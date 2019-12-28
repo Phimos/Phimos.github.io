@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/12/28/Variational%20inference/</loc>
+    
+    <lastmod>2019-12-28T15:56:40.029Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2019/12/28/Bayesian%20framework/</loc>
     
     <lastmod>2019-12-28T06:01:55.410Z</lastmod>
