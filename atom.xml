@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-28T15:56:40.029Z</updated>
+  <updated>2019-12-31T02:31:21.152Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Goodbye 2019</title>
+    <link href="http://yoursite.com/2019/12/31/goodbye-2019/"/>
+    <id>http://yoursite.com/2019/12/31/goodbye-2019/</id>
+    <published>2020-01-01T02:28:51.000Z</published>
+    <updated>2019-12-31T02:31:21.152Z</updated>
+    
+    <content type="html"><![CDATA[<p>2019</p><p>无所得</p><p>有所失</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;2019&lt;/p&gt;
+&lt;p&gt;无所得&lt;/p&gt;
+&lt;p&gt;有所失&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Variational Inference</title>
