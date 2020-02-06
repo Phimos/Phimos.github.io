@@ -2,16 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2019/12/31/goodbye-2019/</loc>
+    <loc>http://yoursite.com/2020/02/06/cpp-interview-2/</loc>
     
-    <lastmod>2019-12-31T02:31:21.152Z</lastmod>
+    <lastmod>2020-02-06T14:16:16.772Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/02/06/cpp-interview-1/</loc>
+    
+    <lastmod>2020-02-06T14:14:18.666Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://yoursite.com/2019/12/28/Bayesian%20framework/</loc>
     
-    <lastmod>2019-12-28T16:11:54.556Z</lastmod>
+    <lastmod>2020-02-06T14:10:26.532Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/12/31/goodbye-2019/</loc>
+    
+    <lastmod>2019-12-31T02:31:21.152Z</lastmod>
     
   </url>
   

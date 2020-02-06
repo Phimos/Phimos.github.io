@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="准备面试的时候找到了两套C++面试题，做了一下，解答直接写在上面了，放在这里分享出来。感觉难度并不是很高，这是第二套~   A. Show me the code  1. Please create a “String” class to process char strings. This string class should satisfy the following requirement">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 面试题 2">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;06&#x2F;cpp-interview-2&#x2F;index.html">
+<meta property="og:site_name" content="Pims&#39; Blog">
+<meta property="og:description" content="准备面试的时候找到了两套C++面试题，做了一下，解答直接写在上面了，放在这里分享出来。感觉难度并不是很高，这是第二套~   A. Show me the code  1. Please create a “String” class to process char strings. This string class should satisfy the following requirement">
+<meta property="article:published_time" content="2020-02-06T14:14:51.000Z">
+<meta property="article:modified_time" content="2020-02-06T14:16:16.772Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="interview">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/02/06/cpp-interview-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>C++ 面试题 2 | Pims' Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims' Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/06/cpp-interview-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 面试题 2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-02-06 06:14:51 / Modified: 06:16:16" itemprop="dateCreated datePublished" datetime="2020-02-06T06:14:51-08:00">2020-02-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>准备面试的时候找到了两套C++面试题，做了一下，解答直接写在上面了，放在这里分享出来。感觉难度并不是很高，这是第二套~</p>
+<hr />
+<h2 id="a-show-me-the-code"><a class="markdownIt-Anchor" href="#a-show-me-the-code"></a> A. Show me the code</h2>
+<h4 id="1-please-create-a-string-class-to-process-char-strings-this-string-class-should-satisfy-the-following-requirements"><a class="markdownIt-Anchor" href="#1-please-create-a-string-class-to-process-char-strings-this-string-class-should-satisfy-the-following-requirements"></a> 1. Please create a “String” class to process char strings. This string class should satisfy the following requirements:</h4>
+<ul>
+<li>It could be used as an original type like “int” to define variables and support assignment and copy.</li>
+<li>It could be used as the parameter type of a function and the return value type of a function.</li>
+<li>It could be used as the element type of the STL container, e.g., vector/list/deque.</li>
+</ul>
+<p>In other words, your “String” class could be used in the following code and be complied successfully by a standard C++ compiler.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">String</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(<span class="keyword">const</span> <span class="keyword">String</span>&amp; x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">String</span> <span class="title">baz</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">String</span> <span class="title">ret</span><span class="params">(<span class="string">"world"</span>)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">String</span> s0;</span><br><span class="line">  <span class="function"><span class="keyword">String</span> <span class="title">s1</span><span class="params">(<span class="string">"hello"</span>)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">String</span> <span class="title">s2</span><span class="params">(s0)</span></span>;</span><br><span class="line">  <span class="keyword">String</span> s3 = s1;</span><br><span class="line">  s2 = s1;</span><br><span class="line">  foo(s1);</span><br><span class="line">  bar(s1);</span><br><span class="line">  foo(<span class="string">"temporary"</span>);</span><br><span class="line">  bar(<span class="string">"temporary"</span>);</span><br><span class="line">  <span class="keyword">String</span> s4 = baz();</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">String</span>&gt; svec;</span><br><span class="line">  svec.push_back(s0);</span><br><span class="line">  svec.push_back(s1);</span><br><span class="line">  svec.push_back(baz());</span><br><span class="line">  svec.push_back(<span class="string">"good job"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>略，感觉以前写过。</p>
+<h4 id="2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-remove-a-specified-node-in-the-list"><a class="markdownIt-Anchor" href="#2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-remove-a-specified-node-in-the-list"></a> 2. Imagine we have a single linked list, please write a function which could remove a specified node in the list.</h4>
+<ul>
+<li>Please define the data structure for the list as you need.</li>
+<li>Pass the head pointer to the function.</li>
+<li>Pass the pointer to the node to be removed to the function. Remove the node in the list if it has the same pointer value.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode* next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> _val): val(_val)&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">ListNode* <span class="title">deleteNode</span><span class="params">(ListNode* head, <span class="keyword">int</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!head)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  <span class="keyword">while</span>(head-&gt;val == val)</span><br><span class="line">  &#123;</span><br><span class="line">    head = head-&gt;next;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(!head)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  ListNode* pnode = head-&gt;next;</span><br><span class="line">  ListNode* prev = head;</span><br><span class="line">  <span class="keyword">while</span>(pnode)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span>(pnode-&gt;val == val)</span><br><span class="line">    &#123;</span><br><span class="line">      prev-&gt;next = pnode-&gt;next;</span><br><span class="line">      pnode = pnode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      prev = pnode;</span><br><span class="line">      pnode = pnode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="b-basic-part"><a class="markdownIt-Anchor" href="#b-basic-part"></a> B. Basic Part</h2>
+<h4 id="1-what-are-wrong-in-the-following-code-please-point-out"><a class="markdownIt-Anchor" href="#1-what-are-wrong-in-the-following-code-please-point-out"></a> 1. What are wrong in the following code? Please point out.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> a = <span class="string">'a'</span>;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> *pInt1 = &amp;b;</span><br><span class="line">  <span class="keyword">int</span> c = *pInt1;</span><br><span class="line">  pInt1 = (<span class="keyword">int</span>*)(&amp;a);</span><br><span class="line">  <span class="keyword">int</span> *pInt2 = pInt1 + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> d = *pInt2;</span><br><span class="line">  <span class="keyword">void</span> *pV = &amp;a;</span><br><span class="line">  <span class="comment">// char * pV = &amp;a;</span></span><br><span class="line">  pV++;	<span class="comment">// 对空指针不能最算术运算</span></span><br><span class="line">  <span class="keyword">char</span> e = *pV;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-what-are-wrong-in-the-following-code-please-provide-your-fix"><a class="markdownIt-Anchor" href="#2-what-are-wrong-in-the-following-code-please-provide-your-fix"></a> 2. What are wrong in the following code? Please provide your <strong>FIX</strong>.</h4>
+<p><em>Common.h</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> var1;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> input)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// some code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>TestA.h</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Common.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestB.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CTestA</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    CTestB m_b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><em>TestB.h</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Common.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestA.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CTestB</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    CTestA m_a;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><em>TestA.cpp</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestA.h"</span></span></span><br><span class="line"><span class="comment">// some code</span></span><br></pre></td></tr></table></figure>
+<p><em>TestB.cpp</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestB.h"</span></span></span><br><span class="line"><span class="comment">// some code</span></span><br></pre></td></tr></table></figure>
+<p>提前声明，结构体内部都采用指针而不是实体。</p>
+<hr />
+<h2 id="c-stl"><a class="markdownIt-Anchor" href="#c-stl"></a> C. STL</h2>
+<h4 id="1-errors-inefficiency-and-potential-bugs-exsit-in-the-following-code-please-point-them-out"><a class="markdownIt-Anchor" href="#1-errors-inefficiency-and-potential-bugs-exsit-in-the-following-code-please-point-them-out"></a> 1. Errors, inefficiency and potential bugs exsit in the following code, please point them out.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&amp; mapIn, <span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;&amp; setIn)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; va(<span class="number">10</span>);</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vb;</span><br><span class="line">  <span class="built_in">std</span>::copy(va.<span class="built_in">begin</span>(), va.<span class="built_in">end</span>(), vb.<span class="built_in">begin</span>());</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//std::vector&lt;int&gt; vb(va);</span></span><br><span class="line">  </span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vc(<span class="number">100</span>);</span><br><span class="line">  <span class="keyword">auto</span> iter = va.<span class="built_in">begin</span>() + <span class="number">5</span>;</span><br><span class="line">  <span class="keyword">int</span> varInt = *iter;</span><br><span class="line">  va.push_back(vc.<span class="built_in">begin</span>(), vc.<span class="built_in">end</span>());</span><br><span class="line">  varInt = *(++iter);</span><br><span class="line">  <span class="keyword">if</span> (mapIn[<span class="number">4</span>] == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">auto</span> itVec = <span class="built_in">std</span>::<span class="built_in">find</span>(vc.<span class="built_in">begin</span>(), vc.<span class="built_in">end</span>(), <span class="number">100</span>);</span><br><span class="line">  <span class="keyword">if</span> (itVec != vc.<span class="built_in">end</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//auto itSet = setIn.find(10);</span></span><br><span class="line">  <span class="comment">//Set本来就是有序的结构，利用可以进行二分查找，效率更高</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">auto</span> itSet = <span class="built_in">std</span>::<span class="built_in">find</span>(setIn.<span class="built_in">begin</span>(), setIn.<span class="built_in">end</span>(), <span class="number">10</span>);</span><br><span class="line">  <span class="keyword">if</span> (itSet == setIn.<span class="built_in">end</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-please-see-the-following-code-typea-could-be-either-a-function-pointer-or-a-functor-please-try-to-provide-the-definition-for-typea-in-both-function-pointer-way-and-functor-way"><a class="markdownIt-Anchor" href="#2-please-see-the-following-code-typea-could-be-either-a-function-pointer-or-a-functor-please-try-to-provide-the-definition-for-typea-in-both-function-pointer-way-and-functor-way"></a> 2. Please see the following code, <code>TypeA</code> could be either a function pointer or a functor, please try to provide the definition for <code>TypeA</code> in both function pointer way and functor way.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(TypeA processor)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> paraInt = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* pParaStr = <span class="string">"Test"</span>;</span><br><span class="line">  <span class="keyword">int</span> rtn = processor(paraInt, pParaStr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数指针:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">function_pointer</span><span class="params">(<span class="keyword">int</span> pInt, <span class="keyword">const</span> <span class="keyword">char</span>* pStr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">		<span class="comment">//do something</span></span><br><span class="line">  	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数对象：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">functor</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">operator</span> <span class="params">()</span><span class="params">(<span class="keyword">int</span> pInt, <span class="keyword">const</span> <span class="keyword">char</span> * pStr)</span></span>&#123;</span><br><span class="line">				<span class="comment">// do something</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/c/" rel="tag"># c++</a>
+              <a href="/tags/interview/" rel="tag"># interview</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/06/cpp-interview-1/" rel="prev" title="C++ 面试题 1">
+      <i class="fa fa-chevron-left"></i> C++ 面试题 1
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#a-show-me-the-code"><span class="nav-number">1.</span> <span class="nav-text"> A. Show me the code</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-please-create-a-string-class-to-process-char-strings-this-string-class-should-satisfy-the-following-requirements"><span class="nav-number">1.0.1.</span> <span class="nav-text"> 1. Please create a “String” class to process char strings. This string class should satisfy the following requirements:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-remove-a-specified-node-in-the-list"><span class="nav-number">1.0.2.</span> <span class="nav-text"> 2. Imagine we have a single linked list, please write a function which could remove a specified node in the list.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#b-basic-part"><span class="nav-number">2.</span> <span class="nav-text"> B. Basic Part</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-what-are-wrong-in-the-following-code-please-point-out"><span class="nav-number">2.0.1.</span> <span class="nav-text"> 1. What are wrong in the following code? Please point out.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-what-are-wrong-in-the-following-code-please-provide-your-fix"><span class="nav-number">2.0.2.</span> <span class="nav-text"> 2. What are wrong in the following code? Please provide your FIX.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c-stl"><span class="nav-number">3.</span> <span class="nav-text"> C. STL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-errors-inefficiency-and-potential-bugs-exsit-in-the-following-code-please-point-them-out"><span class="nav-number">3.0.1.</span> <span class="nav-text"> 1. Errors, inefficiency and potential bugs exsit in the following code, please point them out.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-please-see-the-following-code-typea-could-be-either-a-function-pointer-or-a-functor-please-try-to-provide-the-definition-for-typea-in-both-function-pointer-way-and-functor-way"><span class="nav-number">3.0.2.</span> <span class="nav-text"> 2. Please see the following code, TypeA could be either a function pointer or a functor, please try to provide the definition for TypeA in both function pointer way and functor way.</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.1.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
