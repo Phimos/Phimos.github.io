@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/02/15/RN-ResNet/</loc>
+    
+    <lastmod>2020-02-15T15:07:05.850Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/02/13/RN-Categorical-Reparameterization-with-Gumbel-Softmax/</loc>
     
     <lastmod>2020-02-13T13:42:32.822Z</lastmod>
