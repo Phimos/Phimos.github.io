@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/03/30/6828-lab3/</loc>
+    
+    <lastmod>2020-03-30T11:56:44.798Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/03/30/6828-lab2/</loc>
+    
+    <lastmod>2020-03-30T11:54:50.980Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/03/06/OpenMP-on-macOS/</loc>
     
     <lastmod>2020-03-06T12:00:49.992Z</lastmod>
