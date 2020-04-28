@@ -166,6 +166,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/06/cpp-interview-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/06/cpp-interview-2/" class="post-title-link" itemprop="url">C++ 面试题 2</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-02-06 22:14:51 / Modified: 22:16:16" itemprop="dateCreated datePublished" datetime="2020-02-06T22:14:51+08:00">2020-02-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>准备面试的时候找到了两套C++面试题，做了一下，解答直接写在上面了，放在这里分享出来。感觉难度并不是很高，这是第二套~</p>
+<hr />
+<h2 id="a-show-me-the-code"><a class="markdownIt-Anchor" href="#a-show-me-the-code"></a> A. Show me the code</h2>
+<h4 id="1-please-create-a-string-class-to-process-char-strings-this-string-class-should-satisfy-the-following-requirements"><a class="markdownIt-Anchor" href="#1-please-create-a-string-class-to-process-char-strings-this-string-class-should-satisfy-the-following-requirements"></a> 1. Please create a “String” class to process char strings. This string class should satisfy the following requirements:</h4>
+<ul>
+<li>It could be used as an original type like “int” to define variables and support assignment and copy.</li>
+<li>It could be used as the parameter type of a function and the return value type of a function.</li>
+<li>It could be used as the element type of the STL container, e.g., vector/list/deque.</li>
+</ul>
+<p>In other words, your “String” class could be used in the following code and be complied successfully by a standard C++ compiler.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">String</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(<span class="keyword">const</span> <span class="keyword">String</span>&amp; x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">String</span> <span class="title">baz</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">String</span> <span class="title">ret</span><span class="params">(<span class="string">"world"</span>)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">String</span> s0;</span><br><span class="line">  <span class="function"><span class="keyword">String</span> <span class="title">s1</span><span class="params">(<span class="string">"hello"</span>)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">String</span> <span class="title">s2</span><span class="params">(s0)</span></span>;</span><br><span class="line">  <span class="keyword">String</span> s3 = s1;</span><br><span class="line">  s2 = s1;</span><br><span class="line">  foo(s1);</span><br><span class="line">  bar(s1);</span><br><span class="line">  foo(<span class="string">"temporary"</span>);</span><br><span class="line">  bar(<span class="string">"temporary"</span>);</span><br><span class="line">  <span class="keyword">String</span> s4 = baz();</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">String</span>&gt; svec;</span><br><span class="line">  svec.push_back(s0);</span><br><span class="line">  svec.push_back(s1);</span><br><span class="line">  svec.push_back(baz());</span><br><span class="line">  svec.push_back(<span class="string">"good job"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>略，感觉以前写过。</p>
+<h4 id="2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-remove-a-specified-node-in-the-list"><a class="markdownIt-Anchor" href="#2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-remove-a-specified-node-in-the-list"></a> 2. Imagine we have a single linked list, please write a function which could remove a specified node in the list.</h4>
+<ul>
+<li>Please define the data structure for the list as you need.</li>
+<li>Pass the head pointer to the function.</li>
+<li>Pass the pointer to the node to be removed to the function. Remove the node in the list if it has the same pointer value.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode* next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> _val): val(_val)&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">ListNode* <span class="title">deleteNode</span><span class="params">(ListNode* head, <span class="keyword">int</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!head)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  <span class="keyword">while</span>(head-&gt;val == val)</span><br><span class="line">  &#123;</span><br><span class="line">    head = head-&gt;next;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(!head)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  ListNode* pnode = head-&gt;next;</span><br><span class="line">  ListNode* prev = head;</span><br><span class="line">  <span class="keyword">while</span>(pnode)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span>(pnode-&gt;val == val)</span><br><span class="line">    &#123;</span><br><span class="line">      prev-&gt;next = pnode-&gt;next;</span><br><span class="line">      pnode = pnode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      prev = pnode;</span><br><span class="line">      pnode = pnode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="b-basic-part"><a class="markdownIt-Anchor" href="#b-basic-part"></a> B. Basic Part</h2>
+<h4 id="1-what-are-wrong-in-the-following-code-please-point-out"><a class="markdownIt-Anchor" href="#1-what-are-wrong-in-the-following-code-please-point-out"></a> 1. What are wrong in the following code? Please point out.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> a = <span class="string">'a'</span>;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> *pInt1 = &amp;b;</span><br><span class="line">  <span class="keyword">int</span> c = *pInt1;</span><br><span class="line">  pInt1 = (<span class="keyword">int</span>*)(&amp;a);</span><br><span class="line">  <span class="keyword">int</span> *pInt2 = pInt1 + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> d = *pInt2;</span><br><span class="line">  <span class="keyword">void</span> *pV = &amp;a;</span><br><span class="line">  <span class="comment">// char * pV = &amp;a;</span></span><br><span class="line">  pV++;	<span class="comment">// 对空指针不能最算术运算</span></span><br><span class="line">  <span class="keyword">char</span> e = *pV;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-what-are-wrong-in-the-following-code-please-provide-your-fix"><a class="markdownIt-Anchor" href="#2-what-are-wrong-in-the-following-code-please-provide-your-fix"></a> 2. What are wrong in the following code? Please provide your <strong>FIX</strong>.</h4>
+<p><em>Common.h</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> var1;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> input)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// some code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>TestA.h</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Common.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestB.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CTestA</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    CTestB m_b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><em>TestB.h</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Common.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestA.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CTestB</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    CTestA m_a;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><em>TestA.cpp</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestA.h"</span></span></span><br><span class="line"><span class="comment">// some code</span></span><br></pre></td></tr></table></figure>
+<p><em>TestB.cpp</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"TestB.h"</span></span></span><br><span class="line"><span class="comment">// some code</span></span><br></pre></td></tr></table></figure>
+<p>提前声明，结构体内部都采用指针而不是实体。</p>
+<hr />
+<h2 id="c-stl"><a class="markdownIt-Anchor" href="#c-stl"></a> C. STL</h2>
+<h4 id="1-errors-inefficiency-and-potential-bugs-exsit-in-the-following-code-please-point-them-out"><a class="markdownIt-Anchor" href="#1-errors-inefficiency-and-potential-bugs-exsit-in-the-following-code-please-point-them-out"></a> 1. Errors, inefficiency and potential bugs exsit in the following code, please point them out.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&amp; mapIn, <span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;&amp; setIn)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; va(<span class="number">10</span>);</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vb;</span><br><span class="line">  <span class="built_in">std</span>::copy(va.<span class="built_in">begin</span>(), va.<span class="built_in">end</span>(), vb.<span class="built_in">begin</span>());</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//std::vector&lt;int&gt; vb(va);</span></span><br><span class="line">  </span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vc(<span class="number">100</span>);</span><br><span class="line">  <span class="keyword">auto</span> iter = va.<span class="built_in">begin</span>() + <span class="number">5</span>;</span><br><span class="line">  <span class="keyword">int</span> varInt = *iter;</span><br><span class="line">  va.push_back(vc.<span class="built_in">begin</span>(), vc.<span class="built_in">end</span>());</span><br><span class="line">  varInt = *(++iter);</span><br><span class="line">  <span class="keyword">if</span> (mapIn[<span class="number">4</span>] == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// do something </span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">auto</span> itVec = <span class="built_in">std</span>::<span class="built_in">find</span>(vc.<span class="built_in">begin</span>(), vc.<span class="built_in">end</span>(), <span class="number">100</span>);</span><br><span class="line">  <span class="keyword">if</span> (itVec != vc.<span class="built_in">end</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//auto itSet = setIn.find(10);</span></span><br><span class="line">  <span class="comment">//Set本来就是有序的结构，利用可以进行二分查找，效率更高</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">auto</span> itSet = <span class="built_in">std</span>::<span class="built_in">find</span>(setIn.<span class="built_in">begin</span>(), setIn.<span class="built_in">end</span>(), <span class="number">10</span>);</span><br><span class="line">  <span class="keyword">if</span> (itSet == setIn.<span class="built_in">end</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-please-see-the-following-code-typea-could-be-either-a-function-pointer-or-a-functor-please-try-to-provide-the-definition-for-typea-in-both-function-pointer-way-and-functor-way"><a class="markdownIt-Anchor" href="#2-please-see-the-following-code-typea-could-be-either-a-function-pointer-or-a-functor-please-try-to-provide-the-definition-for-typea-in-both-function-pointer-way-and-functor-way"></a> 2. Please see the following code, <code>TypeA</code> could be either a function pointer or a functor, please try to provide the definition for <code>TypeA</code> in both function pointer way and functor way.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(TypeA processor)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> paraInt = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* pParaStr = <span class="string">"Test"</span>;</span><br><span class="line">  <span class="keyword">int</span> rtn = processor(paraInt, pParaStr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数指针:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">function_pointer</span><span class="params">(<span class="keyword">int</span> pInt, <span class="keyword">const</span> <span class="keyword">char</span>* pStr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">		<span class="comment">//do something</span></span><br><span class="line">  	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数对象：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">functor</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">operator</span> <span class="params">()</span><span class="params">(<span class="keyword">int</span> pInt, <span class="keyword">const</span> <span class="keyword">char</span> * pStr)</span></span>&#123;</span><br><span class="line">				<span class="comment">// do something</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/06/cpp-interview-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -191,7 +294,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-02-06 06:12:27 / Modified: 06:14:18" itemprop="dateCreated datePublished" datetime="2020-02-06T06:12:27-08:00">2020-02-06</time>
+              <time title="Created: 2020-02-06 22:12:27 / Modified: 22:14:18" itemprop="dateCreated datePublished" datetime="2020-02-06T22:12:27+08:00">2020-02-06</time>
             </span>
 
           
@@ -275,7 +378,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/31/goodbye-2019/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/01/goodbye-2019/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -289,7 +392,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/31/goodbye-2019/" class="post-title-link" itemprop="url">Goodbye 2019</a>
+            <a href="/2020/01/01/goodbye-2019/" class="post-title-link" itemprop="url">Goodbye 2019</a>
         </h1>
 
         <div class="post-meta">
@@ -299,14 +402,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-31 18:28:51" itemprop="dateCreated datePublished" datetime="2019-12-31T18:28:51-08:00">2019-12-31</time>
+              <time title="Created: 2020-01-01 10:28:51" itemprop="dateCreated datePublished" datetime="2020-01-01T10:28:51+08:00">2020-01-01</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-30 18:31:21" itemprop="dateModified" datetime="2019-12-30T18:31:21-08:00">2019-12-30</time>
+                <time title="Modified: 2019-12-31 10:31:21" itemprop="dateModified" datetime="2019-12-31T10:31:21+08:00">2019-12-31</time>
               </span>
 
           
@@ -342,7 +445,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/28/Variational%20inference/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/29/Variational%20inference/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -356,7 +459,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/28/Variational%20inference/" class="post-title-link" itemprop="url">Variational Inference</a>
+            <a href="/2019/12/29/Variational%20inference/" class="post-title-link" itemprop="url">Variational Inference</a>
         </h1>
 
         <div class="post-meta">
@@ -365,10 +468,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2019-12-28 23:55:05 / Modified: 07:56:40" itemprop="dateCreated datePublished" datetime="2019-12-28T23:55:05-08:00">2019-12-28</time>
+              <time title="Created: 2019-12-29 15:55:05" itemprop="dateCreated datePublished" datetime="2019-12-29T15:55:05+08:00">2019-12-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-28 23:56:40" itemprop="dateModified" datetime="2019-12-28T23:56:40+08:00">2019-12-28</time>
+              </span>
 
           
 
@@ -532,7 +641,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/28/Bayesian%20framework/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/29/Bayesian%20framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -546,7 +655,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/28/Bayesian%20framework/" class="post-title-link" itemprop="url">Bayesian Framework</a>
+            <a href="/2019/12/29/Bayesian%20framework/" class="post-title-link" itemprop="url">Bayesian Framework</a>
         </h1>
 
         <div class="post-meta">
@@ -556,14 +665,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-28 13:45:05" itemprop="dateCreated datePublished" datetime="2019-12-28T13:45:05-08:00">2019-12-28</time>
+              <time title="Created: 2019-12-29 05:45:05" itemprop="dateCreated datePublished" datetime="2019-12-29T05:45:05+08:00">2019-12-29</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-06 06:10:26" itemprop="dateModified" datetime="2020-02-06T06:10:26-08:00">2020-02-06</time>
+                <time title="Modified: 2020-02-06 22:10:26" itemprop="dateModified" datetime="2020-02-06T22:10:26+08:00">2020-02-06</time>
               </span>
 
           
@@ -843,7 +952,7 @@ p(\theta|X) &amp;= \frac{1}{Z}p(X|\theta)p(\theta)\\
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/18/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/19/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -857,7 +966,7 @@ p(\theta|X) &amp;= \frac{1}{Z}p(X|\theta)p(\theta)\\
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/18/hello-world/" class="post-title-link" itemprop="url">Hello World!</a>
+            <a href="/2019/12/19/hello-world/" class="post-title-link" itemprop="url">Hello World!</a>
         </h1>
 
         <div class="post-meta">
@@ -867,14 +976,14 @@ p(\theta|X) &amp;= \frac{1}{Z}p(X|\theta)p(\theta)\\
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-18 08:31:23" itemprop="dateCreated datePublished" datetime="2019-12-18T08:31:23-08:00">2019-12-18</time>
+              <time title="Created: 2019-12-19 00:31:23" itemprop="dateCreated datePublished" datetime="2019-12-19T00:31:23+08:00">2019-12-19</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-11-01 23:31:56" itemprop="dateModified" datetime="2019-11-01T23:31:56-07:00">2019-11-01</time>
+                <time title="Modified: 2019-11-02 14:31:56" itemprop="dateModified" datetime="2019-11-02T14:31:56+08:00">2019-11-02</time>
               </span>
 
           
@@ -913,7 +1022,7 @@ p(\theta|X) &amp;= \frac{1}{Z}p(X|\theta)p(\theta)\\
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/15/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/16/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -927,7 +1036,7 @@ p(\theta|X) &amp;= \frac{1}{Z}p(X|\theta)p(\theta)\\
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/15/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/" class="post-title-link" itemprop="url">[论文笔记] Multivariate Time Series Imputation with Generative Adversarial Networks</a>
+            <a href="/2019/12/16/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/" class="post-title-link" itemprop="url">[论文笔记] Multivariate Time Series Imputation with Generative Adversarial Networks</a>
         </h1>
 
         <div class="post-meta">
@@ -937,14 +1046,14 @@ p(\theta|X) &amp;= \frac{1}{Z}p(X|\theta)p(\theta)\\
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-15 14:37:36" itemprop="dateCreated datePublished" datetime="2019-12-15T14:37:36-08:00">2019-12-15</time>
+              <time title="Created: 2019-12-16 06:37:36" itemprop="dateCreated datePublished" datetime="2019-12-16T06:37:36+08:00">2019-12-16</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-18 08:20:59" itemprop="dateModified" datetime="2019-12-18T08:20:59-08:00">2019-12-18</time>
+                <time title="Modified: 2019-12-19 00:20:59" itemprop="dateModified" datetime="2019-12-19T00:20:59+08:00">2019-12-19</time>
               </span>
 
           
@@ -1048,7 +1157,7 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/13/DL-with-PyTorch-5/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/14/DL-with-PyTorch-5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1062,7 +1171,7 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/13/DL-with-PyTorch-5/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 5</a>
+            <a href="/2019/12/14/DL-with-PyTorch-5/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 5</a>
         </h1>
 
         <div class="post-meta">
@@ -1072,14 +1181,14 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-13 14:04:00" itemprop="dateCreated datePublished" datetime="2019-12-13T14:04:00-08:00">2019-12-13</time>
+              <time title="Created: 2019-12-14 06:04:00" itemprop="dateCreated datePublished" datetime="2019-12-14T06:04:00+08:00">2019-12-14</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-18 19:21:38" itemprop="dateModified" datetime="2019-12-18T19:21:38-08:00">2019-12-18</time>
+                <time title="Modified: 2019-12-19 11:21:38" itemprop="dateModified" datetime="2019-12-19T11:21:38+08:00">2019-12-19</time>
               </span>
 
           
@@ -1150,7 +1259,7 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/13/DL-with-PyTorch-4/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/14/DL-with-PyTorch-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1164,7 +1273,7 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/13/DL-with-PyTorch-4/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 4</a>
+            <a href="/2019/12/14/DL-with-PyTorch-4/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 4</a>
         </h1>
 
         <div class="post-meta">
@@ -1174,14 +1283,14 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-13 14:03:32" itemprop="dateCreated datePublished" datetime="2019-12-13T14:03:32-08:00">2019-12-13</time>
+              <time title="Created: 2019-12-14 06:03:32" itemprop="dateCreated datePublished" datetime="2019-12-14T06:03:32+08:00">2019-12-14</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-18 19:21:27" itemprop="dateModified" datetime="2019-12-18T19:21:27-08:00">2019-12-18</time>
+                <time title="Modified: 2019-12-19 11:21:27" itemprop="dateModified" datetime="2019-12-19T11:21:27+08:00">2019-12-19</time>
               </span>
 
           
@@ -1300,14 +1409,14 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2019-12-12 00:15:18" itemprop="dateCreated datePublished" datetime="2019-12-12T00:15:18-08:00">2019-12-12</time>
+              <time title="Created: 2019-12-12 16:15:18" itemprop="dateCreated datePublished" datetime="2019-12-12T16:15:18+08:00">2019-12-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-18 19:21:16" itemprop="dateModified" datetime="2019-12-18T19:21:16-08:00">2019-12-18</time>
+                <time title="Modified: 2019-12-19 11:21:16" itemprop="dateModified" datetime="2019-12-19T11:21:16+08:00">2019-12-19</time>
               </span>
 
           
@@ -1406,205 +1515,6 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/10/DL-with-PyTorch-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims' Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/10/DL-with-PyTorch-2/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 2</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-10 21:45:05" itemprop="dateCreated datePublished" datetime="2019-12-10T21:45:05-08:00">2019-12-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-18 19:21:05" itemprop="dateModified" datetime="2019-12-18T19:21:05-08:00">2019-12-18</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="啥是深度学习"><a class="markdownIt-Anchor" href="#啥是深度学习"></a> 啥是深度学习</h2>
-<p>Input Representation -&gt; Intermediate Representation -&gt; Output Representation</p>
-<p>神经网络学到的就是怎样把Input Representation转化成Output Representation。</p>
-<h2 id="tensor"><a class="markdownIt-Anchor" href="#tensor"></a> Tensor</h2>
-<p>PyTorch中的tensor起始就是一个n维数组，可以和NumPy中的ndarray相类比，Tensor支持numpy的无缝衔接。</p>
-<p>对比NumPy中的ndarray，tensor可以</p>
-<ul>
-<li>在GPU上进行高效的运算</li>
-<li>可以在多机器上进行运算</li>
-<li>可以在运算图上进行追踪</li>
-</ul>
-<h2 id="tensor基础"><a class="markdownIt-Anchor" href="#tensor基础"></a> Tensor基础</h2>
-<p>Python内置List的不足点</p>
-<ul>
-<li>浮点数会使用超过32bit的大小来进行储存，数据量打的时候比较低效</li>
-<li>不能从向量化的运算中得到优化，在内存中并不都是连续分布的</li>
-<li>对于多维的情况只能写list的list，十分的低效</li>
-<li>python解释器和优化编译过后的代码相比比较低效，用C做底层会快很多</li>
-</ul>
-<p>可以类似numpy中的索引方式。</p>
-<p>可以利用<code>torch.zeros(3,2)</code>或者<code>torch.ones(3,2)</code>的函数进行初始化。</p>
-<h2 id="tensor存储"><a class="markdownIt-Anchor" href="#tensor存储"></a> Tensor存储</h2>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1g9t8zqviepj31ds0pyqjy.jpg" alt="" /></p>
-<p>存储形式类似C中数组的方式。</p>
-<p>可以利用<code>tensor.storage()</code>方法获得连续的存储，无论本来是几维数组，都可以最终得到一个连续的数组，用正常方法进行索引。<strong>类似于得到C中多维数组的首地址。</strong></p>
-<p>通过改变storage中的值同样可以改变对应tensor的内容。</p>
-<h2 id="size-storage-offset-and-strides"><a class="markdownIt-Anchor" href="#size-storage-offset-and-strides"></a> Size, storage offset, and strides</h2>
-<ul>
-<li>
-<p>Size：一个tuple，能告诉这个tensor的每一维有多少元素，<code>tensor.size()</code>或者<code>tensor.shape</code></p>
-</li>
-<li>
-<p>Storage offset：相对于tensor中第一个元素的offset，<code>tensor.storage_offset()</code></p>
-</li>
-<li>
-<p>Stride：每一维度上，所需要得到下一个元素的步长，<code>tensor.stride()</code></p>
-</li>
-</ul>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1g9t8zqqn05j31dy0u0qks.jpg" alt="" /></p>
-<p>注意：子tensor有着更少的维度，但是实际上有着和原来的tensor都在相同的地方存储，所以对子tensor的改变会改变原来的tensor（直接类比C语言中的多维数组）。可以采用<code>tensor.clone()</code>得到tensor的克隆，这样更改不会改变原来的tensor。</p>
-<p><code>tensor.t()</code>可以将tensor转置，但是他们的存储空间仍然是一样的，只是改变了size和stride。确切的说，只是把对应维度的size和stride进行了<strong>交换</strong>。</p>
-<p><code>tensor.transpose()</code>可以用来对多维数组的两个维度进行交换，接受两个参数，分别代表<code>dim0</code>和<code>dim1</code>。</p>
-<p>contiguous表示tensor在存储中是否按照直接的形式进行存储。可以用<code>tensor.is_contiguous()</code>进行判断，并且可以用<code>tensor.contiguous</code>方法对存储重新排布，不改变size，改变storage和stride。</p>
-<h2 id="数值类型"><a class="markdownIt-Anchor" href="#数值类型"></a> 数值类型</h2>
-<p>在创建的时候可以用<code>dtype</code>进行指定，默认的是32-bit浮点数，<code>torch.Tensor</code>就是<code>torch.FloatTensor</code>的别名，下面是一些可能的值：</p>
-<ul>
-<li>
-<p>torch.float32 or torch.float—32-bit floating-point</p>
-</li>
-<li>
-<p>torch.float64 or torch.double—64-bit, double-precision floating-point</p>
-</li>
-<li>
-<p>torch.float16 or torch.half—16-bit, half-precision floating-point</p>
-</li>
-<li>
-<p>torch.int8—Signed 8-bit integers</p>
-</li>
-<li>
-<p>torch.uint8—Unsigned 8-bit integers</p>
-</li>
-<li>
-<p>torch.int16 or torch.short—Signed 16-bit integers</p>
-</li>
-<li>
-<p>torch.int32 or torch.int—Signed 32-bit integers</p>
-</li>
-<li>
-<p>torch.int64 or torch.long—Signed 64-bit integers</p>
-</li>
-</ul>
-<p>可以通过<code>tensor.dtype</code>来获取类型，可以用对应的方法或者<code>to()</code>进行转换，<code>type()</code>进行同样的操作，但是<code>to()</code>还可以接受额外的参数。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">double_points = torch.zeros(<span class="number">10</span>,<span class="number">2</span>).double()</span><br><span class="line">short_points = torch.ones(<span class="number">10</span>,<span class="number">2</span>).short()</span><br><span class="line"></span><br><span class="line">double_points = torch.zeros(<span class="number">10</span>,<span class="number">2</span>).to(torch.double)</span><br><span class="line">short_points - torch.ones(<span class="number">10</span>,<span class="number">2</span>).to(dtype = torch.short)</span><br><span class="line"></span><br><span class="line">points = torch.randn(<span class="number">10</span>,<span class="number">2</span>)</span><br><span class="line">stort_points = points.type(torch.short)</span><br></pre></td></tr></table></figure>
-<h2 id="tensor索引"><a class="markdownIt-Anchor" href="#tensor索引"></a> tensor索引</h2>
-<p>正常的列表索引，不同维度上切片什么的随你玩</p>
-<h2 id="与numpy的交互"><a class="markdownIt-Anchor" href="#与numpy的交互"></a> 与NumPy的交互</h2>
-<p>利用<code>tensor.numpy()</code>把tensor转换为numpy中的array。利用<code>tensor.from_numpy()</code>把numpy中的array转换成tensor。</p>
-<p>注意一点，如果tensor在CPU上分配的话，是共享存储的，但是如果在GPU上分配的话，会在CPU上重新创造一个array的副本。</p>
-<h2 id="serializing-tensor"><a class="markdownIt-Anchor" href="#serializing-tensor"></a> Serializing Tensor</h2>
-<p>tensor的保存与加载，即可以使用路径，也可以使用文件描述符</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Save</span></span><br><span class="line">torch.save(points, <span class="string">'../data/p1ch3/ourpoints.t'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'../data/p1ch3/ourpoints.t'</span>,<span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    torch.save(points, f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load</span></span><br><span class="line">points = torch.load(<span class="string">'../data/p1ch3/ourpoints.t'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'../data/p1ch3/ourpoints.t'</span>,<span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    torch.load(f)</span><br></pre></td></tr></table></figure>
-<p>如果要将tensor保存成一个更加可互用的形式，可以采用HDF5格式，一种用于表示多维数组的格式，他内部采用一个字典形式的<strong>键值对</strong>来进行保存。python通过h5py库支持HDF5格式，它可以接受和返回NumPy array。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"></span><br><span class="line">f = h5py.File(<span class="string">'../data/plch3/ourpoints.hdf5'</span>,<span class="string">'w'</span>)</span><br><span class="line">dset = f.create_dataset(<span class="string">'coords'</span>, data = points.numpy())</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
-<p>在这里’coords’就是key，<strong>有趣的一点在于</strong>可以只从HDF5中加载一部分的内容，而不用加载全部！</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f = h5py.File(<span class="string">'../data/p1ch3/ourpoints'</span>,<span class="string">'r'</span>)</span><br><span class="line">dset = f[<span class="string">'coords'</span>]</span><br><span class="line">last_points = dset[<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
-<p>在这种情况下只取出了后面几个点的坐标，返回了一个类似NumPy数组的对象。可以直接采用<code>from_numpy()</code>方法构造tensor。</p>
-<p>这种情况下，数据会<strong>复制</strong>到tensor的storage。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">last_points = torch.from_numpy(dset[<span class="number">1</span>:])</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
-<p>记得在加载完数据之后关闭文件！</p>
-<h2 id="将tensor移动到gpu"><a class="markdownIt-Anchor" href="#将tensor移动到gpu"></a> 将tensor移动到GPU</h2>
-<p>在GPU上可以对tensor进行高效的并行计算，tensor有一个<code>device</code>可以用来指定在CPU或者GPU上面，可以在创建时候指定，或者利用<code>to</code>方法创建一个GPU上的副本。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">points_gpu = torch.tensor([[<span class="number">1.0</span>, <span class="number">4.0</span>], [<span class="number">2.0</span>, <span class="number">1.0</span>], [<span class="number">3.0</span>, <span class="number">4.0</span>]],</span><br><span class="line">                          device=<span class="string">'cuda'</span>)</span><br><span class="line"></span><br><span class="line">points_gpu = points.to(device=<span class="string">'cuda'</span>)</span><br></pre></td></tr></table></figure>
-<p>注意！这个时候类型会从<code>torch.FloatTensor</code>变成<code>torch.cuda.FloatTensor</code>，其他的类型类似。</p>
-<p>如果有多GPU的情况，可以用一个从零开始的int来指定特定的GPU，如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">points_gpu = points.to(device=<span class="string">'cuda:0'</span>)</span><br></pre></td></tr></table></figure>
-<p>注意到一个问题，运算结束后，并不会把结果返回到CPU，只是返回一个<code>handle</code>，除非调用了<code>to</code>方法把它弄回了CPU。</p>
-<p>可以使用<code>cuda()</code>方法和<code>cpu()</code>方法完成类似上面的事情</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">points_gpu = points.cuda() <span class="comment">#默认是分配到下标为0的GPU</span></span><br><span class="line">points_gpu = points.cuda(<span class="number">0</span>)</span><br><span class="line">points = points_gpu.cpu()</span><br></pre></td></tr></table></figure>
-<p>但是使用<code>to</code>方法可以传递多个参数！比如同时改变<code>device</code>和<code>dtype</code>。</p>
-<h2 id="tensor-api"><a class="markdownIt-Anchor" href="#tensor-api"></a> Tensor API</h2>
-<p>注意有些api会在最后有一个下划线，表示他们是<strong>原地修改</strong>的，并不会返回一个新的tensor，例如<code>zero_()</code>会原地把矩阵清零。如果没有下划线会返回一个新的tensor，而原tensor保持不变。大致的API分类如下：</p>
-<ul>
-<li>
-<p>Creation ops—Functions for constructing a tensor, such as <code>ones</code> and <code>from_numpy</code></p>
-</li>
-<li>
-<p>Indexing, slicing, joining, and mutating ops—Functions for changing the shape,</p>
-</li>
-</ul>
-<p>stride, or content of a tensor, such as <code>transpose</code></p>
-<ul>
-<li>
-<p>Math ops—Functions for manipulating the content of the tensor through computations:</p>
-<ul>
-<li>Pointwise ops—Functions for obtaining a new tensor by applying a function to each element independently, such as <code>abs</code> and <code>cos</code></li>
-<li>Reduction ops—Functions for computing aggregate values by iterating through tensors, such as <code>mean</code>, <code>std</code>, and <code>norm</code></li>
-<li>Comparison ops—Functions for evaluating numerical predicates over tensors, such as <code>equal</code> and <code>max</code></li>
-<li>Spectral ops—Functions for transforming in and operating in the frequency domain, such as <code>stft</code> and <code>hamming_window</code></li>
-<li>Other ops—Special functions operating on vectors, such as cross, or matrices, such as <code>trace</code></li>
-<li>BLAS and LAPACK ops—Functions that follow the BLAS (Basic Linear Algebra Subprograms) specification for scalar, vector-vector, matrix-vector, and matrix-matrix operations</li>
-</ul>
-</li>
-<li>
-<p>Random sampling ops—Functions for generating values by drawing randomly</p>
-<p>from probability distributions, such as <code>randn</code> and <code>normal</code></p>
-</li>
-<li>
-<p>Serialization ops—Functions for saving and loading tensors, such as <code>load</code> and</p>
-</li>
-</ul>
-<p><code>save</code></p>
-<ul>
-<li>Parallelism ops—Functions for controlling the number of threads for parallel</li>
-</ul>
-<p>CPU execution, such as <code>set_num_threads</code></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1675,12 +1585,12 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
