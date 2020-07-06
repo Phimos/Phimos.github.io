@@ -47,16 +47,18 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;index.html">
+  <meta name="description" content="在神经网络训练过程当中，如果是利用jupyter-notebook来进行代码编写的话，可能断开之后不会看到输出的结果。利用logging模块可以将内容同时输出到文件和终端，首先定义构造logger的函数内容如下： 123456789101112131415161718192021import loggingdef get_logger(filename, verbosity&#x3D;1, name&#x3D;Non">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python使用logger保存训练参数日志">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;07&#x2F;06&#x2F;logging-for-training&#x2F;index.html">
 <meta property="og:site_name" content="Pims&#39; Blog">
-<meta property="article:published_time" content="2020-04-29T11:17:31.000Z">
-<meta property="article:modified_time" content="2020-04-29T11:18:19.598Z">
+<meta property="og:description" content="在神经网络训练过程当中，如果是利用jupyter-notebook来进行代码编写的话，可能断开之后不会看到输出的结果。利用logging模块可以将内容同时输出到文件和终端，首先定义构造logger的函数内容如下： 123456789101112131415161718192021import loggingdef get_logger(filename, verbosity&#x3D;1, name&#x3D;Non">
+<meta property="article:published_time" content="2020-07-06T05:15:45.000Z">
+<meta property="article:modified_time" content="2020-07-06T05:17:23.539Z">
 <meta property="article:author" content="Pims">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/tags/">
+<link rel="canonical" href="http://yoursite.com/2020/07/06/logging-for-training/">
 
 
 <script id="page-configurations">
@@ -64,12 +66,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>tags | Pims' Blog
-  </title>
+  <title>Python使用logger保存训练参数日志 | Pims' Blog</title>
   
 
 
@@ -170,52 +171,84 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
           <div class="content">
             
 
   <div class="posts-expand">
-    
-    
-    
-    <div class="post-block" lang="zh-Hans">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/logging-for-training/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims' Blog">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python使用logger保存训练参数日志
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">tags
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
 
-<div class="post-meta">
+              <time title="Created: 2020-07-06 13:15:45 / Modified: 13:17:23" itemprop="dateCreated datePublished" datetime="2020-07-06T13:15:45+08:00">2020-07-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在神经网络训练过程当中，如果是利用jupyter-notebook来进行代码编写的话，可能断开之后不会看到输出的结果。利用<code>logging</code>模块可以将内容同时输出到文件和终端，首先定义构造logger的函数内容如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_logger</span><span class="params">(filename, verbosity=<span class="number">1</span>, name=None)</span>:</span></span><br><span class="line">    level_dict = &#123;<span class="number">0</span>: logging.DEBUG, <span class="number">1</span>: logging.INFO, <span class="number">2</span>: logging.WARNING&#125;</span><br><span class="line">    formatter = logging.Formatter(</span><br><span class="line">        <span class="string">"[%(asctime)s][%(filename)s][line:%(lineno)d][%(levelname)s] %(message)s"</span></span><br><span class="line">    )</span><br><span class="line">    logger = logging.getLogger(name)</span><br><span class="line">    logger.setLevel(level_dict[verbosity])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Output to file</span></span><br><span class="line">    fh = logging.FileHandler(filename, <span class="string">"w"</span>)</span><br><span class="line">    fh.setFormatter(formatter)</span><br><span class="line">    logger.addHandler(fh)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Output to terminal</span></span><br><span class="line">    sh = logging.StreamHandler()</span><br><span class="line">    sh.setFormatter(formatter)</span><br><span class="line">    logger.addHandler(sh)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> logger</span><br></pre></td></tr></table></figure>
+<p>之后在训练流程当中通过以上的函数生成logger，再采用<code>info</code>方法进行保存就可以了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">logger = get_logger(<span class="string">'./train.log'</span>)</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">'start training!'</span>)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(EPOCHS):</span><br><span class="line">    ...</span><br><span class="line">    loss = ...</span><br><span class="line">    acc = ...</span><br><span class="line">    logger.info(<span class="string">'Epoch:[&#123;&#125;/&#123;&#125;]\t loss=&#123;:.5f&#125;\t acc=&#123;:.3f&#125;'</span>.format(epoch, EPOCHS, loss, acc))</span><br><span class="line">    ...</span><br><span class="line">logger.info(<span class="string">'finish training!'</span>)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/05/RN-DGC/" rel="prev" title="[论文笔记] Deep Gradient Compression: Reducing the Communication Bandwidth for Distributed Training">
+      <i class="fa fa-chevron-left"></i> [论文笔记] Deep Gradient Compression: Reducing the Communication Bandwidth for Distributed Training
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-              19 tags in total
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/01-BFS/" style="font-size: 12px; color: #ccc">01-BFS</a> <a href="/tags/6-828/" style="font-size: 25.5px; color: #404040">6.828</a> <a href="/tags/Algorithm/" style="font-size: 25.5px; color: #404040">Algorithm</a> <a href="/tags/BFS/" style="font-size: 16.5px; color: #9d9d9d">BFS</a> <a href="/tags/Codeforces/" style="font-size: 12px; color: #ccc">Codeforces</a> <a href="/tags/Computer-Vision/" style="font-size: 21px; color: #6f6f6f">Computer Vision</a> <a href="/tags/Constructive-Algorithm/" style="font-size: 12px; color: #ccc">Constructive Algorithm</a> <a href="/tags/DFS/" style="font-size: 16.5px; color: #9d9d9d">DFS</a> <a href="/tags/Deep-Bayes/" style="font-size: 21px; color: #6f6f6f">Deep Bayes</a> <a href="/tags/Distributed-Training/" style="font-size: 12px; color: #ccc">Distributed Training</a> <a href="/tags/Dynamic-programming/" style="font-size: 12px; color: #ccc">Dynamic programming</a> <a href="/tags/Math/" style="font-size: 12px; color: #ccc">Math</a> <a href="/tags/Operating-System/" style="font-size: 25.5px; color: #404040">Operating System</a> <a href="/tags/Paper-Reading/" style="font-size: 30px; color: #111">Paper Reading</a> <a href="/tags/PyTorch/" style="font-size: 25.5px; color: #404040">PyTorch</a> <a href="/tags/Reading-Notes/" style="font-size: 25.5px; color: #404040">Reading Notes</a> <a href="/tags/Reparameterization/" style="font-size: 12px; color: #ccc">Reparameterization</a> <a href="/tags/c/" style="font-size: 16.5px; color: #9d9d9d">c++</a> <a href="/tags/interview/" style="font-size: 21px; color: #6f6f6f">interview</a>
-            </div>
-          </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
   </div>
 
 

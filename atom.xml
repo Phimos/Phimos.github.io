@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-07-05T15:04:12.338Z</updated>
+  <updated>2020-07-06T05:17:23.539Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python使用logger保存训练参数日志</title>
+    <link href="http://yoursite.com/2020/07/06/logging-for-training/"/>
+    <id>http://yoursite.com/2020/07/06/logging-for-training/</id>
+    <published>2020-07-06T05:15:45.000Z</published>
+    <updated>2020-07-06T05:17:23.539Z</updated>
+    
+    <content type="html"><![CDATA[<p>在神经网络训练过程当中，如果是利用jupyter-notebook来进行代码编写的话，可能断开之后不会看到输出的结果。利用<code>logging</code>模块可以将内容同时输出到文件和终端，首先定义构造logger的函数内容如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_logger</span><span class="params">(filename, verbosity=<span class="number">1</span>, name=None)</span>:</span></span><br><span class="line">    level_dict = &#123;<span class="number">0</span>: logging.DEBUG, <span class="number">1</span>: logging.INFO, <span class="number">2</span>: logging.WARNING&#125;</span><br><span class="line">    formatter = logging.Formatter(</span><br><span class="line">        <span class="string">"[%(asctime)s][%(filename)s][line:%(lineno)d][%(levelname)s] %(message)s"</span></span><br><span class="line">    )</span><br><span class="line">    logger = logging.getLogger(name)</span><br><span class="line">    logger.setLevel(level_dict[verbosity])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Output to file</span></span><br><span class="line">    fh = logging.FileHandler(filename, <span class="string">"w"</span>)</span><br><span class="line">    fh.setFormatter(formatter)</span><br><span class="line">    logger.addHandler(fh)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Output to terminal</span></span><br><span class="line">    sh = logging.StreamHandler()</span><br><span class="line">    sh.setFormatter(formatter)</span><br><span class="line">    logger.addHandler(sh)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> logger</span><br></pre></td></tr></table></figure><p>之后在训练流程当中通过以上的函数生成logger，再采用<code>info</code>方法进行保存就可以了：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">logger = get_logger(<span class="string">'./train.log'</span>)</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">'start training!'</span>)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(EPOCHS):</span><br><span class="line">    ...</span><br><span class="line">    loss = ...</span><br><span class="line">    acc = ...</span><br><span class="line">    logger.info(<span class="string">'Epoch:[&#123;&#125;/&#123;&#125;]\t loss=&#123;:.5f&#125;\t acc=&#123;:.3f&#125;'</span>.format(epoch, EPOCHS, loss, acc))</span><br><span class="line">    ...</span><br><span class="line">logger.info(<span class="string">'finish training!'</span>)</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;在神经网络训练过程当中，如果是利用jupyter-notebook来进行代码编写的话，可能断开之后不会看到输出的结果。利用&lt;code&gt;logging&lt;/code&gt;模块可以将内容同时输出到文件和终端，首先定义构造logger的函数内容如下：&lt;/p&gt;
+&lt;figure class
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>[论文笔记] Deep Gradient Compression: Reducing the Communication Bandwidth for Distributed Training</title>
@@ -533,31 +556,6 @@
       <category term="c++" scheme="http://yoursite.com/tags/c/"/>
     
       <category term="interview" scheme="http://yoursite.com/tags/interview/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Goodbye 2019</title>
-    <link href="http://yoursite.com/2020/01/01/goodbye-2019/"/>
-    <id>http://yoursite.com/2020/01/01/goodbye-2019/</id>
-    <published>2020-01-01T02:28:51.000Z</published>
-    <updated>2019-12-31T02:31:21.152Z</updated>
-    
-    <content type="html"><![CDATA[<p>2019</p><p>无所得</p><p>有所失</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;2019&lt;/p&gt;
-&lt;p&gt;无所得&lt;/p&gt;
-&lt;p&gt;有所失&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
     
   </entry>
   
