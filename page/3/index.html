@@ -176,6 +176,115 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/06/cpp-interview-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/06/cpp-interview-1/" class="post-title-link" itemprop="url">C++ 面试题 1</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-02-06 22:12:27 / Modified: 22:14:18" itemprop="dateCreated datePublished" datetime="2020-02-06T22:12:27+08:00">2020-02-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>准备面试的时候找到了两套C++面试题，做了一下，解答直接写在上面了，放在这里分享出来。感觉难度并不是很高，这是第一套~</p>
+<hr />
+<h2 id="for-your-answers-either-chinese-or-english-are-ok"><a class="markdownIt-Anchor" href="#for-your-answers-either-chinese-or-english-are-ok"></a> For your answers, either Chinese or English are OK.</h2>
+<h2 id="a-coding"><a class="markdownIt-Anchor" href="#a-coding"></a> A. Coding</h2>
+<h4 id="1-please-create-a-class-to-represent-int-only-declaration-is-required-please-give-the-declaration-of-all-member-functions-friend-functions-and-member-variables"><a class="markdownIt-Anchor" href="#1-please-create-a-class-to-represent-int-only-declaration-is-required-please-give-the-declaration-of-all-member-functions-friend-functions-and-member-variables"></a> 1. Please create a class to represent Int. Only declaration is required. Please give the declaration of all member functions, friend functions, and member variables.</h4>
+<p>略</p>
+<h4 id="2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-move-a-specified-node-to-the-tail-of-the-list"><a class="markdownIt-Anchor" href="#2-imagine-we-have-a-single-linked-list-please-write-a-function-which-could-move-a-specified-node-to-the-tail-of-the-list"></a> 2. Imagine we have a single linked list, please write a function which could move a specified node to the tail of the list.</h4>
+<ul>
+<li>Please define the data structure for the list as you need.</li>
+<li>Pass the head pointer to the function.</li>
+<li>Pass the pointer of the node to be moved to the function. Move the node to the tail of the list if it has the same pointer value.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode* next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> _val): val(_val)&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">ListNode* <span class="title">deleteNode</span><span class="params">(ListNode* head, <span class="keyword">int</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!head)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  <span class="keyword">while</span>(head-&gt;val == val)</span><br><span class="line">  &#123;</span><br><span class="line">    head = head-&gt;next;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(!head)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  ListNode* pnode = head-&gt;next;</span><br><span class="line">  ListNode* prev = head;</span><br><span class="line">  <span class="keyword">while</span>(pnode)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span>(pnode-&gt;val == val)</span><br><span class="line">    &#123;</span><br><span class="line">      prev-&gt;next = pnode-&gt;next;</span><br><span class="line">      pnode = pnode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      prev = pnode;</span><br><span class="line">      pnode = pnode-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="b-read-and-answer"><a class="markdownIt-Anchor" href="#b-read-and-answer"></a> B. Read and Answer</h2>
+<h4 id="1-what-are-wrong-in-the-following-code"><a class="markdownIt-Anchor" href="#1-what-are-wrong-in-the-following-code"></a> 1. What are wrong in the following code?</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(short startIndex)</span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">  short <span class="built_in">buffer</span>[<span class="number">50000</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> i = startIndex; i &lt; <span class="number">40000</span>; ++i) </span><br><span class="line">  &#123;  </span><br><span class="line">    <span class="built_in">buffer</span>[i] = (<span class="keyword">char</span>)i;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Because i is short, i &lt; 40000  is always True, the loop NEVER ends.</p>
+<h4 id="2-mark-all-lines-which-are-wrong-and-provide-the-fix"><a class="markdownIt-Anchor" href="#2-mark-all-lines-which-are-wrong-and-provide-the-fix"></a> 2. Mark all lines which are wrong and provide the FIX.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CBase</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CBase() </span><br><span class="line">      : m_pVar1(<span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        m_pVar2 = <span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ~CBase()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">delete</span> m_pVar2;</span><br><span class="line">        <span class="keyword">delete</span> m_pVar1;	<span class="comment">// Can't delete NULL pointer</span></span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">      *if(! m_pVar1)</span></span><br><span class="line"><span class="comment">      *  delete m_pVal1;</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(<span class="keyword">int</span>* pVar)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m_pVar1 = pVar;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span>* m_pVar1;</span><br><span class="line">    <span class="keyword">int</span>* m_pVar2;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CDerive</span> :</span> <span class="keyword">public</span> CBase</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CDerive(<span class="keyword">int</span> var) : m_var(var) &#123;&#125;;</span><br><span class="line">  <span class="comment">//CDerive()&#123;&#125;</span></span><br><span class="line">    ~CDerive() &#123;&#125;;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_var;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CDerive* pDerives = <span class="keyword">new</span> CDerive[<span class="number">10</span>]; <span class="comment">// can't init</span></span><br><span class="line">    <span class="keyword">int</span> *pVar = <span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">10</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        pDerive[i].Init(pVar);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> pDerives;	<span class="comment">// pDerives is an array</span></span><br><span class="line">  <span class="comment">//delete[] pDerives;</span></span><br><span class="line">    <span class="keyword">delete</span> pVar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-the-following-code-could-not-be-compiled-give-two-ways-to-fix-it"><a class="markdownIt-Anchor" href="#3-the-following-code-could-not-be-compiled-give-two-ways-to-fix-it"></a> 3. The following code could not be compiled, give TWO ways to fix it.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CFoo() : m_var(<span class="number">0</span>) &#123;&#125;;</span><br><span class="line">    ~CFoo() &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">AddAndCheck</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m_var += <span class="number">5</span>;</span><br><span class="line">        <span class="keyword">return</span> m_var &lt; <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_var;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>第一种：丢掉const</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CFoo() : m_var(<span class="number">0</span>) &#123;&#125;;</span><br><span class="line">    ~CFoo() &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">AddAndCheck</span><span class="params">()</span><span class="comment">// drop the const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m_var += <span class="number">5</span>;</span><br><span class="line">        <span class="keyword">return</span> m_var &lt; <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_var;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>第二种：加上mutable</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CFoo() : m_var(<span class="number">0</span>) &#123;&#125;;</span><br><span class="line">    ~CFoo() &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">AddAndCheck</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m_var += <span class="number">5</span>;</span><br><span class="line">        <span class="keyword">return</span> m_var &lt; <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">mutable</span> <span class="keyword">int</span> m_var;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="4-what-are-wrong-in-the-following-code-provide-your-fix"><a class="markdownIt-Anchor" href="#4-what-are-wrong-in-the-following-code-provide-your-fix"></a> 4. What are wrong in the following code? Provide your fix.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INCREASE(a) ++a </span></span><br><span class="line"><span class="comment">// #define INCREASE(a) a+1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">int</span> b = <span class="number">7</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;INCREASE(a * b)&lt;&lt;<span class="built_in">endl</span>; <span class="comment">// 等价于(++a) * b</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-what-are-wrong-in-the-following-code-why"><a class="markdownIt-Anchor" href="#5-what-are-wrong-in-the-following-code-why"></a> 5. What are wrong in the following code? Why?</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">GetStaticBuffer</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">100</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">buffer</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>buffer在栈上分配的，返回之后释放了。</p>
+<h4 id="6-with-default-configuration-in-the-following-code-function-fooa-is-ok-but-foob-has-issues-why"><a class="markdownIt-Anchor" href="#6-with-default-configuration-in-the-following-code-function-fooa-is-ok-but-foob-has-issues-why"></a> 6. With default configuration, in the following code, function fooA is OK but fooB has issues, why?</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> TEN_MEGA_BYTES = <span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fooA</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *pBuffer = <span class="keyword">new</span> <span class="keyword">char</span>[TEN_MEGA_BYTES];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fooB</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> <span class="built_in">buffer</span>[TEN_MEGA_BYTES] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>fooA()</code>在堆上进行分配，<code>fooB()</code>在栈上进行分配，栈小，会爆。</p>
+<h4 id="7-in-the-following-code-line-32-i-want-to-give-student_teacher-as-the-input-parameter-but-by-mistake-i-typed-student-the-compiling-succeeded-anyway-why-if-i-want-the-compiling-be-failed-in-this-condition-how-to-do"><a class="markdownIt-Anchor" href="#7-in-the-following-code-line-32-i-want-to-give-student_teacher-as-the-input-parameter-but-by-mistake-i-typed-student-the-compiling-succeeded-anyway-why-if-i-want-the-compiling-be-failed-in-this-condition-how-to-do"></a> 7. In the following code, line 32, I want to give “student_teacher” as the input parameter, but by mistake, I typed “student”. The compiling succeeded anyway. Why? If I want the compiling be failed in this condition, how to do?</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CStudent</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CStudent() &#123;&#125;;</span><br><span class="line">    ~CStudent() &#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CTeacher</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CTeacher() &#123;&#125;;</span><br><span class="line">  <span class="comment">// delete this part------------</span></span><br><span class="line">    CTeacher(CStudent student)</span><br><span class="line">        : m_student(student)</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    ~CTeacher() &#123;&#125;;</span><br><span class="line">  <span class="comment">// end here -------------------</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Teach</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    CStudent m_student;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(CTeacher teacher)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    teacher.Teach();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CStudent student;</span><br><span class="line">    CTeacher student_teacher;</span><br><span class="line">    foo(student);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="8-what-is-the-output-of-the-following-code"><a class="markdownIt-Anchor" href="#8-what-is-the-output-of-the-following-code"></a> 8. What is the output of the following code?</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fooVar = <span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> *pVar, <span class="keyword">int</span>&amp; var)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    pVar = &amp;fooVar;</span><br><span class="line">    var = fooVar;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var1 = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> var2 = <span class="number">2</span>;</span><br><span class="line">    foo(&amp;var1, var2);</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;var1&lt;&lt;<span class="string">":"</span>&lt;&lt;var2&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1:10</p>
+<h4 id="9-how-to-run-some-code-before-main-function-is-called"><a class="markdownIt-Anchor" href="#9-how-to-run-some-code-before-main-function-is-called"></a> 9. How to run some code before main function is called?</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">code_before_main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"code before main()"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> useless = code_before_main();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"main() start"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="10-what-the-difference-are-between"><a class="markdownIt-Anchor" href="#10-what-the-difference-are-between"></a> 10. What the difference are between</h4>
+<p>std::vector::resize() and std::vector::reserve()</p>
+<p>std::vector::size() and std::vector::capacity()</p>
+<p><code>size()</code>对应的是有效空间，而<code>capacity()</code>对应的是实际空间。</p>
+<p><code>resize()</code>调整的是有效空间的大小，<code>reserve()</code>调整的是实际空间大小。</p>
+<h4 id="11-template-greater-is-often-used-when-operating-the-stl-containers-please-give-an-implementation-of-greater"><a class="markdownIt-Anchor" href="#11-template-greater-is-often-used-when-operating-the-stl-containers-please-give-an-implementation-of-greater"></a> 11. Template greater&lt;&gt; is often used when operating the STL containers. Please give an implementation of greater&lt;&gt;.</h4>
+<p>Hints: Two template parameters. One is a number to be compared as base, another is the element to be compared.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt; </span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">greater</span>&#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y)</span> <span class="keyword">const</span> </span></span><br><span class="line"><span class="function">  	</span>&#123;<span class="keyword">return</span> x&gt;y;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="12-say-we-have-a-class-named-printer-which-has-a-member-function-as-print-now-theres-a-container-as-vector-please-give-a-lambda-expression-which-could-be-used-in-for_each-to-call-print-function-for-every-instance-in-vector"><a class="markdownIt-Anchor" href="#12-say-we-have-a-class-named-printer-which-has-a-member-function-as-print-now-theres-a-container-as-vector-please-give-a-lambda-expression-which-could-be-used-in-for_each-to-call-print-function-for-every-instance-in-vector"></a> 12. Say we have a class named Printer which has a member function as Print(). Now there’s a container as vector. Please give a lambda expression which could be used in for_each() to call Print() function for every instance in vector.</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for_each(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), [](<span class="keyword">const</span> T&amp; n) &#123; Printer().Print(n); &#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/01/goodbye-2019/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1512,88 +1621,11 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/DL-with-PyTorch-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims' Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/11/DL-with-PyTorch-1/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 1</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-11 13:17:08" itemprop="dateCreated datePublished" datetime="2019-12-11T13:17:08+08:00">2019-12-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-19 11:20:51" itemprop="dateModified" datetime="2019-12-19T11:20:51+08:00">2019-12-19</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="pytorch拥有的工具"><a class="markdownIt-Anchor" href="#pytorch拥有的工具"></a> PyTorch拥有的工具</h2>
-<ul>
-<li>自动求导：<code>torch.autograd</code></li>
-<li>数据加载与处理：<code>torch.util.data</code>
-<ul>
-<li><code>Dataset</code></li>
-<li><code>DataLoader</code><br />
-生成子进程从Dataset加载数据</li>
-</ul>
-</li>
-<li>多GPU或者多机器训练：<code>torch.nn.DataParallel</code>, <code>torch.distributed</code></li>
-<li>优化器：<code>torch.optim</code></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1659,14 +1691,14 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
