@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/about/index.html</loc>
+    
+    <lastmod>2020-07-10T10:57:39.708Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/07/07/2019-AAIS-summer/</loc>
     
     <lastmod>2020-07-07T10:59:43.889Z</lastmod>
@@ -68,13 +75,6 @@
     <loc>http://yoursite.com/2020/05/07/CF-1342E/</loc>
     
     <lastmod>2020-05-07T13:38:56.907Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/about/index.html</loc>
-    
-    <lastmod>2020-04-29T11:53:41.698Z</lastmod>
     
   </url>
   
