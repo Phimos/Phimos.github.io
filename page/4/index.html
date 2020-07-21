@@ -176,6 +176,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/14/DL-with-PyTorch-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims' Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/14/DL-with-PyTorch-4/" class="post-title-link" itemprop="url">[读书笔记] Deep Learning with Pytorch -- Chapter 4</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-14 06:03:32" itemprop="dateCreated datePublished" datetime="2019-12-14T06:03:32+08:00">2019-12-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-19 11:21:27" itemprop="dateModified" datetime="2019-12-19T11:21:27+08:00">2019-12-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>开普勒从数据中得到三定律，同样利用的是现在数据科学的思想，他的步骤如下：</p>
+<ol>
+<li>得到数据</li>
+<li>可视化数据</li>
+<li>选择最简单的可能模型来拟合数据</li>
+<li>将数据分成两部分，一部分用来推导，另一部分用来检验</li>
+<li>从一个奇怪的初始值除法逐渐迭代</li>
+<li>在独立的验证集上检验所得到的模型</li>
+<li>尝试对模型进行解释</li>
+</ol>
+<p>今日的学习方法实际上就是自动寻找适合的函数形式来拟合输入输出，流程如下：</p>
+<p>输入测试数据-&gt;计算输出-&gt;计算误差-&gt;反向传播-&gt;更新权重</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1g9z168ny9oj31cx0u04kh.jpg" alt="image-20191217003050436" /></p>
+<h2 id="问题示例"><a class="markdownIt-Anchor" href="#问题示例"></a> 问题示例</h2>
+<p>一个简单的摄氏度和华氏度转换的方法。</p>
+<p>定义model和loss函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(t_u, w, b)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> w * t_u + b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss_fn</span><span class="params">(t_p, t_c)</span>:</span></span><br><span class="line">  squared_diffs = (t_p - t_c)**<span class="number">2</span></span><br><span class="line">  <span class="keyword">return</span> squared_diffs.mean()</span><br></pre></td></tr></table></figure>
+<p>正向过程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">w = torch.ones(<span class="number">1</span>)</span><br><span class="line">b = torch.zeros(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">t_p = model(t_u, w, b)</span><br><span class="line"></span><br><span class="line">loss = loss_fn(t_p, t_c)</span><br></pre></td></tr></table></figure>
+<p>采用梯度下降进行反向传播，这里采用最简单的方法进行梯度的模拟计算：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">delta = <span class="number">0.1</span></span><br><span class="line">learning_rate = <span class="number">1e-2</span></span><br><span class="line"></span><br><span class="line">loss_rate_of_change_w = (loss_fn(model(t_u, w+delta, b), t_c) - (loss_fn(model, t_u, w-delta, b), t_c)) / (<span class="number">2.0</span>*delta)</span><br><span class="line"></span><br><span class="line">loss_rate_of_change_b = (loss_fn(model(t_u, w, b+delta), t_c) - (loss_fn(model, t_u, w, b-delta), t_c)) / (<span class="number">2.0</span>*delta)</span><br><span class="line"></span><br><span class="line">w -= learning_rate * loss_rate_of_change_w</span><br><span class="line">b -= learning_rate * loss_rate_of_change_b</span><br></pre></td></tr></table></figure>
+<p>上面这种方法会存在误差，可以考虑采用链式法则进行导数的计算：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss_fn</span><span class="params">(t_p, t_c)</span>:</span></span><br><span class="line">  squared_diffs = (t_p - t_c)**<span class="number">2</span></span><br><span class="line">  <span class="keyword">return</span> squared_diffs.mean()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dloss_fn</span><span class="params">(t_p, t_c)</span>:</span></span><br><span class="line">  dsq_diffs = <span class="number">2</span> * (t_p - t_c)</span><br><span class="line">  <span class="keyword">return</span> dsq_diffs</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(t_u, w, b)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> w * t_u + b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dmodel_dw</span><span class="params">(t_u, w, b)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> t_u</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dmodel_db</span><span class="params">(t_u, w, b)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">1.0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">grad_fn</span><span class="params">(t_u, t_c, t_p, w, b)</span>:</span></span><br><span class="line">  dloss_dw = dloss_fn(t_p, t_c) * dmodel_dw(t_u, w, b)</span><br><span class="line">  dloss_db = dloss_fn(t_p, t_c) * dmodel_db(t_u, w, b)</span><br><span class="line">  <span class="keyword">return</span> torch.stack([dloss_dw.mean(), dloss_db.mean()])	<span class="comment"># 利用stack合成一个tensor</span></span><br></pre></td></tr></table></figure>
+<p>对于一个训练轮次可以写成下面的样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">training_loop</span><span class="params">(n_epochs, learning_rate, params, t_u, t_c)</span>:</span></span><br><span class="line">  <span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1</span>, n_epochs+<span class="number">1</span>):</span><br><span class="line">    w, b = params</span><br><span class="line">    </span><br><span class="line">    t_p = model(t_u, w, b)</span><br><span class="line">    loss = loss_fn(t_p, t_c)</span><br><span class="line">    grad = grad_fn(t_u, t_c, t_p, w, b)</span><br><span class="line">    </span><br><span class="line">    params = parmas - learning_rate * grad</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">"Epoch %d, Loss %f"</span> % (epoch, float(loss)))</span><br><span class="line">  <span class="keyword">return</span> params</span><br></pre></td></tr></table></figure>
+<p>对于不同的参数，可能得到的梯度大小会很不一样，一般将所有的输入做一个标准化的操作，从而能够使得训练更有效的收敛。</p>
+<h2 id="autograd"><a class="markdownIt-Anchor" href="#autograd"></a> Autograd</h2>
+<p>autograd可以自动的根据运算求出导数，而不需要手动的对复杂的函数进行计算，考虑用autograd重写之前的内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(t_u, w, b)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> w * t_u + b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss_fn</span><span class="params">(t_p, t_c)</span>:</span></span><br><span class="line">  squared_diffs = (t_p - t_c)**<span class="number">2</span></span><br><span class="line">  <span class="keyword">return</span> squared_diffs.mean()</span><br><span class="line"></span><br><span class="line">params = torch.tensor([<span class="number">1.0</span>, <span class="number">0.0</span>], requires_grad = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p><code>requires_grad</code>的效果是让pytorch在运算过程中对他的值进行追踪，每个参数都有<code>.grad</code>对象，正常情况下值为<code>None</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">loss = loss_fn(model(t_u, *params), t_c) <span class="comment"># 加*相当于对参数进行解包，分别作为w,b传入</span></span><br><span class="line">loss.backward()</span><br></pre></td></tr></table></figure>
+<p>通过<code>backward()</code>反传之后，<code>params.grad</code>不再是<code>None</code>。</p>
+<p>多次运算，<code>params</code>上的梯度会被叠加，为了防止这样的事情出现，需要将梯度清零：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> params.grad <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">  params.grad.zero_()</span><br></pre></td></tr></table></figure>
+<p>现在训练过程长这个样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">training_loop</span><span class="params">(n_epochs, learning_rate, params, t_u, t_c)</span>:</span></span><br><span class="line">  <span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1</span>, n_epochs + <span class="number">1</span>):</span><br><span class="line">    <span class="keyword">if</span> params.grad <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">      params.grad.zero_()</span><br><span class="line">    </span><br><span class="line">    t_p = model(t_u, *params)</span><br><span class="line">    loss = loss_fn(t_p, t_c)</span><br><span class="line">    loss.backward()</span><br><span class="line">    </span><br><span class="line">    params = (params - learning_rate * params.grad).detach().requires_grad_()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> epoch % <span class="number">500</span> == <span class="number">0</span>:</span><br><span class="line">      print(<span class="string">'Epoch %d, Loss %f'</span> % (epoch, float(loss)))</span><br><span class="line">  <span class="keyword">return</span> params</span><br></pre></td></tr></table></figure>
+<p><code>detach</code>将旧版本的参数从运算图中分离，<code>requires_grad_</code>使得参数可以被追踪导数。调用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">training_loop(</span><br><span class="line">	n_epochs = <span class="number">5000</span>,</span><br><span class="line">	learning_rate = <span class="number">1e-2</span>,</span><br><span class="line">	params = torch.tensor([<span class="number">1.0</span>,<span class="number">0.0</span>], requires_grad = <span class="literal">True</span>),</span><br><span class="line">	t_u = t_un,</span><br><span class="line">	t_c = t_c)</span><br></pre></td></tr></table></figure>
+<h3 id="optimizer"><a class="markdownIt-Anchor" href="#optimizer"></a> Optimizer</h3>
+<p>可以通过下面的方法列出所有的优化器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"></span><br><span class="line">dir(optim)</span><br></pre></td></tr></table></figure>
+<p>每个优化器在构造的时候都针对一系列的参数(requires_grad = True)，每个参数都被存在优化器内部，使得可以通过访问<code>grad</code>来对他们进行更新。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1g9zi1b5630j317n0rr1at.jpg" alt="image-20191217101422617" /></p>
+<p>每个优化器都有两个方法：<code>zero_grad</code>和<code>step</code>，前者将所有在构建优化器时候传入的参数的<code>grad</code>全部设置成0，后者通过优化器自己的方法利用梯度对参数进行更新。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">params = torch.tensor([<span class="number">1.0</span>, <span class="number">0.0</span>], requires_grad = <span class="literal">True</span>)</span><br><span class="line">learning_rate = <span class="number">1e-5</span></span><br><span class="line">optimizer = optim.SGD([params], lr = learning_rate)</span><br><span class="line"></span><br><span class="line">t_p = model(t_un, * params)</span><br><span class="line">loss = loss_fn(t_p, t_c)</span><br><span class="line"><span class="comment"># 正常的流程</span></span><br><span class="line">optimizer.zero_grad()</span><br><span class="line">loss.backward()</span><br><span class="line">optimizer.step()</span><br></pre></td></tr></table></figure>
+<p>更改之后的训练流程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">training_loop</span><span class="params">(n_epochs, optimizer, params, t_u, t_c)</span>:</span></span><br><span class="line">  <span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1</span>, nepochs + <span class="number">1</span>):</span><br><span class="line">    t_p = model(t_u, *params)</span><br><span class="line">    loss = loss_fn(t_p, t_c)</span><br><span class="line">    </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> epoch%<span class="number">500</span> == <span class="number">0</span>:</span><br><span class="line">      print(<span class="string">'Epoch %d, Loss %f'</span> % (epoch, float(loss)))</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">return</span> params</span><br></pre></td></tr></table></figure>
+<h3 id="训练集验证集和过拟合"><a class="markdownIt-Anchor" href="#训练集验证集和过拟合"></a> 训练集，验证集和过拟合</h3>
+<p>规则一：如果训练loss不下降，那么可能是模型太简单，或者是输入的信息不能很好地解释输出</p>
+<p>规则二：如果验证集loss偏离，说明过拟合</p>
+<p>缓解过拟合方法：</p>
+<ol>
+<li>添加正则项</li>
+<li>给输入加噪声生成新的数据</li>
+<li>采用更简单的模型</li>
+</ol>
+<p>可以考虑利用随机排序的下标来获得shuffle后的训练集和验证集：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n_samples = t_u.shape[<span class="number">0</span>]</span><br><span class="line">n_val = int(<span class="number">0.2</span>*n_sample)</span><br><span class="line"></span><br><span class="line">shuffled_indices = torch.randperm(n_samples)</span><br><span class="line"></span><br><span class="line">train_indices = shuffled_indices[:-n_val]</span><br><span class="line">val_indices = shuffled_indices[-n_val:]</span><br></pre></td></tr></table></figure>
+<p>由于并不会考虑在验证集的loss上反向传播，为验证集构造运算图是非常浪费内存和时间的事情，可以考虑利用<code>torch.no_grad</code>来提升效率：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">training_loop</span><span class="params">(n_epochs, optimizer, params, train_t_u, val_t_u, train_t_c, val_t_c)</span>:</span></span><br><span class="line">  <span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1</span>, n_epochs + <span class="number">1</span>):</span><br><span class="line">    train_t_p = model(train_t_u, *params)</span><br><span class="line">    train_loss = loss_fn(train_t_p, train_t_c)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">      val_t_p = model(val_t_u, *params)</span><br><span class="line">      val_loss = loss_fn(val_t_p, val_t_c)</span><br><span class="line">      <span class="keyword">assert</span> val_loss.requires_grad == <span class="literal">False</span>  <span class="comment"># 确认所有参数的requires_grad是False</span></span><br><span class="line">      </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    train_loss.backward()</span><br><span class="line">    optimizer.step()</span><br></pre></td></tr></table></figure>
+<p>或者可以使用<code>set_grad_enabled</code>来条件的启用反向传播</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_forward</span><span class="params">(t_u, t_c, is_train)</span>:</span></span><br><span class="line">  <span class="keyword">with</span> torch.set_grad_enabled(is_train):</span><br><span class="line">    t_p = model(t_u, *params)</span><br><span class="line">    loss = loss_fn(t_p, t_c)</span><br><span class="line">  <span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/12/DL-with-PyTorch-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -652,7 +778,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
