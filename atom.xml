@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="http://phimos.github.io/"/>
   <updated>2020-12-31T04:21:31.946Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>http://phimos.github.io/</id>
   
   <author>
     <name>Pims</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Goodbye 2020</title>
-    <link href="http://yoursite.com/2020/12/31/goodbye-2020/"/>
-    <id>http://yoursite.com/2020/12/31/goodbye-2020/</id>
+    <link href="http://phimos.github.io/2020/12/31/goodbye-2020/"/>
+    <id>http://phimos.github.io/2020/12/31/goodbye-2020/</id>
     <published>2020-12-31T04:20:42.000Z</published>
     <updated>2020-12-31T04:21:31.946Z</updated>
     
@@ -43,8 +43,8 @@
   
   <entry>
     <title>CQ资产面试回忆</title>
-    <link href="http://yoursite.com/2020/09/07/ChengQi-Capital-Interview-2/"/>
-    <id>http://yoursite.com/2020/09/07/ChengQi-Capital-Interview-2/</id>
+    <link href="http://phimos.github.io/2020/09/07/ChengQi-Capital-Interview-2/"/>
+    <id>http://phimos.github.io/2020/09/07/ChengQi-Capital-Interview-2/</id>
     <published>2020-09-07T14:29:23.000Z</published>
     <updated>2020-10-19T15:25:31.860Z</updated>
     
@@ -64,14 +64,14 @@
     
     
     
-      <category term="Interview" scheme="http://yoursite.com/tags/Interview/"/>
+      <category term="Interview" scheme="http://phimos.github.io/tags/Interview/"/>
     
   </entry>
   
   <entry>
     <title>CQ资产笔试题目</title>
-    <link href="http://yoursite.com/2020/09/07/ChengQi-Capital-Interview-1/"/>
-    <id>http://yoursite.com/2020/09/07/ChengQi-Capital-Interview-1/</id>
+    <link href="http://phimos.github.io/2020/09/07/ChengQi-Capital-Interview-1/"/>
+    <id>http://phimos.github.io/2020/09/07/ChengQi-Capital-Interview-1/</id>
     <published>2020-09-07T14:24:33.000Z</published>
     <updated>2020-09-07T14:28:28.303Z</updated>
     
@@ -92,14 +92,14 @@
     
     
     
-      <category term="Interview" scheme="http://yoursite.com/tags/Interview/"/>
+      <category term="Interview" scheme="http://phimos.github.io/tags/Interview/"/>
     
   </entry>
   
   <entry>
     <title>[论文笔记] A Survey of Model Compression and Acceleration</title>
-    <link href="http://yoursite.com/2020/08/28/RN-A-Survey-of-Model-Compression-and-Acceleration/"/>
-    <id>http://yoursite.com/2020/08/28/RN-A-Survey-of-Model-Compression-and-Acceleration/</id>
+    <link href="http://phimos.github.io/2020/08/28/RN-A-Survey-of-Model-Compression-and-Acceleration/"/>
+    <id>http://phimos.github.io/2020/08/28/RN-A-Survey-of-Model-Compression-and-Acceleration/</id>
     <published>2020-08-28T15:28:19.000Z</published>
     <updated>2020-08-28T15:33:11.842Z</updated>
     
@@ -116,18 +116,18 @@
     
     
     
-      <category term="Paper Reading" scheme="http://yoursite.com/tags/Paper-Reading/"/>
+      <category term="Paper Reading" scheme="http://phimos.github.io/tags/Paper-Reading/"/>
     
-      <category term="Survey" scheme="http://yoursite.com/tags/Survey/"/>
+      <category term="Survey" scheme="http://phimos.github.io/tags/Survey/"/>
     
-      <category term="Model Compression" scheme="http://yoursite.com/tags/Model-Compression/"/>
+      <category term="Model Compression" scheme="http://phimos.github.io/tags/Model-Compression/"/>
     
   </entry>
   
   <entry>
     <title>[论文笔记] (CGD) Combination of Multiple Global Descriptors for Image Retrieval</title>
-    <link href="http://yoursite.com/2020/08/13/RN-CGD/"/>
-    <id>http://yoursite.com/2020/08/13/RN-CGD/</id>
+    <link href="http://phimos.github.io/2020/08/13/RN-CGD/"/>
+    <id>http://phimos.github.io/2020/08/13/RN-CGD/</id>
     <published>2020-08-13T01:29:51.000Z</published>
     <updated>2020-08-13T07:43:25.852Z</updated>
     
@@ -145,18 +145,18 @@
     
     
     
-      <category term="Paper Reading" scheme="http://yoursite.com/tags/Paper-Reading/"/>
+      <category term="Paper Reading" scheme="http://phimos.github.io/tags/Paper-Reading/"/>
     
-      <category term="Computer Vision" scheme="http://yoursite.com/tags/Computer-Vision/"/>
+      <category term="Computer Vision" scheme="http://phimos.github.io/tags/Computer-Vision/"/>
     
-      <category term="Image Retrieval" scheme="http://yoursite.com/tags/Image-Retrieval/"/>
+      <category term="Image Retrieval" scheme="http://phimos.github.io/tags/Image-Retrieval/"/>
     
   </entry>
   
   <entry>
     <title>Jupyter Lab 虚拟环境配置</title>
-    <link href="http://yoursite.com/2020/08/11/jupyter-lab-env/"/>
-    <id>http://yoursite.com/2020/08/11/jupyter-lab-env/</id>
+    <link href="http://phimos.github.io/2020/08/11/jupyter-lab-env/"/>
+    <id>http://phimos.github.io/2020/08/11/jupyter-lab-env/</id>
     <published>2020-08-11T13:28:09.000Z</published>
     <updated>2020-08-11T13:32:43.304Z</updated>
     
@@ -178,8 +178,8 @@
   
   <entry>
     <title>2020北大叉院/信科保研经历分享</title>
-    <link href="http://yoursite.com/2020/07/30/2020%E4%BF%9D%E7%A0%94/"/>
-    <id>http://yoursite.com/2020/07/30/2020%E4%BF%9D%E7%A0%94/</id>
+    <link href="http://phimos.github.io/2020/07/30/2020%E4%BF%9D%E7%A0%94/"/>
+    <id>http://phimos.github.io/2020/07/30/2020%E4%BF%9D%E7%A0%94/</id>
     <published>2020-07-30T09:16:54.000Z</published>
     <updated>2020-07-30T09:24:21.114Z</updated>
     
@@ -197,14 +197,14 @@
     
     
     
-      <category term="Experience" scheme="http://yoursite.com/tags/Experience/"/>
+      <category term="Experience" scheme="http://phimos.github.io/tags/Experience/"/>
     
   </entry>
   
   <entry>
     <title>[论文笔记] (SPP) Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition</title>
-    <link href="http://yoursite.com/2020/07/21/RN-SPPLayer/"/>
-    <id>http://yoursite.com/2020/07/21/RN-SPPLayer/</id>
+    <link href="http://phimos.github.io/2020/07/21/RN-SPPLayer/"/>
+    <id>http://phimos.github.io/2020/07/21/RN-SPPLayer/</id>
     <published>2020-07-21T14:37:00.000Z</published>
     <updated>2020-07-21T14:38:31.775Z</updated>
     
@@ -223,16 +223,16 @@
     
     
     
-      <category term="Paper Reading" scheme="http://yoursite.com/tags/Paper-Reading/"/>
+      <category term="Paper Reading" scheme="http://phimos.github.io/tags/Paper-Reading/"/>
     
-      <category term="Computer Vision" scheme="http://yoursite.com/tags/Computer-Vision/"/>
+      <category term="Computer Vision" scheme="http://phimos.github.io/tags/Computer-Vision/"/>
     
   </entry>
   
   <entry>
     <title>Codeforces 1368E - Ski Accidents</title>
-    <link href="http://yoursite.com/2020/07/14/CF-1368E/"/>
-    <id>http://yoursite.com/2020/07/14/CF-1368E/</id>
+    <link href="http://phimos.github.io/2020/07/14/CF-1368E/"/>
+    <id>http://phimos.github.io/2020/07/14/CF-1368E/</id>
     <published>2020-07-14T01:36:42.000Z</published>
     <updated>2020-07-14T01:38:54.672Z</updated>
     
@@ -250,20 +250,20 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="Codeforces" scheme="http://yoursite.com/tags/Codeforces/"/>
+      <category term="Codeforces" scheme="http://phimos.github.io/tags/Codeforces/"/>
     
-      <category term="Graphs" scheme="http://yoursite.com/tags/Graphs/"/>
+      <category term="Graphs" scheme="http://phimos.github.io/tags/Graphs/"/>
     
-      <category term="Greedy" scheme="http://yoursite.com/tags/Greedy/"/>
+      <category term="Greedy" scheme="http://phimos.github.io/tags/Greedy/"/>
     
   </entry>
   
   <entry>
     <title>2019大数据研究中心夏令营上机考试题解</title>
-    <link href="http://yoursite.com/2020/07/07/2019-AAIS-summer/"/>
-    <id>http://yoursite.com/2020/07/07/2019-AAIS-summer/</id>
+    <link href="http://phimos.github.io/2020/07/07/2019-AAIS-summer/"/>
+    <id>http://phimos.github.io/2020/07/07/2019-AAIS-summer/</id>
     <published>2020-07-07T10:55:22.000Z</published>
     <updated>2020-07-07T10:59:43.889Z</updated>
     
@@ -282,16 +282,16 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="Interview" scheme="http://yoursite.com/tags/Interview/"/>
+      <category term="Interview" scheme="http://phimos.github.io/tags/Interview/"/>
     
   </entry>
   
   <entry>
     <title>2018大数据研究中心夏令营上机考试题解</title>
-    <link href="http://yoursite.com/2020/07/07/2018-AAIS-summer/"/>
-    <id>http://yoursite.com/2020/07/07/2018-AAIS-summer/</id>
+    <link href="http://phimos.github.io/2020/07/07/2018-AAIS-summer/"/>
+    <id>http://phimos.github.io/2020/07/07/2018-AAIS-summer/</id>
     <published>2020-07-07T06:54:18.000Z</published>
     <updated>2020-07-07T10:56:41.940Z</updated>
     
@@ -310,16 +310,16 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="Interview" scheme="http://yoursite.com/tags/Interview/"/>
+      <category term="Interview" scheme="http://phimos.github.io/tags/Interview/"/>
     
   </entry>
   
   <entry>
     <title>Python使用logger保存训练参数日志</title>
-    <link href="http://yoursite.com/2020/07/06/logging-for-training/"/>
-    <id>http://yoursite.com/2020/07/06/logging-for-training/</id>
+    <link href="http://phimos.github.io/2020/07/06/logging-for-training/"/>
+    <id>http://phimos.github.io/2020/07/06/logging-for-training/</id>
     <published>2020-07-06T05:15:45.000Z</published>
     <updated>2020-07-06T05:17:23.539Z</updated>
     
@@ -341,8 +341,8 @@
   
   <entry>
     <title>[论文笔记] Deep Gradient Compression: Reducing the Communication Bandwidth for Distributed Training</title>
-    <link href="http://yoursite.com/2020/07/05/RN-DGC/"/>
-    <id>http://yoursite.com/2020/07/05/RN-DGC/</id>
+    <link href="http://phimos.github.io/2020/07/05/RN-DGC/"/>
+    <id>http://phimos.github.io/2020/07/05/RN-DGC/</id>
     <published>2020-07-05T15:00:24.000Z</published>
     <updated>2020-07-05T15:04:12.338Z</updated>
     
@@ -360,16 +360,16 @@
     
     
     
-      <category term="Paper Reading" scheme="http://yoursite.com/tags/Paper-Reading/"/>
+      <category term="Paper Reading" scheme="http://phimos.github.io/tags/Paper-Reading/"/>
     
-      <category term="Distributed Training" scheme="http://yoursite.com/tags/Distributed-Training/"/>
+      <category term="Distributed Training" scheme="http://phimos.github.io/tags/Distributed-Training/"/>
     
   </entry>
   
   <entry>
     <title>Codeforces 1363E - Tree Shuffling</title>
-    <link href="http://yoursite.com/2020/06/30/CF-1363E/"/>
-    <id>http://yoursite.com/2020/06/30/CF-1363E/</id>
+    <link href="http://phimos.github.io/2020/06/30/CF-1363E/"/>
+    <id>http://phimos.github.io/2020/06/30/CF-1363E/</id>
     <published>2020-06-30T10:27:15.000Z</published>
     <updated>2020-07-14T01:38:43.679Z</updated>
     
@@ -387,20 +387,20 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="Codeforces" scheme="http://yoursite.com/tags/Codeforces/"/>
+      <category term="Codeforces" scheme="http://phimos.github.io/tags/Codeforces/"/>
     
-      <category term="DFS" scheme="http://yoursite.com/tags/DFS/"/>
+      <category term="DFS" scheme="http://phimos.github.io/tags/DFS/"/>
     
-      <category term="Dynamic programming" scheme="http://yoursite.com/tags/Dynamic-programming/"/>
+      <category term="Dynamic programming" scheme="http://phimos.github.io/tags/Dynamic-programming/"/>
     
   </entry>
   
   <entry>
     <title>MIT6.828 Lab5</title>
-    <link href="http://yoursite.com/2020/05/20/6828-lab5/"/>
-    <id>http://yoursite.com/2020/05/20/6828-lab5/</id>
+    <link href="http://phimos.github.io/2020/05/20/6828-lab5/"/>
+    <id>http://phimos.github.io/2020/05/20/6828-lab5/</id>
     <published>2020-05-20T06:08:08.000Z</published>
     <updated>2020-05-20T06:08:47.230Z</updated>
     
@@ -418,16 +418,16 @@
     
     
     
-      <category term="6.828" scheme="http://yoursite.com/tags/6-828/"/>
+      <category term="6.828" scheme="http://phimos.github.io/tags/6-828/"/>
     
-      <category term="Operating System" scheme="http://yoursite.com/tags/Operating-System/"/>
+      <category term="Operating System" scheme="http://phimos.github.io/tags/Operating-System/"/>
     
   </entry>
   
   <entry>
     <title>[论文笔记] Bag of Tricks for Image Classification with Convolutional Neural Networks</title>
-    <link href="http://yoursite.com/2020/05/10/RN-Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/"/>
-    <id>http://yoursite.com/2020/05/10/RN-Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/</id>
+    <link href="http://phimos.github.io/2020/05/10/RN-Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/"/>
+    <id>http://phimos.github.io/2020/05/10/RN-Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/</id>
     <published>2020-05-10T06:30:29.000Z</published>
     <updated>2020-05-10T06:34:59.332Z</updated>
     
@@ -445,16 +445,16 @@
     
     
     
-      <category term="Paper Reading" scheme="http://yoursite.com/tags/Paper-Reading/"/>
+      <category term="Paper Reading" scheme="http://phimos.github.io/tags/Paper-Reading/"/>
     
-      <category term="Computer Vision" scheme="http://yoursite.com/tags/Computer-Vision/"/>
+      <category term="Computer Vision" scheme="http://phimos.github.io/tags/Computer-Vision/"/>
     
   </entry>
   
   <entry>
     <title>Codeforces 1345D - Monopole Magnets</title>
-    <link href="http://yoursite.com/2020/05/09/CF-1345D/"/>
-    <id>http://yoursite.com/2020/05/09/CF-1345D/</id>
+    <link href="http://phimos.github.io/2020/05/09/CF-1345D/"/>
+    <id>http://phimos.github.io/2020/05/09/CF-1345D/</id>
     <published>2020-05-09T03:44:04.000Z</published>
     <updated>2020-07-14T01:38:49.590Z</updated>
     
@@ -472,20 +472,20 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="BFS" scheme="http://yoursite.com/tags/BFS/"/>
+      <category term="BFS" scheme="http://phimos.github.io/tags/BFS/"/>
     
-      <category term="Codeforces" scheme="http://yoursite.com/tags/Codeforces/"/>
+      <category term="Codeforces" scheme="http://phimos.github.io/tags/Codeforces/"/>
     
-      <category term="Constructive Algorithm" scheme="http://yoursite.com/tags/Constructive-Algorithm/"/>
+      <category term="Constructive Algorithm" scheme="http://phimos.github.io/tags/Constructive-Algorithm/"/>
     
   </entry>
   
   <entry>
     <title>Codeforces 1342E - Placing Rooks</title>
-    <link href="http://yoursite.com/2020/05/07/CF-1342E/"/>
-    <id>http://yoursite.com/2020/05/07/CF-1342E/</id>
+    <link href="http://phimos.github.io/2020/05/07/CF-1342E/"/>
+    <id>http://phimos.github.io/2020/05/07/CF-1342E/</id>
     <published>2020-05-07T12:48:58.000Z</published>
     <updated>2020-07-14T01:38:58.201Z</updated>
     
@@ -503,18 +503,18 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="Codeforces" scheme="http://yoursite.com/tags/Codeforces/"/>
+      <category term="Codeforces" scheme="http://phimos.github.io/tags/Codeforces/"/>
     
-      <category term="Math" scheme="http://yoursite.com/tags/Math/"/>
+      <category term="Math" scheme="http://phimos.github.io/tags/Math/"/>
     
   </entry>
   
   <entry>
     <title>MIT6.828 Lab4</title>
-    <link href="http://yoursite.com/2020/04/29/6828-lab4/"/>
-    <id>http://yoursite.com/2020/04/29/6828-lab4/</id>
+    <link href="http://phimos.github.io/2020/04/29/6828-lab4/"/>
+    <id>http://phimos.github.io/2020/04/29/6828-lab4/</id>
     <published>2020-04-29T09:45:48.000Z</published>
     <updated>2020-04-29T09:47:21.759Z</updated>
     
@@ -532,16 +532,16 @@
     
     
     
-      <category term="6.828" scheme="http://yoursite.com/tags/6-828/"/>
+      <category term="6.828" scheme="http://phimos.github.io/tags/6-828/"/>
     
-      <category term="Operating System" scheme="http://yoursite.com/tags/Operating-System/"/>
+      <category term="Operating System" scheme="http://phimos.github.io/tags/Operating-System/"/>
     
   </entry>
   
   <entry>
     <title>Codeforces 1341F - Nastya and Time Machine</title>
-    <link href="http://yoursite.com/2020/04/26/CF-1341F/"/>
-    <id>http://yoursite.com/2020/04/26/CF-1341F/</id>
+    <link href="http://phimos.github.io/2020/04/26/CF-1341F/"/>
+    <id>http://phimos.github.io/2020/04/26/CF-1341F/</id>
     <published>2020-04-25T20:11:56.000Z</published>
     <updated>2020-04-28T15:49:46.262Z</updated>
     
@@ -559,9 +559,9 @@
     
     
     
-      <category term="Algorithm" scheme="http://yoursite.com/tags/Algorithm/"/>
+      <category term="Algorithm" scheme="http://phimos.github.io/tags/Algorithm/"/>
     
-      <category term="DFS" scheme="http://yoursite.com/tags/DFS/"/>
+      <category term="DFS" scheme="http://phimos.github.io/tags/DFS/"/>
     
   </entry>
   
