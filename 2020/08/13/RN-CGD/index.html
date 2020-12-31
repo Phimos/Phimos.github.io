@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.1.1">
+<meta name="generator" content="Hexo 4.2.1">
 <link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -50,16 +50,16 @@
   <meta name="description" content="Introduction 基于深度学习的图像检索任务通常是利用CNN网络进行特征提取，将图片转化为一个向量，然后通过之后通过向量来进行相关图片的检索。那么怎么利用CNN提取出一个有效的全局描述符实际上就成为了一个非常关键的步骤。 这篇论文提出了一种不需要训练多个网络再融合就能够将多个全局描述符进行融合的方法。  提出了CGD网络（combination of multiple global de">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[论文笔记] (CGD) Combination of Multiple Global Descriptors for Image Retrieval">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;08&#x2F;13&#x2F;RN-CGD&#x2F;index.html">
+<meta property="og:url" content="http://yoursite.com/2020/08/13/RN-CGD/index.html">
 <meta property="og:site_name" content="Pims的博客">
 <meta property="og:description" content="Introduction 基于深度学习的图像检索任务通常是利用CNN网络进行特征提取，将图片转化为一个向量，然后通过之后通过向量来进行相关图片的检索。那么怎么利用CNN提取出一个有效的全局描述符实际上就成为了一个非常关键的步骤。 这篇论文提出了一种不需要训练多个网络再融合就能够将多个全局描述符进行融合的方法。  提出了CGD网络（combination of multiple global de">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghofchd5inj31tn0u0gye.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghoxahfyr2j30uu0lq77v.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghoxbol8drj30xs0am40g.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghoxdef9ahj30vc0nqq8w.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghoxefoxs2j30ya09a75v.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghoxezh3u6j30ym080jsl.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghofchd5inj31tn0u0gye.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghoxahfyr2j30uu0lq77v.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghoxbol8drj30xs0am40g.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghoxdef9ahj30vc0nqq8w.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghoxefoxs2j30ya09a75v.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghoxezh3u6j30ym080jsl.jpg">
 <meta property="article:published_time" content="2020-08-13T01:29:51.000Z">
 <meta property="article:modified_time" content="2020-08-13T07:43:25.852Z">
 <meta property="article:author" content="Pims">
@@ -67,7 +67,7 @@
 <meta property="article:tag" content="Computer Vision">
 <meta property="article:tag" content="Image Retrieval">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;007S8ZIlgy1ghofchd5inj31tn0u0gye.jpg">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ghofchd5inj31tn0u0gye.jpg">
 
 <link rel="canonical" href="http://yoursite.com/2020/08/13/RN-CGD/">
 
@@ -386,7 +386,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -424,7 +424,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Pims</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.1
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0

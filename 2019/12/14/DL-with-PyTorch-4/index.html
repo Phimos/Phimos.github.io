@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.1.1">
+<meta name="generator" content="Hexo 4.2.1">
 <link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -50,19 +50,19 @@
   <meta name="description" content="开普勒从数据中得到三定律，同样利用的是现在数据科学的思想，他的步骤如下：  得到数据 可视化数据 选择最简单的可能模型来拟合数据 将数据分成两部分，一部分用来推导，另一部分用来检验 从一个奇怪的初始值除法逐渐迭代 在独立的验证集上检验所得到的模型 尝试对模型进行解释  今日的学习方法实际上就是自动寻找适合的函数形式来拟合输入输出，流程如下： 输入测试数据-&gt;计算输出-&gt;计算误差-&amp;gt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[读书笔记] Deep Learning with Pytorch -- Chapter 4">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;14&#x2F;DL-with-PyTorch-4&#x2F;index.html">
+<meta property="og:url" content="http://yoursite.com/2019/12/14/DL-with-PyTorch-4/index.html">
 <meta property="og:site_name" content="Pims的博客">
 <meta property="og:description" content="开普勒从数据中得到三定律，同样利用的是现在数据科学的思想，他的步骤如下：  得到数据 可视化数据 选择最简单的可能模型来拟合数据 将数据分成两部分，一部分用来推导，另一部分用来检验 从一个奇怪的初始值除法逐渐迭代 在独立的验证集上检验所得到的模型 尝试对模型进行解释  今日的学习方法实际上就是自动寻找适合的函数形式来拟合输入输出，流程如下： 输入测试数据-&gt;计算输出-&gt;计算误差-&amp;gt">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;006tNbRwly1g9z168ny9oj31cx0u04kh.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;006tNbRwly1g9zi1b5630j317n0rr1at.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/006tNbRwly1g9z168ny9oj31cx0u04kh.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/006tNbRwly1g9zi1b5630j317n0rr1at.jpg">
 <meta property="article:published_time" content="2019-12-13T22:03:32.000Z">
 <meta property="article:modified_time" content="2019-12-19T03:21:27.987Z">
 <meta property="article:author" content="Pims">
 <meta property="article:tag" content="Reading Notes">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;006tNbRwly1g9z168ny9oj31cx0u04kh.jpg">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/006tNbRwly1g9z168ny9oj31cx0u04kh.jpg">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/14/DL-with-PyTorch-4/">
 
@@ -391,7 +391,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -429,7 +429,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Pims</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.1
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0

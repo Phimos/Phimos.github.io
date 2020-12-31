@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.1.1">
+<meta name="generator" content="Hexo 4.2.1">
 <link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -50,18 +50,18 @@
   <meta name="description" content="基本介绍 传统处理数据集中缺失值一般有两种方法：  直接针对缺失值进行建模  对于每个数据集，需要单独建模   对于缺失值进行填充得到完整数据集，再用常规方法进行分析  删除法，会丢失到一些重要信息，缺失率越高，情况越严重 用均值&#x2F;中位数&#x2F;众数填充，没有利用现有的其他信息 基于机器学习的填充方法  EM KNN Matrix Factorization      考虑一个这样的数据，时间序列XX">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[论文笔记] Multivariate Time Series Imputation with Generative Adversarial Networks">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;16&#x2F;RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks&#x2F;index.html">
+<meta property="og:url" content="http://yoursite.com/2019/12/16/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/index.html">
 <meta property="og:site_name" content="Pims的博客">
 <meta property="og:description" content="基本介绍 传统处理数据集中缺失值一般有两种方法：  直接针对缺失值进行建模  对于每个数据集，需要单独建模   对于缺失值进行填充得到完整数据集，再用常规方法进行分析  删除法，会丢失到一些重要信息，缺失率越高，情况越严重 用均值&#x2F;中位数&#x2F;众数填充，没有利用现有的其他信息 基于机器学习的填充方法  EM KNN Matrix Factorization      考虑一个这样的数据，时间序列XX">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;006tNbRwly1g9x92nixl6j30z40bu40s.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;006tNbRwly1g9xa4l9l49j311g07mgmv.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/006tNbRwly1g9x92nixl6j30z40bu40s.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/006tNbRwly1g9xa4l9l49j311g07mgmv.jpg">
 <meta property="article:published_time" content="2019-12-15T22:37:36.000Z">
 <meta property="article:modified_time" content="2019-12-18T16:20:59.698Z">
 <meta property="article:author" content="Pims">
 <meta property="article:tag" content="Paper Reading">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;large&#x2F;006tNbRwly1g9x92nixl6j30z40bu40s.jpg">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/006tNbRwly1g9x92nixl6j30z40bu40s.jpg">
 
 <link rel="canonical" href="http://yoursite.com/2019/12/16/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/">
 
@@ -398,7 +398,7 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -436,7 +436,7 @@ h_{t_{i}}&amp;=(1-\mu_{t_{i}})\odot h_{t_{i-1}}^{\prime}+\mu_{t_{i}}\odot \tilde
   </span>
   <span class="author" itemprop="copyrightHolder">Pims</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.1
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
