@@ -177,6 +177,193 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/04/23/BT-must-win/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/23/BT-must-win/" class="post-title-link" itemprop="url">[Brain Teaser]必胜策略</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-23 23:55:50 / 修改时间：23:58:51" itemprop="dateCreated datePublished" datetime="2021-04-23T23:55:50+08:00">2021-04-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Bob和Alice被邀请参加一个卡牌游戏。庄家从一组扑克牌（4种花色，A-K）给Bob随机发放5张。Bob可以选择其中4张给Alice看，然后Alice被要求猜测Bob手中剩下的一张牌的花色和点数。</p>
+<p><strong>问：</strong></p>
+<p>Bob和Alice能否仅仅根据牌的花色和点数设计出一个策略，使得无论Bob拿到的是哪五张牌，Alice都能成功猜测出最后一张牌的花色和点数。</p>
+<blockquote>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mn>3</mn><mo>=</mo><mn>2</mn><mo>∗</mo><mn>3</mn><mo>!</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">13 = 2 * 3! + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">3</span><span class="mrel">=</span><span class="mord mathrm">2</span><span class="mbin">∗</span><span class="mord mathrm">3</span><span class="mclose">!</span><span class="mbin">+</span><span class="mord mathrm">1</span></span></span></span></p>
+</blockquote>
+<p>有人直接给出了这么一个式子，感觉思考思考还是很有意思的。</p>
+<p>首先两个重要前提，一个在于Bob可以自由选择翻牌的顺序，另一个就是可以选择让Alice猜哪一张牌。</p>
+<p>而确定一张牌需要花色加上点数。</p>
+<p>首先是花色，花色由于抽屉原理，一定会有两张相同花色的牌。那么可以将一张牌当作被猜的牌，另一张被第一个翻出，当作花色指示牌。</p>
+<p>对于点数而言，剩下三张牌可以考虑预先对于花色和点数的组合大小进行一个定义，那么三张不同的牌一共涉及<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><mo>!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">3</span><span class="mclose">!</span><span class="mrel">=</span><span class="mord mathrm">6</span></span></span></span>种排列方式，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mn>3</mn></mrow><annotation encoding="application/x-tex">13</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">3</span></span></span></span>张牌A-K排成一个圆周，每一张牌到剩下十二张牌的距离都在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn></mrow><annotation encoding="application/x-tex">6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">6</span></span></span></span>以内（顺时针或逆时针）。于是可以预先定义顺/逆时针，然后以第一张标示牌沿顺/逆时针走<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span>格。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span>为之后三张牌组合出来对应的数字，由于Bob拥有一定的自主选择权，可以通过对调第一张牌和最后一张牌的方式来确保一定是可达的。</p>
+<p>此时再回头看最开始的那个式子，只用一个公式描述清楚了整个状态，非常精妙！</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/03/21/6824-lab2a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/21/6824-lab2a/" class="post-title-link" itemprop="url">6824 lab2a</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-21 14:24:01 / 修改时间：14:34:44" itemprop="dateCreated datePublished" datetime="2021-03-21T14:24:01+08:00">2021-03-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="noopener">http://thesecretlivesofdata.com/raft/</a></p>
+<p>由于Lab2当中分布式系统存在一定的不确定性，所以TA给出了一个便于进行多次测试的脚本，如果测试100遍都没有问题，那大致可以认为实现是基本ok的，链接如下：</p>
+<p><a href="https://gist.githubusercontent.com/jonhoo/f686cacb4b9fe716d5aa/raw/d7f3ac9a399b9b163373d7866d7876eca5510c4c/go-test-many.sh" target="_blank" rel="noopener">https://gist.githubusercontent.com/jonhoo/f686cacb4b9fe716d5aa/raw/d7f3ac9a399b9b163373d7866d7876eca5510c4c/go-test-many.sh</a></p>
+<p>这里依然依照官方所给出的引导进行实现：</p>
+<blockquote>
+<p>You can’t easily run your Raft implementation directly; instead you should run it by way of the tester, i.e. <code>go test -run 2A</code></p>
+</blockquote>
+<blockquote>
+<p>Follow the paper’s Figure 2. At this point you care about sending and receiving RequestVote RPCs, the Rules for Servers that relate to elections ,and the State related to leader election.</p>
+</blockquote>
+<p>![image-20210215222523484](/Users/pims/Library/Application Support/typora-user-images/image-20210215222523484.png)</p>
+<blockquote>
+<p>Add the Figure 2 state for leader election to the <code>Raft</code> struct in <code>raft.go</code>. You’ll also need to define a struct to hold information about each log entry.</p>
+</blockquote>
+<blockquote>
+<p>Fill in the <code>RequestVoteArgs</code> and <code>RequestVoteReply</code> structs. Modify <code>Make()</code> to create a background goroutine that will kick off leader election periodically by sending out <code>RequestVote</code> RPCs when it hasn’t heard from another peer for a while. This way a peer will learn who is the leader, if there is already a leader, or become the leader itself. Implement the <code>RequestVote()</code> RPC handler so that servers will vote for one another.</p>
+</blockquote>
+<blockquote>
+<p>To implement heartbeats, define an <code>AppendEntries</code> RPC struct (though you may not need all the arguments yet), and have the leader send them out periodically. Write an <code>AppendEntries</code> RPC handler method that resets the election timeout so that other servers don’t step forward as leaders when one has already been elected.</p>
+</blockquote>
+<blockquote>
+<p>Make sure the election timeouts in different peers don’t always fire at the same time, or else all peers will vote only for themselves and no one will become the leader.</p>
+</blockquote>
+<blockquote>
+<p>The tester requires that the leader send heartbeat RPCs no more than ten times per second.</p>
+</blockquote>
+<blockquote>
+<p>The tester requires your Raft to elect a new leader within five seconds of the failure of the old leader (if a majority of peers can still communicate). Remember, however, that leader election may require multiple rounds in case of a split vote (which can happen if packets are lost or if candidates unluckily choose the same random backoff times). You must pick election timeouts (and thus heartbeat intervals) that are short enough that it’s very likely that an election will complete in less than five seconds even if it requires multiple rounds.</p>
+</blockquote>
+<blockquote>
+<p>The paper’s Section 5.2 mentions election timeouts in the range of 150 to 300 milliseconds. Such a range only makes sense if the leader sends heartbeats considerably more often than once per 150 milliseconds. Because the tester limits you to 10 heartbeats per second, you will have to use an election timeout larger than the paper’s 150 to 300 milliseconds, but not too large, because then you may fail to elect a leader within five seconds.</p>
+</blockquote>
+<blockquote>
+<p>You may find Go’s <code>rand</code> useful.</p>
+</blockquote>
+<blockquote>
+<p>You’ll need to write code that takes actions periodically or after delays in time. The easiest way to do this is to create a goroutine with a loop that calls <code>time.Sleep()</code>. Don’t use Go’s <code>time.Timer</code> or <code>time.Ticker</code> , which are difficult to use correctly.</p>
+</blockquote>
+<blockquote>
+<p>Read this advice about <code>locking</code> and <code>structure</code>.</p>
+</blockquote>
+<blockquote>
+<p>If your code has trouble passing the tests, read the paper’s Figure 2 again; the full logic for leader election is spread over multiple parts of the figure.</p>
+</blockquote>
+<blockquote>
+<p>Don’t forget to implement <code>GetState()</code> .</p>
+</blockquote>
+<blockquote>
+<p>The tester calls your Raft’s<code>rf.Kill()</code> when it is permanently shutting down an instance. You can check whether <code>Kill()</code> has been called using <code>rf.killed()</code>. You may want to do this in all loops, to avoid having dead Raft instances print confusing messages.</p>
+</blockquote>
+<blockquote>
+<p>A good way to debug your code is to insert print statements when a peer sends or receives a message, and collect the output in a file with <code>go test -run 2A &gt; out</code>. Then, by studying the trace of messages in the <code>out</code> file, you can identify where your implementation deviates from the desired protocol. You might find <code>DPrintf</code> in <code>util.go</code> useful to turn printing on and off as you debug different problems.</p>
+</blockquote>
+<blockquote>
+<p>Go RPC sends only struct fields whose names start with capital letters. Substructures must also have capitalized field names (e.g. fields of log records in an array). The <code>labgob</code> package will warn you about this; don’t ignore the warnings.</p>
+</blockquote>
+<blockquote>
+<p>Check your code with <code>go test -race</code>, and fix any races it reports.</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/02/18/trick-pytorch-rolling-window/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1088,210 +1275,6 @@ r_{d-1} &amp; r_{d-2} &amp; \ldots &amp; r_{1} &amp; r_{0}
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/07/30/2020%E4%BF%9D%E7%A0%94/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/30/2020%E4%BF%9D%E7%A0%94/" class="post-title-link" itemprop="url">2020北大叉院/信科保研经历分享</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-07-30 17:16:54 / 修改时间：17:24:21" itemprop="dateCreated datePublished" datetime="2020-07-30T17:16:54+08:00">2020-07-30</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>2020年由于新冠疫情影响，出国人数减少，再加上近年来硕士名额转成博士名额的趋势，使得保硕士难度会比往年更高，当然如果这个趋势不变，可以预见难度只会越来越高。</p>
-<p>比较幸运的是今年还是拿到了想要的offer成功上岸，这里将北大叉院和信科保研的相关经历记录，希望能够帮助之后准备保研面试的同学。不过今年由于疫情，很多流程都较往年有所更改，估计参考价值有限。</p>
-<h2 id="个人条件"><a class="markdownIt-Anchor" href="#个人条件"></a> 个人条件</h2>
-<p>入学在工学院，大一平转信科，GPA前10%，辅修北大国发院经济学双学位。</p>
-<p>大一大二都拿了奖学金和奖励，无国奖，无论文，无企业实习经历。</p>
-<p>从个人角度来看，自身并不想走学术这条路，排序为：</p>
-<center>硕士 > 工作 > 博士</center>
-<p>大三在AIIC（北京大学人工智能创新中心）有一年实习经历，计划为保AIIC的学硕，同时在比较早就报了叉院项目希望能够保底。</p>
-<h2 id="北大叉院"><a class="markdownIt-Anchor" href="#北大叉院"></a> 北大叉院</h2>
-<h3 id="流程"><a class="markdownIt-Anchor" href="#流程"></a> 流程</h3>
-<p>今年由于疫情取消了机考，形式为笔试+面试。</p>
-<h3 id="笔试"><a class="markdownIt-Anchor" href="#笔试"></a> 笔试</h3>
-<p>笔试一共有3道题目，题目主要考察基础的编程与算法相关的内容，难度较低。可以参考数据结构或是算法分析的课程内容来进行复习。</p>
-<h3 id="面试"><a class="markdownIt-Anchor" href="#面试"></a> 面试</h3>
-<p>面试形式为多对一，多为面试老师，一位学生，流程大致如下：</p>
-<ul>
-<li>
-<p>英文自我介绍，时长大约两分钟</p>
-</li>
-<li>
-<p>简历相关问题（问了我简历上的一个项目大概是怎么做的）</p>
-</li>
-<li>
-<p>个人意向相关</p>
-<ul>
-<li>读研or读博</li>
-<li>学术导向还是产业导向（这边老师问我为什么经历和陈述都更像创业导向，我直接表明自己不是很想做学术，之后就开始问数学问题了）</li>
-</ul>
-</li>
-<li>
-<p>数学基础问题（就我与其他人的交流好像其他人没怎么被问到）</p>
-<ol>
-<li>神经网络：ResNet结构</li>
-<li>高等代数：特征值特征向量，SVD分解，正交矩阵和相关性质</li>
-<li>计算方法：牛顿法</li>
-<li>概率统计：一元和多元正态分布公式，贝叶斯公式和解释</li>
-</ol>
-</li>
-</ul>
-<h3 id="结果"><a class="markdownIt-Anchor" href="#结果"></a> 结果</h3>
-<p>当表明自己不想做学术的时候感觉就应该凉了，但是可能是因为数学问题都答得没什么问题，所以最后给了个Waiting List，在七月底补录为优秀营员，我直接拒绝了offer。</p>
-<p>推荐准备北大叉院的保研面试还是以<strong>学术导向</strong>为主，最好能够展现出自己想在学术领域继续研究的意图。</p>
-<h2 id="北大信科"><a class="markdownIt-Anchor" href="#北大信科"></a> 北大信科</h2>
-<h3 id="流程-2"><a class="markdownIt-Anchor" href="#流程-2"></a> 流程</h3>
-<p>由于疫情影响取消了机考之后，信科只有一轮面试，具体形式内容应当是各个系所自己组织，我报的是北大AIIC的人工智能产业创新学硕项目。</p>
-<h3 id="面试-2"><a class="markdownIt-Anchor" href="#面试-2"></a> 面试</h3>
-<p>形式同样为多对一，多位面试老师，一位学生。由于之前已经在中心实习一年加上老师对于实习生已经有过了一轮面试，整体的面试氛围偏向轻松。</p>
-<ul>
-<li>自我介绍</li>
-<li>简历相关问题</li>
-<li>个人经历问题</li>
-</ul>
-<h3 id="结果-2"><a class="markdownIt-Anchor" href="#结果-2"></a> 结果</h3>
-<p>没有官方邮件通知，第二周周中直接公示名单，成功上岸。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/07/21/RN-SPPLayer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/21/RN-SPPLayer/" class="post-title-link" itemprop="url">[论文笔记] (SPP) Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-07-21 22:37:00 / 修改时间：22:38:31" itemprop="dateCreated datePublished" datetime="2020-07-21T22:37:00+08:00">2020-07-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
-<p>首先要解决的就是为什么需要空间金字塔池化（SPP）这个问题，它到底为了什么而出现。</p>
-<p>对于以往的神经网络结构大部分所需要的都是固定的网络大小输入，但是现实中很多图片数据并不是固定大小的输入。以往的方法往往是通过裁剪（Crop）和扭曲（Warp），但是前者会导致信息的丢失，后者可能会导致图片的失真，都会使得数据分布发生一定变化。</p>
-<p>SPP解决的就是图片大小不同的问题，使得输入可以是任意宽和高的图片。</p>
-<h2 id="spatial-pyramid-pooling-layer"><a class="markdownIt-Anchor" href="#spatial-pyramid-pooling-layer"></a> Spatial Pyramid Pooling Layer</h2>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghcakh41uj30z80oitcg.jpg" alt="image-20200706163747651" /></p>
-<p>如上图所示的SPP-Net 中有若干个并行的池化层，将卷积层的结果 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi><mo>×</mo><mi>h</mi><mo>×</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">w\times h\times d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">×</span><span class="mord mathit">h</span><span class="mbin">×</span><span class="mord mathit">d</span></span></span></span> 池化成 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>[</mo><mn>1</mn><mo>×</mo><mn>1</mn><mo>]</mo><mo separator="true">,</mo><mo>[</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>]</mo><mo separator="true">,</mo><mo>[</mo><mn>4</mn><mo>×</mo><mn>4</mn><mo>]</mo><mo separator="true">,</mo><mo>⋯</mo></mrow><annotation encoding="application/x-tex">[1\times 1],[2\times 2],[4\times4],\cdots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">×</span><span class="mord mathrm">1</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mopen">[</span><span class="mord mathrm">2</span><span class="mbin">×</span><span class="mord mathrm">2</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mopen">[</span><span class="mord mathrm">4</span><span class="mbin">×</span><span class="mord mathrm">4</span><span class="mclose">]</span><span class="mpunct">,</span><span class="minner">⋯</span></span></span></span>的一层层结果，再将其所有结果进行拼接之后与 FC 层相连。</p>
-<p>由于只有最后的FC层对于输入的大小是存在硬性要求的，当输入为任意大小的图片时，我们可以随意进行卷积、池化。在过FC 层之前，通过 SPP 层，将图片抽象出<strong>固定</strong>大小的特征（即多尺度特征下的固定特征向量抽取）。</p>
-<p>好处有以下几点：</p>
-<ol>
-<li>SPP可以针对于不同的input size输出固定长度的向量，这是原本的滑动窗口池化做不到的</li>
-<li>SPP用了多层级的空间信息，而滑动窗口池化操作使用的窗口大小是单一的</li>
-<li>由于输入的大小是可以变化的，所以SPP可以提取到不同尺度上信息</li>
-</ol>
-<h2 id="training"><a class="markdownIt-Anchor" href="#training"></a> Training</h2>
-<ul>
-<li>Single-size Training</li>
-</ul>
-<p>单输入size大小的训练方法同普通的训练相同，这里所需要的就是设置好对应的pooling层的stride和window size，以便于之后的SPP层可以输出正确的结果。事实上，这里为了探究single-size的训练主要是为了来测试金字塔池化的行为是否符合预期。</p>
-<ul>
-<li>Multi-size Training</li>
-</ul>
-<p>为了防止切换数据带来的overhead过高，这里假设有两种size的输入图片，每一种size训练一个epoch之后切换到另一种。事实上发现采用多尺度的图片，收敛速率和单尺度图片是相似的，并没有带来收敛速率上的损失。</p>
-<p>以上两种方法都是只针对训练阶段的，在测试阶段，可以直接将任何尺寸的图片输入到SPP-net当中。</p>
-<h2 id="代码实现"><a class="markdownIt-Anchor" href="#代码实现"></a> 代码实现</h2>
-<p>基于PyTorch框架的实现如下，在github上看了几个实现大多数都是通过论文当中提供的公式来进行实现的，少部分发现了公式在面对一些不太友好数据的情况会出现输出维度不同的问题，增加了padding的计算方法。</p>
-<p>本着不重复造轮子的原则，在我使用的PyTorch-1.5.0当中提供了<code>AdaptiveMaxPool2d</code>和<code>AdaptiveAvgPool2d</code>方法，直接采用其进行构造，代码逻辑会更为清晰和行数也会更短。</p>
-<p>同时提供一个<code>outputdim</code>的辅助函数，通过输入的之前卷积层结果的channel数来计算输出维度。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpatialPyramidPooling</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, levels = <span class="number">3</span>, pooling=<span class="string">'max'</span>)</span>:</span></span><br><span class="line">        super(SpatialPyramidPooling, self).__init__()</span><br><span class="line">        self.levels = levels</span><br><span class="line">        self.mode = pooling</span><br><span class="line">        self.pooling_method = nn.AdaptiveMaxPool2d <span class="keyword">if</span> pooling == <span class="string">'max'</span> <span class="keyword">else</span> nn.AdaptiveAvgPool2d</span><br><span class="line">        self.layers = [self.pooling_method(i) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, levels+<span class="number">1</span>)]</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        b, c, _, _ = x.size()</span><br><span class="line">        pooled = []</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> self.layers:</span><br><span class="line">            pooled.append(p(x).view(b, <span class="number">-1</span>))</span><br><span class="line">        <span class="keyword">return</span> torch.cat(pooled, <span class="number">-1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">outputdim</span><span class="params">(self, previous_channel)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> previous_channel * sum([i*i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, self.levels+<span class="number">1</span>)])</span><br></pre></td></tr></table></figure>
-<p>测试如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">spp = SpatialPyramidPooling()</span><br><span class="line">input = torch.randn(<span class="number">8</span>, <span class="number">32</span>, <span class="number">224</span>, <span class="number">224</span>)</span><br><span class="line">output = spp(input)</span><br><span class="line">print(output.shape)</span><br><span class="line"></span><br><span class="line">input = torch.randn(<span class="number">8</span>, <span class="number">32</span>, <span class="number">128</span>, <span class="number">324</span>)</span><br><span class="line">output = spp(input)</span><br><span class="line">print(output.shape)</span><br></pre></td></tr></table></figure>
-<p>输出结果为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">torch.Size([8, 448])</span><br><span class="line">torch.Size([8, 448])</span><br></pre></td></tr></table></figure>
-<p>的确将不同大小的输入给调整成了统一大小。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1362,14 +1345,14 @@ r_{d-1} &amp; r_{d-2} &amp; \ldots &amp; r_{1} &amp; r_{0}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
