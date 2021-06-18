@@ -177,6 +177,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/06/18/rust-in-mac/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/18/rust-in-mac/" class="post-title-link" itemprop="url">MacOS上通过brew配置Rust开发环境</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-18 15:21:55 / 修改时间：15:31:55" itemprop="dateCreated datePublished" datetime="2021-06-18T15:21:55+08:00">2021-06-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>首先通过homebrew安装rustup管理工具：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> brew install rustup</span></span><br></pre></td></tr></table></figure>
+<p>安装完后发现并不能够找到rustup指令，通过<code>brew list</code>进行查询，发现实际上安装的为rustup-init，于是再在命令行执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> rustup-init</span></span><br></pre></td></tr></table></figure>
+<p>顺着流程安装完成之后，重启终端便可以安装好rust环境以及相关的工具链。</p>
+<p>可以查看对应rustc以及cargo的版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> rustc --version</span></span><br><span class="line">rustc 1.53.0 (53cb7b09b 2021-06-17)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cargo --version</span></span><br><span class="line">cargo 1.53.0 (4369396ce 2021-04-27)</span><br></pre></td></tr></table></figure>
+<p>简单的创建一个rust语言版的Hello World进行测试：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">"Hello World!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将其保存为<code>hello.rs</code>。</p>
+<p>在命令行使用rustc将其编译为可执行文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> rustc hello.rs</span></span><br></pre></td></tr></table></figure>
+<p>之后直接执行可执行文件，便可以在终端看到对应的输出了！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./hello</span></span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/04/23/BT-must-win/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1164,118 +1237,6 @@ r_{d-1} &amp; r_{d-2} &amp; \ldots &amp; r_{1} &amp; r_{0}
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/07/30/2020%E4%BF%9D%E7%A0%94/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/30/2020%E4%BF%9D%E7%A0%94/" class="post-title-link" itemprop="url">2020北大叉院/信科保研经历分享</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-07-30 17:16:54 / 修改时间：17:24:21" itemprop="dateCreated datePublished" datetime="2020-07-30T17:16:54+08:00">2020-07-30</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>2020年由于新冠疫情影响，出国人数减少，再加上近年来硕士名额转成博士名额的趋势，使得保硕士难度会比往年更高，当然如果这个趋势不变，可以预见难度只会越来越高。</p>
-<p>比较幸运的是今年还是拿到了想要的offer成功上岸，这里将北大叉院和信科保研的相关经历记录，希望能够帮助之后准备保研面试的同学。不过今年由于疫情，很多流程都较往年有所更改，估计参考价值有限。</p>
-<h2 id="个人条件"><a class="markdownIt-Anchor" href="#个人条件"></a> 个人条件</h2>
-<p>入学在工学院，大一平转信科，GPA前10%，辅修北大国发院经济学双学位。</p>
-<p>大一大二都拿了奖学金和奖励，无国奖，无论文，无企业实习经历。</p>
-<p>从个人角度来看，自身并不想走学术这条路，排序为：</p>
-<center>硕士 > 工作 > 博士</center>
-<p>大三在AIIC（北京大学人工智能创新中心）有一年实习经历，计划为保AIIC的学硕，同时在比较早就报了叉院项目希望能够保底。</p>
-<h2 id="北大叉院"><a class="markdownIt-Anchor" href="#北大叉院"></a> 北大叉院</h2>
-<h3 id="流程"><a class="markdownIt-Anchor" href="#流程"></a> 流程</h3>
-<p>今年由于疫情取消了机考，形式为笔试+面试。</p>
-<h3 id="笔试"><a class="markdownIt-Anchor" href="#笔试"></a> 笔试</h3>
-<p>笔试一共有3道题目，题目主要考察基础的编程与算法相关的内容，难度较低。可以参考数据结构或是算法分析的课程内容来进行复习。</p>
-<h3 id="面试"><a class="markdownIt-Anchor" href="#面试"></a> 面试</h3>
-<p>面试形式为多对一，多为面试老师，一位学生，流程大致如下：</p>
-<ul>
-<li>
-<p>英文自我介绍，时长大约两分钟</p>
-</li>
-<li>
-<p>简历相关问题（问了我简历上的一个项目大概是怎么做的）</p>
-</li>
-<li>
-<p>个人意向相关</p>
-<ul>
-<li>读研or读博</li>
-<li>学术导向还是产业导向（这边老师问我为什么经历和陈述都更像创业导向，我直接表明自己不是很想做学术，之后就开始问数学问题了）</li>
-</ul>
-</li>
-<li>
-<p>数学基础问题（就我与其他人的交流好像其他人没怎么被问到）</p>
-<ol>
-<li>神经网络：ResNet结构</li>
-<li>高等代数：特征值特征向量，SVD分解，正交矩阵和相关性质</li>
-<li>计算方法：牛顿法</li>
-<li>概率统计：一元和多元正态分布公式，贝叶斯公式和解释</li>
-</ol>
-</li>
-</ul>
-<h3 id="结果"><a class="markdownIt-Anchor" href="#结果"></a> 结果</h3>
-<p>当表明自己不想做学术的时候感觉就应该凉了，但是可能是因为数学问题都答得没什么问题，所以最后给了个Waiting List，在七月底补录为优秀营员，我直接拒绝了offer。</p>
-<p>推荐准备北大叉院的保研面试还是以<strong>学术导向</strong>为主，最好能够展现出自己想在学术领域继续研究的意图。</p>
-<h2 id="北大信科"><a class="markdownIt-Anchor" href="#北大信科"></a> 北大信科</h2>
-<h3 id="流程-2"><a class="markdownIt-Anchor" href="#流程-2"></a> 流程</h3>
-<p>由于疫情影响取消了机考之后，信科只有一轮面试，具体形式内容应当是各个系所自己组织，我报的是北大AIIC的人工智能产业创新学硕项目。</p>
-<h3 id="面试-2"><a class="markdownIt-Anchor" href="#面试-2"></a> 面试</h3>
-<p>形式同样为多对一，多位面试老师，一位学生。由于之前已经在中心实习一年加上老师对于实习生已经有过了一轮面试，整体的面试氛围偏向轻松。</p>
-<ul>
-<li>自我介绍</li>
-<li>简历相关问题</li>
-<li>个人经历问题</li>
-</ul>
-<h3 id="结果-2"><a class="markdownIt-Anchor" href="#结果-2"></a> 结果</h3>
-<p>没有官方邮件通知，第二周周中直接公示名单，成功上岸。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1346,14 +1307,14 @@ r_{d-1} &amp; r_{d-2} &amp; \ldots &amp; r_{1} &amp; r_{0}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
