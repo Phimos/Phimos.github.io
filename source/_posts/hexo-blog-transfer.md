@@ -35,7 +35,7 @@ npm -v
 确认node环境没有问题之后，我们可以进行hexo的安装
 
 ```
-node install -g hexo-cli
+npm install -g hexo-cli
 npm install -g hexo
 ```
 
