@@ -6,7 +6,7 @@
   <link href="http://phimos.github.io/atom.xml" rel="self"/>
   
   <link href="http://phimos.github.io/"/>
-  <updated>2024-06-11T13:48:31.000Z</updated>
+  <updated>2024-06-11T13:59:31.000Z</updated>
   <id>http://phimos.github.io/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>VSCode Ruff插件配置</title>
+    <link href="http://phimos.github.io/2024/06/11/vscode-ruff/"/>
+    <id>http://phimos.github.io/2024/06/11/vscode-ruff/</id>
+    <published>2024-06-11T13:59:31.000Z</published>
+    <updated>2024-06-11T13:59:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://docs.astral.sh/ruff/">Ruff</a>是一个基于Rust开发的代码格式化工具，其功能类似于<code>black</code>，但是效率上由于基于Rust的原因，要比<code>black</code>快很多，同时也可以支持类似<code>isort</code>的功能。</p><p>在VSCode中使用Ruff的时候，可以通过应用商店搜索<code>Ruff</code>插件进行安装，安装完成之后，可以通过以下配置来设置默认的格式化工具：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;[python]&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;source.organizeImports&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;editor.formatOnType&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;editor.defaultFormatter&quot;</span><span class="punctuation">:</span> <span class="string">&quot;charliermarsh.ruff&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;source.fixAll&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;source.organizeImports&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;ruff.format.args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;--line-length=120&quot;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure><p>以上配置会在保存文件的时候自动进行代码格式化，并且对于所有引入的包进行自动排序，同时通过添加命令行参数，将ruff的格式化行宽设置为120。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://docs.astral.sh/ruff/&quot;&gt;Ruff&lt;/a&gt;是一个基于Rust开发的代码格式化工具，其功能类似于&lt;code&gt;black&lt;/code&gt;，但是效率上由于基于Rust的原因，要比&lt;code&gt;black&lt;/code&gt;快很多，同时也可</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>NAT模式下的WSL2代理设置</title>
@@ -490,27 +510,6 @@
     <category term="Computer Vision" scheme="http://phimos.github.io/tags/Computer-Vision/"/>
     
     <category term="Image Retrieval" scheme="http://phimos.github.io/tags/Image-Retrieval/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Jupyter Lab 虚拟环境配置</title>
-    <link href="http://phimos.github.io/2020/08/11/jupyter-lab-env/"/>
-    <id>http://phimos.github.io/2020/08/11/jupyter-lab-env/</id>
-    <published>2020-08-11T13:28:09.000Z</published>
-    <updated>2020-08-11T13:28:09.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>对于Anaconda的使用往往通过Jupyter Notebook或者是Jupyter Lab来进行的，可以通过以cell为单位交互式的运行，能够极大的提升效率。但是当面对与多个虚拟环境的时候，需要在Jupyter Lab当中进行虚拟环境的配置。</p><p>进行虚拟环境的管理需要安装<code>nb_conda</code>包：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install nb_conda</span><br></pre></td></tr></table></figure><p>安装完成之后可以在创建notebook时，或者在执行中通过kernel选项来进行虚拟环境的选择。</p><p>当创建了新的conda虚拟环境的时候，可以在新环境上面安装ipykernel，之后重启Jupyter Lab即可，安装指令如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -n env_name ipykernel</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;对于Anaconda的使用往往通过Jupyter Notebook或者是Jupyter Lab来进行的，可以通过以cell为单位交互式的运行，能够极大的提升效率。但是当面对与多个虚拟环境的时候，需要在Jupyter Lab当中进行虚拟环境的配置。&lt;/p&gt;
-&lt;p&gt;进行虚拟环境</summary>
-      
-    
-    
-    
     
   </entry>
   
