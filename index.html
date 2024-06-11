@@ -177,6 +177,70 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2024/06/11/wsl-network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/11/wsl-network/" class="post-title-link" itemprop="url">NAT模式下的WSL2代理设置</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-06-11 21:48:31" itemprop="dateCreated datePublished" datetime="2024-06-11T21:48:31+08:00">2024-06-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>配置Windows 11的WSL的时候，发现WSL2的网络配置有一些问题，这里记录一下解决方法。</p>
+<p>在安装完Ubuntu系统之后，有一些需要通过代理访问的需求，但是会提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl: 检测到 localhost 代理设置，但未镜像到 WSL。NAT模式下的WSL不支持 localhost 代理设置。</span><br></pre></td></tr></table></figure>
+<p>尝试使用网络上提供的解决方案，通过使用<code>/etc/resolv.conf</code>文件获取到Windows的DNS服务器地址，然后进行代理的设置，但是发现并没有什么用。</p>
+<p>最终查找发现可以通过<code>ip route show</code>命令来获取到Windows的DNS服务器地址，进而动态设置代理。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">set_proxy() &#123;</span><br><span class="line">  host_ip=$(ip route show | grep -i default | awk &#x27;&#123;print $3&#125;&#x27;)</span><br><span class="line">  export http_proxy=&quot;http://$&#123;host_ip&#125;:7890&quot;</span><br><span class="line">  export https_proxy=&quot;http://$&#123;host_ip&#125;:7890&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">unset_proxy() &#123;</span><br><span class="line">  unset http_proxy</span><br><span class="line">  unset https_proxy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过将以上内容加入到<code>.zshrc</code>文件中，就可以通过<code>set_proxy</code>和<code>unset_proxy</code>来动态设置和取消代理了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2023/02/20/hexo-blog-transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1367,78 +1431,6 @@ Answer: B
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/06/18/rust-in-mac/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/18/rust-in-mac/" class="post-title-link" itemprop="url">MacOS上通过brew配置Rust开发环境</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-18 15:21:55" itemprop="dateCreated datePublished" datetime="2021-06-18T15:21:55+08:00">2021-06-18</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>首先通过homebrew安装rustup管理工具：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">brew install rustup</span></span><br></pre></td></tr></table></figure>
-<p>安装完后发现并不能够找到rustup指令，通过<code>brew list</code>进行查询，发现实际上安装的为rustup-init，于是再在命令行执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">rustup-init</span></span><br></pre></td></tr></table></figure>
-<p>顺着流程安装完成之后，重启终端便可以安装好rust环境以及相关的工具链。</p>
-<p>可以查看对应rustc以及cargo的版本：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">rustc --version</span></span><br><span class="line">rustc 1.53.0 (53cb7b09b 2021-06-17)</span><br></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo --version</span></span><br><span class="line">cargo 1.53.0 (4369396ce 2021-04-27)</span><br></pre></td></tr></table></figure>
-<p>简单的创建一个rust语言版的Hello World进行测试：</p>
-<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>将其保存为<code>hello.rs</code>。</p>
-<p>在命令行使用rustc将其编译为可执行文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">rustc hello.rs</span></span><br></pre></td></tr></table></figure>
-<p>之后直接执行可执行文件，便可以在终端看到对应的输出了！</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./hello</span></span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1509,7 +1501,7 @@ Answer: B
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1541,7 +1533,7 @@ Answer: B
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
