@@ -177,6 +177,67 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2024/12/09/cpp-spirit-qi-make-shared/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/12/09/cpp-spirit-qi-make-shared/" class="post-title-link" itemprop="url">在Spirit Qi中使用std::shared_ptr对象</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-12-09 22:23:29" itemprop="dateCreated datePublished" datetime="2024-12-09T22:23:29+08:00">2024-12-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><code>boost::spirit::qi</code>是一个用于解析字符串的库，可以用于解析字符串并构造对象。在解析的过程中，有时候需要构造语法树，这个时候通常可以采用<code>phx::new_</code>或者<code>phx::construct</code>来构造裸指针或对象。但是在实际的应用当中，有时候会希望通过如<code>std::shared_ptr</code>这样的智能指针来管理对象的生命周期，但是在<code>boost::phoenix</code>当中并没有提供<code>make_shared</code>这样的函数对象。</p>
+<p>基于<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/30763212/making-a-vector-of-shared-pointers-from-spirit-qi">stackoverflow</a>上的回答可以构造一个<code>make_shared_</code>的函数对象，用于在<code>boost::spirit::qi</code>的语法规则当中延迟构造<code>std::shared_ptr</code>对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> boost::phoenix &#123;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">make_shared_f</span> &#123;</span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... A&gt;</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">result</span> &#123;</span><br><span class="line">    <span class="keyword">typedef</span> std::shared_ptr&lt;T&gt; type;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... A&gt;</span><br><span class="line">  <span class="keyword">typename</span> result&lt;A...&gt;::<span class="function">type <span class="title">operator</span><span class="params">()</span><span class="params">(A&amp;&amp;... a)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">make_shared</span>&lt;T&gt;(std::forward&lt;A&gt;(a)...);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> make_shared_ = function&lt;make_shared_f&lt;T&gt;&gt;;</span><br><span class="line">&#125;  <span class="comment">// namespace boost::phoenix</span></span><br></pre></td></tr></table></figure>
+<p>在使用的时候可以如下构造创建<code>std::shared_ptr</code>对象的action：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> qi = boost::spirit::qi;</span><br><span class="line"><span class="keyword">namespace</span> phx = boost::phoenix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> phx::make_shared_;</span><br><span class="line"><span class="keyword">using</span> qi::_1;</span><br><span class="line"><span class="keyword">using</span> qi::_val;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">expr = term[_val = _1] &gt;&gt;</span><br><span class="line">       *((<span class="string">&#x27;+&#x27;</span> &gt;&gt; term[_val = <span class="built_in">make_shared_</span>&lt;AddNode&gt;()(_val, _1)]) |</span><br><span class="line">         (<span class="string">&#x27;-&#x27;</span> &gt;&gt; term[_val = <span class="built_in">make_shared_</span>&lt;SubNode&gt;()(_val, _1)]));</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2024/12/09/wsl-update-cxx-tools/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1098,95 +1159,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/10/21/pku-no-run/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/21/pku-no-run/" class="post-title-link" itemprop="url">利用GPS模拟进行跑步打卡</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-21 23:44:16" itemprop="dateCreated datePublished" datetime="2021-10-21T23:44:16+08:00">2021-10-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>本文仅作为技术分享，希望大家都能够拥有锻炼的自由，但不鼓励使用技术进行跑步打卡</strong></p>
-<p>针对北大的校园体育课跑步打卡，已经有如<a target="_blank" rel="noopener" href="https://github.com/PKUNoRun/PKUNoRun">PKUNoRun</a>这样的开源项目，但是PKUNoRun仅仅支持安卓平台的PKURunner用户，使用如乐动力等其他软件作为打卡方式的并不能很方便的使用。</p>
-<p>本文采取的思路为进行GPS定位模拟，从而实际生成跑步轨迹。这种方法的优缺点如下：</p>
-<ul>
-<li>优点
-<ul>
-<li>操作简单，不需要针对APP进行分析和逆向</li>
-<li>通用，可以适用于各种打卡平台和系统</li>
-</ul>
-</li>
-<li>缺点
-<ul>
-<li>耗时，需要挂机等同于跑步本身的时间</li>
-</ul>
-</li>
-</ul>
-<p>网络上已有的大多数教程普遍基于Xcode进行实现，但是由于Xcode版本更新以及使用存在门槛，很多开源教程的方法存在过时的问题。这里采用开源工具<a target="_blank" rel="noopener" href="https://github.com/Schlaubischlump/LocationSimulator">LocationSimulator</a>进行GPS模拟定位，比使用Xcode更加用户友好。关于LocationSimulator的具体安装以及使用可以参考GitHub上的项目主页，总体使用方法即使用数据线连接手机，选中已连接的设备，之后便可以通过GPX文件或者手动控制的方式进行GPS模拟了。</p>
-<p>在完成软件安装之后，则需要确定对应的打卡地点的经纬度坐标，可以考虑直接在LocationSimulator结合手机地图软件进行标点，来确定对应位置的经纬度，也可以考虑使用google地图等别的方式。在操场跑道一圈标上足够多的点之后，可以考虑利用经纬度坐标加上轻微的随机化来生成跑步轨迹对应的GPX文件。</p>
-<p>以北京大学五四操场作为打卡地点违例，在确定操场一圈的经纬度坐标之后，便可以采用以下代码进行GPX文件的生成。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n&lt;gpx version=\&quot;1.1\&quot; creator=\&quot;Xcode\&quot;&gt;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">points = [[<span class="number">39.98670783215012</span>, <span class="number">116.30664405734012</span>],</span><br><span class="line">          [<span class="number">39.98618352533768</span>, <span class="number">116.30672865002087</span>],</span><br><span class="line">          [<span class="number">39.98618352533768</span>, <span class="number">116.30672865002087</span>],</span><br><span class="line">          [<span class="number">39.98581016760418</span>, <span class="number">116.30678898677019</span>],</span><br><span class="line">          [<span class="number">39.98571908922798</span>, <span class="number">116.30689433671324</span>],</span><br><span class="line">          [<span class="number">39.98561288688673</span>, <span class="number">116.30708452367374</span>],</span><br><span class="line">          [<span class="number">39.98565674006142</span>, <span class="number">116.30742482197985</span>],</span><br><span class="line">          [<span class="number">39.98570648307997</span>, <span class="number">116.30754884871082</span>],</span><br><span class="line">          [<span class="number">39.98581008421271</span>, <span class="number">116.30760844737627</span>],</span><br><span class="line">          [<span class="number">39.98630069330874</span>, <span class="number">116.30760921192963</span>],</span><br><span class="line">          [<span class="number">39.98680940636073</span>, <span class="number">116.30751827280433</span>],</span><br><span class="line">          [<span class="number">39.98691331279552</span>, <span class="number">116.30743465659333</span>],</span><br><span class="line">          [<span class="number">39.98701527533597</span>, <span class="number">116.30723729348047</span>],</span><br><span class="line">          [<span class="number">39.98702174059007</span>, <span class="number">116.30706010182425</span>],</span><br><span class="line">          [<span class="number">39.98697385542131</span>, <span class="number">116.30689805739706</span>],</span><br><span class="line">          [<span class="number">39.98687734879176</span>, <span class="number">116.30675655334059</span>]]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="built_in">round</span> <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">for</span> lat, lon <span class="keyword">in</span> points:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;    &lt;wpt lat=\&quot;&#123;&#125;\&quot; lon=\&quot;&#123;&#125;\&quot;&gt;&lt;/wpt&gt;\n&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">            lat + random.random() * <span class="number">0.00005</span>, lon + random.random() * <span class="number">0.00005</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;&lt;/gpx&gt;&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>之后直接运行Python脚本，将标准输出流重定向到文件，即可得到对应的GPX文件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python gen_gpx.py &gt; circle.gpx</span><br></pre></td></tr></table></figure>
-<p>在LocationSimulator通过<code>File</code> -&gt; <code>Open GPX File</code>导入GPX文件，此时GPS坐标就已经在操场上进行规律的运动了。在这个时候打开手机上对应的打卡软件便可以足不出户进行跑步打卡了，同时通过在Walk和Cycle模式当中切换可以调节跑步速度，使得最终的平均速度在打卡范围之内。</p>
-<p><strong>P.S.</strong></p>
-<ol>
-<li>
-<p>为保持LocationSimulator可以持续地对GPS定位进行修改，推荐保持电脑/手机屏幕常亮，避免锁屏。</p>
-</li>
-<li>
-<p>由于连接有切断风险，所以LocationSimulator默认在断开链接之后仍然保持虚拟GPS，每次使用完记得点击左上角的<code>X</code>进行退出。</p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1257,7 +1229,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-count">58</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
