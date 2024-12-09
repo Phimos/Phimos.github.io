@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://phimos.github.io/2024/12/09/wsl-update-cxx-tools/</loc>
+    
+    <lastmod>2024-12-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://phimos.github.io/2024/06/11/vscode-ruff/</loc>
     
     <lastmod>2024-06-11</lastmod>
@@ -544,7 +553,7 @@
 
   <url>
     <loc>http://phimos.github.io/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -552,252 +561,252 @@
   
   <url>
     <loc>http://phimos.github.io/tags/Algorithm/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Interview/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Experience/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/6-824/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Distributed-System/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Golang/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/6-828/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Operating-System/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Brain-Teaser/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Quant/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Deep-Bayes/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/DFS/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/01-BFS/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/BFS/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Codeforces/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Math/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Constructive-Algorithm/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Dynamic-programming/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Reading-Notes/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/PyTorch/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Graphs/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Greedy/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Survey/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Model-Compression/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Paper-Reading/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Computer-Vision/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Image-Retrieval/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Reparameterization/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Distributed-Training/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/C/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Time-Series/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Trick/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Peking-University/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/Environment/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://phimos.github.io/tags/VSCode/</loc>
-    <lastmod>2024-06-11</lastmod>
+    <lastmod>2024-12-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
