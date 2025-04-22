@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="当tfevents文件中存储的数据点非常多的时候（超过10K），Tensorboard会自动对数据点进行降采样，使得加载最多10K个数据点。这使得在进行结果比对的时候，会出现一些不对齐的情况，对应的加载逻辑在event_accumulator.py当中，但是并没有直接提供强制全量加载的接口，并且该行为并没有在文档中进行说明。在EventAccumulator的参数列表中可以发现对于size_gui">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全量加载Tensorboard路径下存储的数据点">
+<meta property="og:url" content="http://phimos.github.io/2025/04/22/dl-tensorboard-loader/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="当tfevents文件中存储的数据点非常多的时候（超过10K），Tensorboard会自动对数据点进行降采样，使得加载最多10K个数据点。这使得在进行结果比对的时候，会出现一些不对齐的情况，对应的加载逻辑在event_accumulator.py当中，但是并没有直接提供强制全量加载的接口，并且该行为并没有在文档中进行说明。在EventAccumulator的参数列表中可以发现对于size_gui">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-22T08:32:32.000Z">
+<meta property="article:modified_time" content="2025-04-22T08:32:32.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="Trick">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phimos.github.io/2025/04/22/dl-tensorboard-loader/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>全量加载Tensorboard路径下存储的数据点 | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2025/04/22/dl-tensorboard-loader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          全量加载Tensorboard路径下存储的数据点
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-22 16:32:32" itemprop="dateCreated datePublished" datetime="2025-04-22T16:32:32+08:00">2025-04-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>当<code>tfevents</code>文件中存储的数据点非常多的时候（超过10K），Tensorboard会自动对数据点进行降采样，使得加载最多10K个数据点。这使得在进行结果比对的时候，会出现一些不对齐的情况，对应的加载逻辑在<a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensorboard/blob/master/tensorboard/backend/event_processing/event_accumulator.py">event_accumulator.py</a>当中，但是并没有直接提供强制全量加载的接口，并且该行为并没有在文档中进行说明。在<code>EventAccumulator</code>的参数列表中可以发现对于<code>size_guidance</code>的描述如下，说明可以通过设置<code>size_guidance</code>来避免默认的降采样行为。</p>
+<blockquote>
+<p><code>size_guidance</code>: Information on how much data the <code>EventAccumulator</code> should store in memory. The <code>DEFAULT_SIZE_GUIDANCE</code> tries not to store too much so as to avoid OOMing the client. The <code>size_guidance</code> should be a map from a <code>tagType</code> string to an integer representing the number of items to keep per tag for items of that <code>tagType</code>. If the size is 0, all events are stored.</p>
+</blockquote>
+<p>其中提到的<code>DEFAULT_SIZE_GUIDANCE</code>定义如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DEFAULT_SIZE_GUIDANCE = &#123;</span><br><span class="line">    COMPRESSED_HISTOGRAMS: <span class="number">500</span>,</span><br><span class="line">    IMAGES: <span class="number">4</span>,</span><br><span class="line">    AUDIO: <span class="number">4</span>,</span><br><span class="line">    SCALARS: <span class="number">10000</span>,</span><br><span class="line">    HISTOGRAMS: <span class="number">1</span>,</span><br><span class="line">    TENSORS: <span class="number">10</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里定义一个新的<code>size_guidance</code>，对应加载所有的数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NoneSizeGuidance</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, _, /</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__contains__</span>(<span class="params">self, _, /</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>对应的使用示例如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os </span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">from</span> tensorboard.backend.event_processing.event_accumulator <span class="keyword">import</span> EventAccumulator</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_tensorboard_scalar</span>(<span class="params">logdir: os.PathLike, tag: <span class="built_in">str</span>, duplicate: <span class="built_in">str</span> = <span class="string">&quot;mean&quot;</span></span>) -&gt; pd.Series:</span><br><span class="line">    accumulator = EventAccumulator(</span><br><span class="line">        logdir,</span><br><span class="line">        size_guidance=NoneSizeGuidance(),</span><br><span class="line">    ).Reload()</span><br><span class="line">    output = pd.DataFrame(accumulator.Scalars(tag), columns=[<span class="string">&quot;wall_time&quot;</span>, <span class="string">&quot;step&quot;</span>, tag])</span><br><span class="line">    output: pd.Series = output.drop(columns=[<span class="string">&quot;wall_time&quot;</span>]).set_index(<span class="string">&quot;step&quot;</span>)[tag]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> duplicate == <span class="string">&quot;mean&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output.groupby(level=<span class="number">0</span>).mean()</span><br><span class="line">    <span class="keyword">elif</span> duplicate == <span class="string">&quot;first&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output.groupby(level=<span class="number">0</span>).first()</span><br><span class="line">    <span class="keyword">elif</span> duplicate == <span class="string">&quot;last&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output.groupby(level=<span class="number">0</span>).last()</span><br><span class="line">    <span class="keyword">elif</span> duplicate == <span class="string">&quot;none&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">f&quot;Unknown duplicate method: <span class="subst">&#123;duplicate&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">load_tensorboard_scalar(</span><br><span class="line">    logdir=<span class="string">&quot;path/to/logdir&quot;</span>,</span><br><span class="line">    tag=<span class="string">&quot;Train/Loss&quot;</span>,</span><br><span class="line">    duplicate=<span class="string">&quot;mean&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Trick/" rel="tag"># Trick</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/22/env-gcc-default-version/" rel="prev" title="Linux系统中多版本GCC管理与切换">
+      <i class="fa fa-chevron-left"></i> Linux系统中多版本GCC管理与切换
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

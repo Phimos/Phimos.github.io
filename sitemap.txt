@@ -1,3 +1,4 @@
+http://phimos.github.io/2025/04/22/dl-tensorboard-loader/
 http://phimos.github.io/2025/04/22/env-gcc-default-version/
 http://phimos.github.io/love/index.html
 http://phimos.github.io/2024/12/09/cpp-spirit-qi-make-shared/

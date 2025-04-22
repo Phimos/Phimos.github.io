@@ -177,6 +177,77 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2022/02/22/trick-pytorch-submatrix/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/22/trick-pytorch-submatrix/" class="post-title-link" itemprop="url">[Trick] PyTorch Tensor索引子矩阵</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-22 15:04:34" itemprop="dateCreated datePublished" datetime="2022-02-22T15:04:34+08:00">2022-02-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>PyTorch的Tensor支持非常多的索引方法，从Tensor当中取出一个子矩阵是一个常用的需求，如果是需要取出一个连续子矩阵或者子矩阵的索引是等间距排列的情况，可以直接采用切片索引的方式进行解决。对于更一般的情况，没有特别直接的解决办法。</p>
+<p>为方便起见，这里定义数据以及需要取出的子矩阵的行列索引如下，这里设置的索引的行列编号相同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = torch.arange(<span class="number">36</span>).reshape(<span class="number">6</span>, <span class="number">6</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data</span><br><span class="line">tensor([[ <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">8</span>,  <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>],</span><br><span class="line">        [<span class="number">24</span>, <span class="number">25</span>, <span class="number">26</span>, <span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">30</span>, <span class="number">31</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>idx = torch.LongTensor([<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>idx</span><br><span class="line">tensor([<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br></pre></td></tr></table></figure>
+<p>如果直接利用索引进行取值操作，取到的是对角线上的元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx, idx]</span><br><span class="line">tensor([ <span class="number">7</span>, <span class="number">28</span>, <span class="number">35</span>])</span><br></pre></td></tr></table></figure>
+<p>如果按照先行后列的方法进行取值，可以获得预期的元素，如下所示</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx][:, idx]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br></pre></td></tr></table></figure>
+<p>但是这样取出来的Tensor并不对应原始矩阵当中的子矩阵，而是一个复制，如果在上面进行赋值操作，并不会对原始Tensor进行修改</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx][:, idx] = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx][:, idx]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br></pre></td></tr></table></figure>
+<p>如果有修改的需求，更加优雅的方式是采用<code>np.ix_</code>方法或<code>torch.meshgrid</code>方法。</p>
+<p><code>np.ix_</code>的示例如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[np.ix_(idx, idx)]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[np.ix_(idx, idx)] = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data</span><br><span class="line">tensor([[ <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">0</span>,  <span class="number">8</span>,  <span class="number">9</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>],</span><br><span class="line">        [<span class="number">24</span>,  <span class="number">0</span>, <span class="number">26</span>, <span class="number">27</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">30</span>,  <span class="number">0</span>, <span class="number">32</span>, <span class="number">33</span>,  <span class="number">0</span>,  <span class="number">0</span>]])</span><br></pre></td></tr></table></figure>
+<p><code>torch.meshgrid</code>的示例如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>x, y = torch.meshgrid(idx, idx)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[x, y]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[x, y] = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data</span><br><span class="line">tensor([[ <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">0</span>,  <span class="number">8</span>,  <span class="number">9</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>],</span><br><span class="line">        [<span class="number">24</span>,  <span class="number">0</span>, <span class="number">26</span>, <span class="number">27</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">30</span>,  <span class="number">0</span>, <span class="number">32</span>, <span class="number">33</span>,  <span class="number">0</span>,  <span class="number">0</span>]])</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2022/02/18/vscode-config/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1249,83 +1320,6 @@ Answer: B
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/09/07/ChengQi-Capital-Interview-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/07/ChengQi-Capital-Interview-2/" class="post-title-link" itemprop="url">CQ资产面试回忆</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-07 22:29:23" itemprop="dateCreated datePublished" datetime="2020-09-07T22:29:23+08:00">2020-09-07</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>面试完全没有提到跟简历有关的内容，基本就是问智力题，感觉答得非常一般。</p>
-<p>最终面试结果为未通过。</p>
-<ol>
-<li>（博弈论）ABC三家公司，在0-100的101个整数点上都存在住户，按照ABC的顺序每个人依次选择1-100当中的一个位置作为公司的办公地点，住户会选择离他最近的公司。为了最大化收益（最大化到自己公司的用户数量），A的最优选择是什么？</li>
-</ol>
-<p>就是一个博弈论的问题，应该算Best Response逐层上推就好了，当时面试只讲了思路，没有算出来。</p>
-<ol start="2">
-<li>有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>个序列，每个序列有3个数字，任意两组之间的correlation都小于0.7，问<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>可能的最大取值是多少。</li>
-</ol>
-<p>将其转变成一个三维的单位球，问求表面能够取多少向量，两两之间夹角的余弦值小于0.7。可以通过用正三角形的构造方法，来利用立体角构造上界。但并不知道怎么计算准确值，当时面试官说可以计算出准确的结果。</p>
-<ol start="3">
-<li>一个没有记忆功能科学计算器，加减乘除和数字键都坏了，可以采用类似三角函数，取倒数，对数，开方，阶乘等操作。最开始只有一个0，如何得到任意整数？如何得到任意有理数？</li>
-</ol>
-<p>本质是利用直角边为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msqrt><mrow><mi>n</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8002800000000001em;"></span><span class="strut bottom" style="height:1.04em;vertical-align:-0.23972em;"></span><span class="base textstyle uncramped"><span class="sqrt mord"><span class="sqrt-sign" style="top:0.03971999999999998em;"><span class="style-wrap reset-textstyle textstyle uncramped">√</span></span><span class="vlist"><span style="top:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="mord textstyle cramped"><span class="mord mathit">n</span></span></span><span style="top:-0.72028em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle uncramped sqrt-line"></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span>​</span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span></span></span></span>的直角三角形。</p>
-<p>首先通过取<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>cos</mi></mrow><annotation encoding="application/x-tex">\cos</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mop">cos</span></span></span></span>得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span></span></span></span>，然后依次采用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>arctan</mi></mrow><annotation encoding="application/x-tex">\arctan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.61508em;"></span><span class="strut bottom" style="height:0.61508em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mop">arctan</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>cos</mi></mrow><annotation encoding="application/x-tex">\cos</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mop">cos</span></span></span></span>，取倒数，平方，就可以得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">2</span></span></span></span>。开方之后再次通过以上流程就可以得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">3</span></span></span></span>，依次类推可以得到任意整数。</p>
-<p>对于任意有理数，实际上要可以得到任意的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>m</mi></mrow><mrow><mi>n</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{m}{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.695392em;"></span><span class="strut bottom" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="base textstyle uncramped"><span class="mord reset-textstyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.345em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">n</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.394em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit">m</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span>，由上面的流程，我们可以在知道<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span></span></span></span>的情况下，得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mbin">+</span><span class="mord mathrm">1</span></span></span></span>，同时可以得到任意的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mi>n</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.845108em;"></span><span class="strut bottom" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="base textstyle uncramped"><span class="mord reset-textstyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.345em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">n</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.394em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span>。</p>
-<p>那么对于任意的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>m</mi></mrow><mrow><mi>n</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{m}{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.695392em;"></span><span class="strut bottom" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="base textstyle uncramped"><span class="mord reset-textstyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.345em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">n</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.394em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit">m</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span>，总是用大的减去小的，就可以最终化成一个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mi>k</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{k}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.845108em;"></span><span class="strut bottom" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="base textstyle uncramped"><span class="mord reset-textstyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.345em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.394em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span>的形式，这个是可以得到的，之后再反复利用倒数和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord">+</span><span class="mord mathrm">1</span></span></span></span>的操作反推回去，就可以得到任意有理数了。</p>
-<ol start="4">
-<li>笔试当中提到的，最奇怪的交易股票的策略。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1396,7 +1390,7 @@ Answer: B
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

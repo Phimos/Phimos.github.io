@@ -177,6 +177,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2025/04/22/dl-tensorboard-loader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/04/22/dl-tensorboard-loader/" class="post-title-link" itemprop="url">全量加载Tensorboard路径下存储的数据点</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-22 16:32:32" itemprop="dateCreated datePublished" datetime="2025-04-22T16:32:32+08:00">2025-04-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>当<code>tfevents</code>文件中存储的数据点非常多的时候（超过10K），Tensorboard会自动对数据点进行降采样，使得加载最多10K个数据点。这使得在进行结果比对的时候，会出现一些不对齐的情况，对应的加载逻辑在<a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensorboard/blob/master/tensorboard/backend/event_processing/event_accumulator.py">event_accumulator.py</a>当中，但是并没有直接提供强制全量加载的接口，并且该行为并没有在文档中进行说明。在<code>EventAccumulator</code>的参数列表中可以发现对于<code>size_guidance</code>的描述如下，说明可以通过设置<code>size_guidance</code>来避免默认的降采样行为。</p>
+<blockquote>
+<p><code>size_guidance</code>: Information on how much data the <code>EventAccumulator</code> should store in memory. The <code>DEFAULT_SIZE_GUIDANCE</code> tries not to store too much so as to avoid OOMing the client. The <code>size_guidance</code> should be a map from a <code>tagType</code> string to an integer representing the number of items to keep per tag for items of that <code>tagType</code>. If the size is 0, all events are stored.</p>
+</blockquote>
+<p>其中提到的<code>DEFAULT_SIZE_GUIDANCE</code>定义如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DEFAULT_SIZE_GUIDANCE = &#123;</span><br><span class="line">    COMPRESSED_HISTOGRAMS: <span class="number">500</span>,</span><br><span class="line">    IMAGES: <span class="number">4</span>,</span><br><span class="line">    AUDIO: <span class="number">4</span>,</span><br><span class="line">    SCALARS: <span class="number">10000</span>,</span><br><span class="line">    HISTOGRAMS: <span class="number">1</span>,</span><br><span class="line">    TENSORS: <span class="number">10</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里定义一个新的<code>size_guidance</code>，对应加载所有的数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NoneSizeGuidance</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, _, /</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__contains__</span>(<span class="params">self, _, /</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>对应的使用示例如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os </span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">from</span> tensorboard.backend.event_processing.event_accumulator <span class="keyword">import</span> EventAccumulator</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_tensorboard_scalar</span>(<span class="params">logdir: os.PathLike, tag: <span class="built_in">str</span>, duplicate: <span class="built_in">str</span> = <span class="string">&quot;mean&quot;</span></span>) -&gt; pd.Series:</span><br><span class="line">    accumulator = EventAccumulator(</span><br><span class="line">        logdir,</span><br><span class="line">        size_guidance=NoneSizeGuidance(),</span><br><span class="line">    ).Reload()</span><br><span class="line">    output = pd.DataFrame(accumulator.Scalars(tag), columns=[<span class="string">&quot;wall_time&quot;</span>, <span class="string">&quot;step&quot;</span>, tag])</span><br><span class="line">    output: pd.Series = output.drop(columns=[<span class="string">&quot;wall_time&quot;</span>]).set_index(<span class="string">&quot;step&quot;</span>)[tag]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> duplicate == <span class="string">&quot;mean&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output.groupby(level=<span class="number">0</span>).mean()</span><br><span class="line">    <span class="keyword">elif</span> duplicate == <span class="string">&quot;first&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output.groupby(level=<span class="number">0</span>).first()</span><br><span class="line">    <span class="keyword">elif</span> duplicate == <span class="string">&quot;last&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output.groupby(level=<span class="number">0</span>).last()</span><br><span class="line">    <span class="keyword">elif</span> duplicate == <span class="string">&quot;none&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">f&quot;Unknown duplicate method: <span class="subst">&#123;duplicate&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">load_tensorboard_scalar(</span><br><span class="line">    logdir=<span class="string">&quot;path/to/logdir&quot;</span>,</span><br><span class="line">    tag=<span class="string">&quot;Train/Loss&quot;</span>,</span><br><span class="line">    duplicate=<span class="string">&quot;mean&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2025/04/22/env-gcc-default-version/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -954,77 +1020,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2022/02/22/trick-pytorch-submatrix/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Pims">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Pims的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/22/trick-pytorch-submatrix/" class="post-title-link" itemprop="url">[Trick] PyTorch Tensor索引子矩阵</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-22 15:04:34" itemprop="dateCreated datePublished" datetime="2022-02-22T15:04:34+08:00">2022-02-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>PyTorch的Tensor支持非常多的索引方法，从Tensor当中取出一个子矩阵是一个常用的需求，如果是需要取出一个连续子矩阵或者子矩阵的索引是等间距排列的情况，可以直接采用切片索引的方式进行解决。对于更一般的情况，没有特别直接的解决办法。</p>
-<p>为方便起见，这里定义数据以及需要取出的子矩阵的行列索引如下，这里设置的索引的行列编号相同。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = torch.arange(<span class="number">36</span>).reshape(<span class="number">6</span>, <span class="number">6</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data</span><br><span class="line">tensor([[ <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">8</span>,  <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>],</span><br><span class="line">        [<span class="number">24</span>, <span class="number">25</span>, <span class="number">26</span>, <span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">30</span>, <span class="number">31</span>, <span class="number">32</span>, <span class="number">33</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>idx = torch.LongTensor([<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>idx</span><br><span class="line">tensor([<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>])</span><br></pre></td></tr></table></figure>
-<p>如果直接利用索引进行取值操作，取到的是对角线上的元素</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx, idx]</span><br><span class="line">tensor([ <span class="number">7</span>, <span class="number">28</span>, <span class="number">35</span>])</span><br></pre></td></tr></table></figure>
-<p>如果按照先行后列的方法进行取值，可以获得预期的元素，如下所示</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx][:, idx]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br></pre></td></tr></table></figure>
-<p>但是这样取出来的Tensor并不对应原始矩阵当中的子矩阵，而是一个复制，如果在上面进行赋值操作，并不会对原始Tensor进行修改</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx][:, idx] = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[idx][:, idx]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br></pre></td></tr></table></figure>
-<p>如果有修改的需求，更加优雅的方式是采用<code>np.ix_</code>方法或<code>torch.meshgrid</code>方法。</p>
-<p><code>np.ix_</code>的示例如下所示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[np.ix_(idx, idx)]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[np.ix_(idx, idx)] = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data</span><br><span class="line">tensor([[ <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">0</span>,  <span class="number">8</span>,  <span class="number">9</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>],</span><br><span class="line">        [<span class="number">24</span>,  <span class="number">0</span>, <span class="number">26</span>, <span class="number">27</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">30</span>,  <span class="number">0</span>, <span class="number">32</span>, <span class="number">33</span>,  <span class="number">0</span>,  <span class="number">0</span>]])</span><br></pre></td></tr></table></figure>
-<p><code>torch.meshgrid</code>的示例如下所示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>x, y = torch.meshgrid(idx, idx)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[x, y]</span><br><span class="line">tensor([[ <span class="number">7</span>, <span class="number">10</span>, <span class="number">11</span>],</span><br><span class="line">        [<span class="number">25</span>, <span class="number">28</span>, <span class="number">29</span>],</span><br><span class="line">        [<span class="number">31</span>, <span class="number">34</span>, <span class="number">35</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data[x, y] = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data</span><br><span class="line">tensor([[ <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>],</span><br><span class="line">        [ <span class="number">6</span>,  <span class="number">0</span>,  <span class="number">8</span>,  <span class="number">9</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>],</span><br><span class="line">        [<span class="number">18</span>, <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>],</span><br><span class="line">        [<span class="number">24</span>,  <span class="number">0</span>, <span class="number">26</span>, <span class="number">27</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">        [<span class="number">30</span>,  <span class="number">0</span>, <span class="number">32</span>, <span class="number">33</span>,  <span class="number">0</span>,  <span class="number">0</span>]])</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1095,7 +1090,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
