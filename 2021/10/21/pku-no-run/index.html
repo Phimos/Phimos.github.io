@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="本文仅作为技术分享，希望大家都能够拥有锻炼的自由，但不鼓励使用技术进行跑步打卡 针对北大的校园体育课跑步打卡，已经有如PKUNoRun这样的开源项目，但是PKUNoRun仅仅支持安卓平台的PKURunner用户，使用如乐动力等其他软件作为打卡方式的并不能很方便的使用。 本文采取的思路为进行GPS定位模拟，从而实际生成跑步轨迹。这种方法的优缺点如下：  优点  操作简单，不需要针对APP进行分析和逆">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用GPS模拟进行跑步打卡">
+<meta property="og:url" content="http://phimos.github.io/2021/10/21/pku-no-run/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="本文仅作为技术分享，希望大家都能够拥有锻炼的自由，但不鼓励使用技术进行跑步打卡 针对北大的校园体育课跑步打卡，已经有如PKUNoRun这样的开源项目，但是PKUNoRun仅仅支持安卓平台的PKURunner用户，使用如乐动力等其他软件作为打卡方式的并不能很方便的使用。 本文采取的思路为进行GPS定位模拟，从而实际生成跑步轨迹。这种方法的优缺点如下：  优点  操作简单，不需要针对APP进行分析和逆">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-21T15:44:16.000Z">
+<meta property="article:modified_time" content="2021-10-21T15:44:16.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="Peking University">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phimos.github.io/2021/10/21/pku-no-run/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>利用GPS模拟进行跑步打卡 | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2021/10/21/pku-no-run/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          利用GPS模拟进行跑步打卡
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-21 23:44:16" itemprop="dateCreated datePublished" datetime="2021-10-21T23:44:16+08:00">2021-10-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>本文仅作为技术分享，希望大家都能够拥有锻炼的自由，但不鼓励使用技术进行跑步打卡</strong></p>
+<p>针对北大的校园体育课跑步打卡，已经有如<a target="_blank" rel="noopener" href="https://github.com/PKUNoRun/PKUNoRun">PKUNoRun</a>这样的开源项目，但是PKUNoRun仅仅支持安卓平台的PKURunner用户，使用如乐动力等其他软件作为打卡方式的并不能很方便的使用。</p>
+<p>本文采取的思路为进行GPS定位模拟，从而实际生成跑步轨迹。这种方法的优缺点如下：</p>
+<ul>
+<li>优点
+<ul>
+<li>操作简单，不需要针对APP进行分析和逆向</li>
+<li>通用，可以适用于各种打卡平台和系统</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>耗时，需要挂机等同于跑步本身的时间</li>
+</ul>
+</li>
+</ul>
+<p>网络上已有的大多数教程普遍基于Xcode进行实现，但是由于Xcode版本更新以及使用存在门槛，很多开源教程的方法存在过时的问题。这里采用开源工具<a target="_blank" rel="noopener" href="https://github.com/Schlaubischlump/LocationSimulator">LocationSimulator</a>进行GPS模拟定位，比使用Xcode更加用户友好。关于LocationSimulator的具体安装以及使用可以参考GitHub上的项目主页，总体使用方法即使用数据线连接手机，选中已连接的设备，之后便可以通过GPX文件或者手动控制的方式进行GPS模拟了。</p>
+<p>在完成软件安装之后，则需要确定对应的打卡地点的经纬度坐标，可以考虑直接在LocationSimulator结合手机地图软件进行标点，来确定对应位置的经纬度，也可以考虑使用google地图等别的方式。在操场跑道一圈标上足够多的点之后，可以考虑利用经纬度坐标加上轻微的随机化来生成跑步轨迹对应的GPX文件。</p>
+<p>以北京大学五四操场作为打卡地点违例，在确定操场一圈的经纬度坐标之后，便可以采用以下代码进行GPX文件的生成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n&lt;gpx version=\&quot;1.1\&quot; creator=\&quot;Xcode\&quot;&gt;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">points = [[<span class="number">39.98670783215012</span>, <span class="number">116.30664405734012</span>],</span><br><span class="line">          [<span class="number">39.98618352533768</span>, <span class="number">116.30672865002087</span>],</span><br><span class="line">          [<span class="number">39.98618352533768</span>, <span class="number">116.30672865002087</span>],</span><br><span class="line">          [<span class="number">39.98581016760418</span>, <span class="number">116.30678898677019</span>],</span><br><span class="line">          [<span class="number">39.98571908922798</span>, <span class="number">116.30689433671324</span>],</span><br><span class="line">          [<span class="number">39.98561288688673</span>, <span class="number">116.30708452367374</span>],</span><br><span class="line">          [<span class="number">39.98565674006142</span>, <span class="number">116.30742482197985</span>],</span><br><span class="line">          [<span class="number">39.98570648307997</span>, <span class="number">116.30754884871082</span>],</span><br><span class="line">          [<span class="number">39.98581008421271</span>, <span class="number">116.30760844737627</span>],</span><br><span class="line">          [<span class="number">39.98630069330874</span>, <span class="number">116.30760921192963</span>],</span><br><span class="line">          [<span class="number">39.98680940636073</span>, <span class="number">116.30751827280433</span>],</span><br><span class="line">          [<span class="number">39.98691331279552</span>, <span class="number">116.30743465659333</span>],</span><br><span class="line">          [<span class="number">39.98701527533597</span>, <span class="number">116.30723729348047</span>],</span><br><span class="line">          [<span class="number">39.98702174059007</span>, <span class="number">116.30706010182425</span>],</span><br><span class="line">          [<span class="number">39.98697385542131</span>, <span class="number">116.30689805739706</span>],</span><br><span class="line">          [<span class="number">39.98687734879176</span>, <span class="number">116.30675655334059</span>]]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="built_in">round</span> <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">for</span> lat, lon <span class="keyword">in</span> points:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;    &lt;wpt lat=\&quot;&#123;&#125;\&quot; lon=\&quot;&#123;&#125;\&quot;&gt;&lt;/wpt&gt;\n&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">            lat + random.random() * <span class="number">0.00005</span>, lon + random.random() * <span class="number">0.00005</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;&lt;/gpx&gt;&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>之后直接运行Python脚本，将标准输出流重定向到文件，即可得到对应的GPX文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python gen_gpx.py &gt; circle.gpx</span><br></pre></td></tr></table></figure>
+<p>在LocationSimulator通过<code>File</code> -&gt; <code>Open GPX File</code>导入GPX文件，此时GPS坐标就已经在操场上进行规律的运动了。在这个时候打开手机上对应的打卡软件便可以足不出户进行跑步打卡了，同时通过在Walk和Cycle模式当中切换可以调节跑步速度，使得最终的平均速度在打卡范围之内。</p>
+<p><strong>P.S.</strong></p>
+<ol>
+<li>
+<p>为保持LocationSimulator可以持续地对GPS定位进行修改，推荐保持电脑/手机屏幕常亮，避免锁屏。</p>
+</li>
+<li>
+<p>由于连接有切断风险，所以LocationSimulator默认在断开链接之后仍然保持虚拟GPS，每次使用完记得点击左上角的<code>X</code>进行退出。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Peking-University/" rel="tag"># Peking University</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/02/optiver-trivia-night/" rel="prev" title="Optiver Trivia Night - Quiz部分记录">
+      <i class="fa fa-chevron-left"></i> Optiver Trivia Night - Quiz部分记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/18/vscode-config/" rel="next" title="Visual Studio Code配置指南">
+      Visual Studio Code配置指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

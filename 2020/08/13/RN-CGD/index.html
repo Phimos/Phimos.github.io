@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Introduction 基于深度学习的图像检索任务通常是利用CNN网络进行特征提取，将图片转化为一个向量，然后通过之后通过向量来进行相关图片的检索。那么怎么利用CNN提取出一个有效的全局描述符实际上就成为了一个非常关键的步骤。 这篇论文提出了一种不需要训练多个网络再融合就能够将多个全局描述符进行融合的方法。  提出了CGD网络（combination of multiple global de">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[论文笔记] (CGD) Combination of Multiple Global Descriptors for Image Retrieval">
+<meta property="og:url" content="http://phimos.github.io/2020/08/13/RN-CGD/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="Introduction 基于深度学习的图像检索任务通常是利用CNN网络进行特征提取，将图片转化为一个向量，然后通过之后通过向量来进行相关图片的检索。那么怎么利用CNN提取出一个有效的全局描述符实际上就成为了一个非常关键的步骤。 这篇论文提出了一种不需要训练多个网络再融合就能够将多个全局描述符进行融合的方法。  提出了CGD网络（combination of multiple global de">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/jQJg4pAcIuLZkzH.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/G7JpkSsoPZUBcLD.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/l7HGr8NnOuVd6oB.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/n5crRF3loCvqUeW.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/L83h7f2tEpUKWSP.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/5rRTkoySGavWjpU.jpg">
+<meta property="article:published_time" content="2020-08-13T01:29:51.000Z">
+<meta property="article:modified_time" content="2020-08-13T01:29:51.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="Paper Reading">
+<meta property="article:tag" content="Computer Vision">
+<meta property="article:tag" content="Image Retrieval">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/10/jQJg4pAcIuLZkzH.jpg">
+
+<link rel="canonical" href="http://phimos.github.io/2020/08/13/RN-CGD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[论文笔记] (CGD) Combination of Multiple Global Descriptors for Image Retrieval | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/08/13/RN-CGD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [论文笔记] (CGD) Combination of Multiple Global Descriptors for Image Retrieval
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-13 09:29:51" itemprop="dateCreated datePublished" datetime="2020-08-13T09:29:51+08:00">2020-08-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<p>基于深度学习的图像检索任务通常是利用CNN网络进行特征提取，将图片转化为一个向量，然后通过之后通过向量来进行相关图片的检索。那么怎么利用CNN提取出一个有效的全局描述符实际上就成为了一个非常关键的步骤。</p>
+<p>这篇论文提出了一种不需要训练多个网络再融合就能够将多个全局描述符进行融合的方法。</p>
+<ol>
+<li>提出了CGD网络（combination of multiple global descriptors），可以融合多种全局描述符并且进行端对端的训练，同时在backbone，loss等方面都有着良好的拓展性。</li>
+<li>通过量化实验说明了融合多种全局描述符比单个有着更好的表现。</li>
+<li>在多个图像检索数据集上都达到了sota水平。</li>
+</ol>
+<p>CGD模型的总体结构如下：</p>
+<p><img src="https://s2.loli.net/2023/01/10/jQJg4pAcIuLZkzH.jpg" alt="" /></p>
+<p>可以看到它主要由一个CNN backbone和两个模块组成。下面的主模块是主要的用于学习图像表示的模块，他组合了多个全局描述符，利用ranking loss进行优化，上方是一个用来对CNN backbone进行fine-tune的辅助模块，利用classification loss进行优化。最终的loss为以上两个loss的总和，这样就可以直接将整个网络进行一个端到端的训练了。</p>
+<h2 id="main-module"><a class="markdownIt-Anchor" href="#main-module"></a> Main Module</h2>
+<p>这边是把最后一层卷积层的结果作为输入，是一个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>×</mo><mi>H</mi><mo>×</mo><mi>W</mi></mrow><annotation encoding="application/x-tex">C\times H\times W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mbin">×</span><span class="mord mathit" style="margin-right:0.08125em;">H</span><span class="mbin">×</span><span class="mord mathit" style="margin-right:0.13889em;">W</span></span></span></span>的三维张量，记作<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi mathvariant="script">X</mi></mrow></mrow><annotation encoding="application/x-tex">\mathcal{X}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span></span></span></span>，通过一个池化操作可以转化为一个向量，池化操作可以写成如下一个统一形式：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>=</mo><msup><mrow><mo fence="true">(</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi mathvariant="normal">∣</mi><msub><mrow><mi mathvariant="script">X</mi></mrow><mi>c</mi></msub><mi mathvariant="normal">∣</mi></mrow></mfrac><msub><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><msub><mrow><mi mathvariant="script">X</mi></mrow><mi>c</mi></msub></mrow></msub><msup><mi>x</mi><mrow><msub><mi>p</mi><mi>c</mi></msub></mrow></msup><mo fence="true">)</mo></mrow><mrow><mfrac><mrow><mn>1</mn></mrow><mrow><msub><mi>p</mi><mi>c</mi></msub></mrow></mfrac></mrow></msup></mrow><annotation encoding="application/x-tex">f_c = \left(\frac{1}{|\mathcal{X}_c|} \sum_{x \in \mathcal{X}_c}x^{p_c}\right)^{\frac{1}{p_c}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.9620199999999999em;"></span><span class="strut bottom" style="height:3.361356em;vertical-align:-1.399336em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.10764em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="minner"><span class="minner displaystyle textstyle uncramped"><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">∣</span><span class=""><span class="mord textstyle cramped"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span></span></span></span><span style="top:-0.2300000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop op-limits"><span class="vlist"><span style="top:1.1943359999999998em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">x</span><span class="mrel">∈</span><span class=""><span class="mord scriptstyle cramped"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.000005000000000143778em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit">x</span><span class="vlist"><span style="top:-0.41300000000000003em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord"><span class="mord mathit">p</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size4">)</span></span></span><span class="vlist"><span style="top:-1.3639999999999999em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord reset-scriptstyle scriptstyle uncramped"><span class="sizing reset-size5 size5 reset-scriptstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.345em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord"><span class="mord mathit">p</span><span class="vlist"><span style="top:0.15em;margin-right:0.1em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptscriptstyle scriptscriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22142857142857142em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle textstyle uncramped frac-line"></span></span><span style="top:-0.394em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle uncramped"><span class="mord scriptscriptstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-scriptstyle textstyle uncramped nulldelimiter"></span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></p>
+<p>其中下标c表示的是c通道的结果，三种全局描述符的表示对应如下：</p>
+<ol>
+<li>SPoC：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>c</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p_c=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit">p</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord mathrm">1</span></span></span></span></li>
+<li>MAC：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>c</mi></msub><mo>→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">p_c\rightarrow \infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit">p</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">→</span><span class="mord mathrm">∞</span></span></span></span></li>
+<li>GeM：默认为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>c</mi></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">p_c=3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit">p</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">c</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord mathrm">3</span></span></span></span>，可以手动设置为任意值，或者当作可训练的参数</li>
+</ol>
+<p>如总框架中所示的，在经过一个池化操作之后，需要需要通过一个全连接层降维再进行L2正则化，得到最终的输出特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="normal">Φ</mi><mrow><mo>(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\Phi^{(a_i)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8879999999999999em;"></span><span class="strut bottom" style="height:0.8879999999999999em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mopen">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="normal">Φ</mi><mrow><mo>(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>)</mo></mrow></msup><mo>=</mo><mfrac><mrow><msup><mi>W</mi><mrow><mo>(</mo><mi>i</mi><mo>)</mo></mrow></msup><mo>⋅</mo><msup><mi>f</mi><mrow><mo>(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>)</mo></mrow></msup></mrow><mrow><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∣</mi><msup><mi>W</mi><mrow><mo>(</mo><mi>i</mi><mo>)</mo></mrow></msup><mo>⋅</mo><msup><mi>f</mi><mrow><mo>(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>)</mo></mrow></msup><mi mathvariant="normal">∣</mi><msub><mi mathvariant="normal">∣</mi><mn>2</mn></msub></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"></mspace><msub><mi>a</mi><mi>i</mi></msub><mo>∈</mo><mo>{</mo><mi>s</mi><mo separator="true">,</mo><mi>m</mi><mo separator="true">,</mo><mi>g</mi><mo>}</mo></mrow><annotation encoding="application/x-tex">\Phi^{(a_i)} = \frac{W^{(i)}\cdot f^{(a_i)}}{|| W^{(i)}\cdot f^{(a_i)}||_2},\qquad a_i\in \{s,m,g\}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.565em;"></span><span class="strut bottom" style="height:2.519em;vertical-align:-0.954em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mopen">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.704em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">∣</span><span class="mord mathrm">∣</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">W</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mopen">(</span><span class="mord mathit">i</span><span class="mclose">)</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">⋅</span><span class="mord"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mopen">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">∣</span><span class="mord"><span class="mord mathrm">∣</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">W</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mopen">(</span><span class="mord mathit">i</span><span class="mclose">)</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">⋅</span><span class="mord"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mopen">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mpunct">,</span><span class="mord mspace qquad"></span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">∈</span><span class="mopen">{</span><span class="mord mathit">s</span><span class="mpunct">,</span><span class="mord mathit">m</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mclose">}</span></span></span></span></span></p>
+<p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.65952em;"></span><span class="strut bottom" style="height:0.65952em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">i</span></span></span></span>表示第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.65952em;"></span><span class="strut bottom" style="height:0.65952em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">i</span></span></span></span>个分支，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">a_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>的三种取值对应上述提到的三种池化操作，最终的特征向量是一个组合描述符，将多个分支的结果进行拼接再进行L2正则化：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ψ</mi><mrow><mi>C</mi><mi>G</mi><mi>D</mi></mrow></msub><mo>=</mo><mfrac><mrow><msup><mi mathvariant="normal">Φ</mi><mrow><mrow><mo fence="true">(</mo><msub><mi>a</mi><mrow><mn>1</mn></mrow></msub><mo fence="true">)</mo></mrow></mrow></msup><mo>⊕</mo><mo>…</mo><mo>⊕</mo><msup><mi mathvariant="normal">Φ</mi><mrow><mrow><mo fence="true">(</mo><msub><mi>a</mi><mrow><mi>i</mi></mrow></msub><mo fence="true">)</mo></mrow></mrow></msup><mo>⊕</mo><mo>…</mo><mo>⊕</mo><msup><mi mathvariant="normal">Φ</mi><mrow><mrow><mo fence="true">(</mo><msub><mi>a</mi><mrow><mi>n</mi></mrow></msub><mo fence="true">)</mo></mrow></mrow></msup></mrow><mrow><msub><mrow><mo fence="true">∥</mo><msup><mi mathvariant="normal">Φ</mi><mrow><mrow><mo fence="true">(</mo><msub><mi>a</mi><mrow><mn>1</mn></mrow></msub><mo fence="true">)</mo></mrow></mrow></msup><mo>⊕</mo><mo>…</mo><mo>⊕</mo><msup><mi mathvariant="normal">Φ</mi><mrow><mrow><mo fence="true">(</mo><msub><mi>a</mi><mrow><mi>i</mi></mrow></msub><mo fence="true">)</mo></mrow></mrow></msup><mo>⊕</mo><mo>…</mo><mo>⊕</mo><msup><mi mathvariant="normal">Φ</mi><mrow><mrow><mo fence="true">(</mo><msub><mi>a</mi><mrow><mi>n</mi></mrow></msub><mo fence="true">)</mo></mrow></mrow></msup><mo fence="true">∥</mo></mrow><mrow><mn>2</mn></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\psi_{C G D}=\frac{\Phi^{\left(a_{1}\right)} \oplus \ldots \oplus \Phi^{\left(a_{i}\right)} \oplus \ldots \oplus \Phi^{\left(a_{n}\right)}}{\left\|\Phi^{\left(a_{1}\right)} \oplus \ldots \oplus \Phi^{\left(a_{i}\right)} \oplus \ldots \oplus \Phi^{\left(a_{n}\right)}\right\|_{2}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.565em;"></span><span class="strut bottom" style="height:2.7169999999999996em;vertical-align:-1.152em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">ψ</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mord mathit">G</span><span class="mord mathit" style="margin-right:0.02778em;">D</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.7519899999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="minner"><span class="minner textstyle cramped"><span class="style-wrap reset-textstyle textstyle uncramped"><span class="delimsizing mult"><span class="vlist"><span style="top:0.35000999999999993em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span style="top:-0.25599000000000005em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="minner scriptstyle cramped"><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">)</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span>​</span></span></span><span class="mbin">⊕</span><span class="minner">…</span><span class="mbin">⊕</span><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="minner scriptstyle cramped"><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">)</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span>​</span></span></span><span class="mbin">⊕</span><span class="minner">…</span><span class="mbin">⊕</span><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.289em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="minner scriptstyle cramped"><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">)</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span>​</span></span></span><span class="style-wrap reset-textstyle textstyle uncramped"><span class="delimsizing mult"><span class="vlist"><span style="top:0.35000999999999993em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span style="top:-0.25599000000000005em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span><span class="vlist"><span style="top:0.4000099999999999em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathrm">2</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="minner scriptstyle uncramped"><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">)</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span>​</span></span></span><span class="mbin">⊕</span><span class="minner">…</span><span class="mbin">⊕</span><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="minner scriptstyle uncramped"><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">)</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span>​</span></span></span><span class="mbin">⊕</span><span class="minner">…</span><span class="mbin">⊕</span><span class="mord"><span class="mord mathrm">Φ</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="minner scriptstyle uncramped"><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">(</span><span class="mord"><span class="mord mathit">a</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathit">n</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-scriptstyle scriptstyle uncramped" style="top:0em;">)</span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0.7em;">​</span></span>​</span></span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<p>这样就在一个CNN backbone的基础上，只通过了很少的参数添加就获得了组合描述符的效果。</p>
+<h2 id="auxiliary-module"><a class="markdownIt-Anchor" href="#auxiliary-module"></a> Auxiliary Module</h2>
+<p>辅助模块通过第一个全局描述符来对接前面的CNN backbone进行fine-tune。通过一个分类任务来帮助最大化图片的组间距离，同时使得模型的训练速度更快。这里采用Temperature scaling和label smoothing的方法来帮助训练，最终的softmax loss定义如下：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mrow><mi>S</mi><mi>o</mi><mi>f</mi><mi>t</mi><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><mo>=</mo><mo>−</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></msubsup><mi>log</mi><mfrac><mrow><mi>exp</mi><mrow><mo fence="true">(</mo><mrow><mo fence="true">(</mo><msubsup><mi>W</mi><mrow><msub><mi>y</mi><mrow><mi>i</mi></mrow></msub></mrow><mrow><mi>T</mi></mrow></msubsup><msub><mi>f</mi><mrow><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>b</mi><mrow><msub><mi>y</mi><mrow><mi>i</mi></mrow></msub></mrow></msub><mo fence="true">)</mo></mrow><mi mathvariant="normal">/</mi><mi>τ</mi><mo fence="true">)</mo></mrow></mrow><mrow><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>M</mi></mrow></msubsup><mi>exp</mi><mrow><mo fence="true">(</mo><mrow><mo fence="true">(</mo><msubsup><mi>W</mi><mrow><mi>j</mi></mrow><mrow><mi>T</mi></mrow></msubsup><msub><mi>f</mi><mrow><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>b</mi><mrow><mi>j</mi></mrow></msub><mo fence="true">)</mo></mrow><mi mathvariant="normal">/</mi><mi>τ</mi><mo fence="true">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">L_{Softmax}=-\frac{1}{N} \sum_{i=1}^{N} \log \frac{\exp \left(\left(W_{y_{i}}^{T} f_{i}+b_{y_{i}}\right) / \tau\right)}{\sum_{j=1}^{M} \exp \left(\left(W_{j}^{T} f_{i}+b_{j}\right) / \tau\right)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.8283360000000002em;"></span><span class="strut bottom" style="height:3.106005em;vertical-align:-1.277669em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mord mathit">L</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord mathit">t</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">x</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mrel">=</span><span class="mord">−</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop op-limits"><span class="vlist"><span style="top:1.1776689999999999em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">i</span><span class="mrel">=</span><span class="mord mathrm">1</span></span></span></span><span style="top:-0.000005000000000143778em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span><span class="op-symbol large-op mop">∑</span></span></span><span style="top:-1.2500050000000003em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.74em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mop"><span class="op-symbol small-op mop" style="top:-0.0000050000000000050004em;">∑</span><span class="vlist"><span style="top:0.30001em;margin-left:0em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span><span class="mrel">=</span><span class="mord mathrm">1</span></span></span></span><span style="top:-0.364em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.10903em;">M</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mop">exp</span><span class="minner textstyle cramped"><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="minner textstyle cramped"><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">W</span><span class="vlist"><span style="top:0.2768639999999999em;margin-left:-0.13889em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-0.3448em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.10764em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">i</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">+</span><span class="mord"><span class="mord mathit">b</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.1132em;">τ</span><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.773108em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mop">exp</span><span class="minner textstyle uncramped"><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="minner textstyle uncramped"><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">W</span><span class="vlist"><span style="top:0.24700000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord scriptstyle uncramped"><span class="mord mathit" style="margin-right:0.13889em;">T</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.10764em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord mathit">i</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">+</span><span class="mord"><span class="mord mathit">b</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord scriptstyle cramped"><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.07142857142857144em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-scriptstyle scriptscriptstyle cramped"><span class="mord scriptscriptstyle cramped"><span class="mord mathit">i</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.1132em;">τ</span><span class="style-wrap reset-textstyle textstyle uncramped" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:1em;">​</span></span>​</span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.1132em;">τ</span></span></span></span>是用来缩放的温度，越低实际上扩大了不同类之间的差距，增强学习的效果。</p>
+<h2 id="more-discussion"><a class="markdownIt-Anchor" href="#more-discussion"></a> More Discussion</h2>
+<h3 id="configuratons"><a class="markdownIt-Anchor" href="#configuratons"></a> Configuratons</h3>
+<p>CGD完成的实际上是多种描述符的组合，在这里一共有3种池化操作。如果有多个描述符的话，第一个的结果要做用到下游的分类任务，所以相对于其他有所区别。于是这里一共有12种不同的描述符：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mo separator="true">,</mo><mi>M</mi><mo separator="true">,</mo><mi>G</mi><mo separator="true">,</mo><mi>S</mi><mi>M</mi><mo separator="true">,</mo><mi>M</mi><mi>S</mi><mo separator="true">,</mo><mi>S</mi><mi>G</mi><mo separator="true">,</mo><mi>G</mi><mi>S</mi><mo separator="true">,</mo><mi>M</mi><mi>G</mi><mo separator="true">,</mo><mi>G</mi><mi>M</mi><mo separator="true">,</mo><mi>S</mi><mi>M</mi><mi>G</mi><mo separator="true">,</mo><mi>M</mi><mi>S</mi><mi>G</mi><mo separator="true">,</mo><mi>G</mi><mi>S</mi><mi>M</mi></mrow><annotation encoding="application/x-tex">S,M,G,SM,MS,SG,GS,MG,GM,SMG,MSG,GSM
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mpunct">,</span><span class="mord mathit">G</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit">G</span><span class="mpunct">,</span><span class="mord mathit">G</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mord mathit">G</span><span class="mpunct">,</span><span class="mord mathit">G</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mord mathit">G</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.10903em;">M</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit">G</span><span class="mpunct">,</span><span class="mord mathit">G</span><span class="mord mathit" style="margin-right:0.05764em;">S</span><span class="mord mathit" style="margin-right:0.10903em;">M</span></span></span></span></span></p>
+<p>选择的方法就是首先用单个描述符来进行测试，跑3次实验，之后选择其中最优的和次优的进行组合。</p>
+<p><img src="https://s2.loli.net/2023/01/10/G7JpkSsoPZUBcLD.jpg" alt="" /></p>
+<h3 id="label-smoothing-and-temperature-scaling"><a class="markdownIt-Anchor" href="#label-smoothing-and-temperature-scaling"></a> Label Smoothing and Temperature Scaling</h3>
+<p>在实验当中得到的结果是，两种trick都采用在ResNet-50 backbone上有着一定程度的提升：</p>
+<p><img src="https://s2.loli.net/2023/01/10/l7HGr8NnOuVd6oB.jpg" alt="" /></p>
+<h3 id="position-of-combination"><a class="markdownIt-Anchor" href="#position-of-combination"></a> Position of Combination</h3>
+<p>对于在什么位置进行多种全局描述符的融合也进行了试验，两种方法如下所示：</p>
+<p><img src="https://s2.loli.net/2023/01/10/n5crRF3loCvqUeW.jpg" alt="" /></p>
+<p>得到的结果如下，可以发现CGD模型的框架在总体情况下是更优的：</p>
+<p><img src="https://s2.loli.net/2023/01/10/L83h7f2tEpUKWSP.jpg" alt="" /></p>
+<h3 id="method-of-combination"><a class="markdownIt-Anchor" href="#method-of-combination"></a> Method of Combination</h3>
+<p>对于组合的方法考虑了直接进行求和和进行拼接两种方法，可以发现拼接可以保存更多的特性和多样性，能够取得更好的最终结果：</p>
+<p><img src="https://s2.loli.net/2023/01/10/5rRTkoySGavWjpU.jpg" alt="" /></p>
+<h2 id="implementation-details"><a class="markdownIt-Anchor" href="#implementation-details"></a> Implementation Details</h2>
+<p>实现的具体参数列在下方：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">transform:</span><br><span class="line">  training phase:</span><br><span class="line">    resize: 252 x 252</span><br><span class="line">    random crop: 224 x 224</span><br><span class="line">    randomly flipped to horizontal</span><br><span class="line">  inference phase:</span><br><span class="line">    resize: 224 x 224</span><br><span class="line">  	</span><br><span class="line">optimizer:</span><br><span class="line">  Adam:</span><br><span class="line">    learning rate: 1e-4</span><br><span class="line">    </span><br><span class="line">batch size: 128</span><br><span class="line">margin for triplet loss: 0.1</span><br><span class="line">temperature: 0.5</span><br><span class="line">label smoothing: 0.1</span><br></pre></td></tr></table></figure>
+<h2 id="code"><a class="markdownIt-Anchor" href="#code"></a> Code</h2>
+<p>提供一个基于PyTorch的实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Identify</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">L2Normalization</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, p=<span class="number">2</span>, dim=-<span class="number">1</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.p = p</span><br><span class="line">        self.dim = dim</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        out = F.normalize(x, p=<span class="number">2</span>, dim=-<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GlobalDescriptor</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, pooling_type, trainable=<span class="literal">False</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="keyword">if</span> trainable:</span><br><span class="line">            self.p = nn.Parameter(torch.tensor([<span class="number">3.</span>]))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.p = <span class="number">3</span></span><br><span class="line">        <span class="keyword">if</span> pooling_type == <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">            self.method = nn.AdaptiveAvgPool2d(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">elif</span> pooling_type == <span class="string">&#x27;m&#x27;</span>:</span><br><span class="line">            self.method = nn.AdaptiveMaxPool2d(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">def</span> <span class="title function_">GeM</span>(<span class="params">x</span>):</span><br><span class="line">                mean_value = torch.mean(torch.<span class="built_in">pow</span>(x, self.p), dim=[-<span class="number">1</span>, -<span class="number">2</span>], keepdim=<span class="literal">True</span>)</span><br><span class="line">                out = torch.sign(mean_value) * torch.<span class="built_in">pow</span>(torch.<span class="built_in">abs</span>(mean_value), <span class="number">1</span> / self.p)</span><br><span class="line">                <span class="keyword">return</span> out</span><br><span class="line">            self.method = GeM</span><br><span class="line">        self.flatten = nn.Flatten()</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        out = self.method(x)</span><br><span class="line">        out = self.flatten(out)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CGDModel</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, gd_config, feature_dim=<span class="number">1536</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="keyword">assert</span> feature_dim % <span class="built_in">len</span>(gd_config) == <span class="number">0</span></span><br><span class="line">        self.pretrained_model = torch.hub.load(<span class="string">&#x27;zhanghang1989/ResNeSt&#x27;</span>, <span class="string">&#x27;resnest101&#x27;</span>, pretrained=<span class="literal">True</span>)</span><br><span class="line">        self.pretrained_model.layer4[<span class="number">0</span>].avd_layer = Identify()</span><br><span class="line">        self.pretrained_model.layer4[<span class="number">0</span>].downsample[<span class="number">0</span>] = Identify()</span><br><span class="line">        self.backbone = nn.Sequential(</span><br><span class="line">            self.pretrained_model.conv1,</span><br><span class="line">            self.pretrained_model.bn1,</span><br><span class="line">            self.pretrained_model.relu,</span><br><span class="line">            self.pretrained_model.maxpool,</span><br><span class="line">            self.pretrained_model.layer1,</span><br><span class="line">            self.pretrained_model.layer2,</span><br><span class="line">            self.pretrained_model.layer3,</span><br><span class="line">            self.pretrained_model.layer4,</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        self.n = <span class="built_in">len</span>(gd_config)</span><br><span class="line">        self.k = feature_dim // self.n</span><br><span class="line">        </span><br><span class="line">        self.gds = nn.ModuleList([GlobalDescriptor(i) <span class="keyword">for</span> i <span class="keyword">in</span> gd_config])</span><br><span class="line">        self.bn = nn.BatchNorm1d(<span class="number">2048</span>)</span><br><span class="line">        self.fc0 = nn.Linear(<span class="number">2048</span>, CLASS_NUM)</span><br><span class="line">        self.fcs = nn.ModuleList([nn.Sequential(nn.Linear(<span class="number">2048</span>, self.k), L2Normalization()) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.n)])</span><br><span class="line">        self.l2norm = L2Normalization()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        shared_feature = self.backbone(x)</span><br><span class="line">        descriptors = []</span><br><span class="line">        <span class="keyword">for</span> i, (gd, fc) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(self.gds, self.fcs)):</span><br><span class="line">            feature = gd(shared_feature)</span><br><span class="line">            <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">                logit = self.bn(feature)</span><br><span class="line">                logit = self.fc0(logit)</span><br><span class="line">            feature = fc(feature)</span><br><span class="line">            descriptors.append(feature)</span><br><span class="line">        global_descriptor = torch.cat(descriptors, dim=-<span class="number">1</span>)</span><br><span class="line">        global_descriptor = self.l2norm(global_descriptor)</span><br><span class="line">        <span class="keyword">return</span> global_descriptor, logit</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Paper-Reading/" rel="tag"># Paper Reading</a>
+              <a href="/tags/Computer-Vision/" rel="tag"># Computer Vision</a>
+              <a href="/tags/Image-Retrieval/" rel="tag"># Image Retrieval</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/11/jupyter-lab-env/" rel="prev" title="Jupyter Lab 虚拟环境配置">
+      <i class="fa fa-chevron-left"></i> Jupyter Lab 虚拟环境配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/28/RN-A-Survey-of-Model-Compression-and-Acceleration/" rel="next" title="[论文笔记] A Survey of Model Compression and Acceleration">
+      [论文笔记] A Survey of Model Compression and Acceleration <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text"> Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-module"><span class="nav-number">2.</span> <span class="nav-text"> Main Module</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#auxiliary-module"><span class="nav-number">3.</span> <span class="nav-text"> Auxiliary Module</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#more-discussion"><span class="nav-number">4.</span> <span class="nav-text"> More Discussion</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configuratons"><span class="nav-number">4.1.</span> <span class="nav-text"> Configuratons</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#label-smoothing-and-temperature-scaling"><span class="nav-number">4.2.</span> <span class="nav-text"> Label Smoothing and Temperature Scaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#position-of-combination"><span class="nav-number">4.3.</span> <span class="nav-text"> Position of Combination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#method-of-combination"><span class="nav-number">4.4.</span> <span class="nav-text"> Method of Combination</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#implementation-details"><span class="nav-number">5.</span> <span class="nav-text"> Implementation Details</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code"><span class="nav-number">6.</span> <span class="nav-text"> Code</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

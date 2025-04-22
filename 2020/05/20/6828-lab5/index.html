@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Exercise 1 当是ENV_TYPE_FS的时候提供读写的权限，对于普通的Env则不提供权限。 1234&#x2F;&#x2F; If this is the file server (type &#x3D;&#x3D; ENV_TYPE_FS) give it I&#x2F;O privileges.&#x2F;&#x2F; LAB 5: Your code here.if(type &#x3D;&#x3D; ENV_TYPE_FS)	e-&gt;env_tf.tf_efla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT6.828 Lab5">
+<meta property="og:url" content="http://phimos.github.io/2020/05/20/6828-lab5/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="Exercise 1 当是ENV_TYPE_FS的时候提供读写的权限，对于普通的Env则不提供权限。 1234&#x2F;&#x2F; If this is the file server (type &#x3D;&#x3D; ENV_TYPE_FS) give it I&#x2F;O privileges.&#x2F;&#x2F; LAB 5: Your code here.if(type &#x3D;&#x3D; ENV_TYPE_FS)	e-&gt;env_tf.tf_efla">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-20T06:08:08.000Z">
+<meta property="article:modified_time" content="2020-05-20T06:08:08.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="6.828">
+<meta property="article:tag" content="Operating System">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phimos.github.io/2020/05/20/6828-lab5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>MIT6.828 Lab5 | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/05/20/6828-lab5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MIT6.828 Lab5
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-20 14:08:08" itemprop="dateCreated datePublished" datetime="2020-05-20T14:08:08+08:00">2020-05-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="exercise-1"><a class="markdownIt-Anchor" href="#exercise-1"></a> Exercise 1</h2>
+<p>当是<code>ENV_TYPE_FS</code>的时候提供读写的权限，对于普通的Env则不提供权限。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If this is the file server (type == ENV_TYPE_FS) give it I/O privileges.</span></span><br><span class="line"><span class="comment">// LAB 5: Your code here.</span></span><br><span class="line"><span class="keyword">if</span>(type == ENV_TYPE_FS)</span><br><span class="line">	e-&gt;env_tf.tf_eflags |= FL_IOPL_MASK;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-2"><a class="markdownIt-Anchor" href="#exercise-2"></a> Exercise 2</h2>
+<p>为block分配一个页面，并且将block的内容读入。首先将addr进行对齐，这里由于page的大小和block的大小相同，所以怎样对齐都是可以的。之后利用<code>sys_page_alloc()</code>系统调用来进行页面分配，然后利用<code>ide_read()</code>进行内容的读取。注意的是<code>ide_read()</code>是以sector为单位进行读取的，是512个byte，同block的大小是8倍的关系，所以需要进行一个小小的处理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Allocate a page in the disk map region, read the contents</span></span><br><span class="line"><span class="comment">// of the block from the disk into that page.</span></span><br><span class="line"><span class="comment">// Hint: first round addr to page boundary. fs/ide.c has code to read</span></span><br><span class="line"><span class="comment">// the disk.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// LAB 5: you code here:</span></span><br><span class="line">addr = ROUNDDOWN(addr, BLKSIZE);</span><br><span class="line"><span class="keyword">if</span>((r = sys_page_alloc(<span class="number">0</span>, addr, PTE_U | PTE_P | PTE_W)) &lt; <span class="number">0</span>)</span><br><span class="line">	panic(<span class="string">&quot;in bc_pgfault, sys_page_alloc: %e&quot;</span>, r);</span><br><span class="line"><span class="keyword">if</span>((r = ide_read(blockno &lt;&lt; <span class="number">3</span>, addr, <span class="number">8</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">	panic(<span class="string">&quot;in_bc_pgfault, ide_read: %e&quot;</span>, r);</span><br></pre></td></tr></table></figure>
+<p>当必要的时候，需要将Block写回磁盘，而必要的时候就是可写页面被修改的时候，所以这里首先的判断条件就应当是当前所对应的block是被映射了的，并且是dirty的。在调用<code>ide_write()</code>写回之后，需要重新进行一次映射来消除掉dirty位。这样可以避免多次进行flush，访问磁盘占用大量的时间。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LAB 5: Your code here.</span></span><br><span class="line"><span class="type">int</span> r;</span><br><span class="line">addr = ROUNDDOWN(addr, BLKSIZE);</span><br><span class="line"><span class="keyword">if</span>(va_is_mapped(addr) &amp;&amp; va_is_dirty(addr))&#123;</span><br><span class="line">	<span class="keyword">if</span>((r = ide_write(blockno &lt;&lt; <span class="number">3</span>, addr, <span class="number">8</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">		panic(<span class="string">&quot;in flush_block, ide_write: %e&quot;</span>, r);</span><br><span class="line">	<span class="keyword">if</span>((r = sys_page_map(<span class="number">0</span>, addr, <span class="number">0</span>, addr, uvpt[PGNUM(addr)] &amp; PTE_SYSCALL)) &lt; <span class="number">0</span>)</span><br><span class="line">		panic(<span class="string">&quot;in flush block, sys_page_map: %e&quot;</span>, r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-3"><a class="markdownIt-Anchor" href="#exercise-3"></a> Exercise 3</h2>
+<p>首先观察<code>free_block()</code>函数，可以发现每一位标志着一个block的状态，其中1表示为空闲，0表示为忙碌。访问的方式如第八行所示。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Mark a block free in the bitmap</span></span><br><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">free_block</span><span class="params">(<span class="type">uint32_t</span> blockno)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// Blockno zero is the null pointer of block numbers.</span></span><br><span class="line">	<span class="keyword">if</span> (blockno == <span class="number">0</span>)</span><br><span class="line">		panic(<span class="string">&quot;attempt to free zero block&quot;</span>);</span><br><span class="line">	bitmap[blockno/<span class="number">32</span>] |= <span class="number">1</span>&lt;&lt;(blockno%<span class="number">32</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么仿照就可以完成<code>alloc_block()</code>，对所有的block进行一个遍历，如果发现free的就进行分配，在bitmap中标志为0，之后立即利用<code>flush_block()</code>将将修改写回磁盘，并且返回blockno。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Search the bitmap for a free block and allocate it.  When you</span></span><br><span class="line"><span class="comment">// allocate a block, immediately flush the changed bitmap block</span></span><br><span class="line"><span class="comment">// to disk.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Return block number allocated on success,</span></span><br><span class="line"><span class="comment">// -E_NO_DISK if we are out of blocks.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Hint: use free_block as an example for manipulating the bitmap.</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">alloc_block</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// The bitmap consists of one or more blocks.  A single bitmap block</span></span><br><span class="line">	<span class="comment">// contains the in-use bits for BLKBITSIZE blocks.  There are</span></span><br><span class="line">	<span class="comment">// super-&gt;s_nblocks blocks in the disk altogether.</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// LAB 5: Your code here.</span></span><br><span class="line">	<span class="type">int</span> blockno;</span><br><span class="line">	<span class="keyword">for</span>(blockno = <span class="number">1</span>; blockno &lt; super-&gt;s_nblocks; blockno++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(block_is_free(blockno))&#123;</span><br><span class="line">			bitmap[blockno/<span class="number">32</span>] &amp;= ~(<span class="number">1</span>&lt;&lt;(blockno%<span class="number">32</span>));</span><br><span class="line">			flush_block(&amp;bitmap[blockno/<span class="number">32</span>]);</span><br><span class="line">			<span class="keyword">return</span> blockno;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> -E_NO_DISK;</span><br><span class="line">&#125;	</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-4"><a class="markdownIt-Anchor" href="#exercise-4"></a> Exercise 4</h2>
+<p>这里的寻址实际上类似于lab2当中虚拟内存的寻址，不过在这里的设计上只有一个indirect的链接，所以实现起来相对简单很多。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Find the disk block number slot for the &#x27;filebno&#x27;th block in file &#x27;f&#x27;.</span></span><br><span class="line"><span class="comment">// Set &#x27;*ppdiskbno&#x27; to point to that slot.</span></span><br><span class="line"><span class="comment">// The slot will be one of the f-&gt;f_direct[] entries,</span></span><br><span class="line"><span class="comment">// or an entry in the indirect block.</span></span><br><span class="line"><span class="comment">// When &#x27;alloc&#x27; is set, this function will allocate an indirect block</span></span><br><span class="line"><span class="comment">// if necessary.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Returns:</span></span><br><span class="line"><span class="comment">//	0 on success (but note that *ppdiskbno might equal 0).</span></span><br><span class="line"><span class="comment">//	-E_NOT_FOUND if the function needed to allocate an indirect block, but</span></span><br><span class="line"><span class="comment">//		alloc was 0.</span></span><br><span class="line"><span class="comment">//	-E_NO_DISK if there&#x27;s no space on the disk for an indirect block.</span></span><br><span class="line"><span class="comment">//	-E_INVAL if filebno is out of range (it&#x27;s &gt;= NDIRECT + NINDIRECT).</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Analogy: This is like pgdir_walk for files.</span></span><br><span class="line"><span class="comment">// Hint: Don&#x27;t forget to clear any block you allocate.</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span></span><br><span class="line"><span class="title function_">file_block_walk</span><span class="params">(<span class="keyword">struct</span> File *f, <span class="type">uint32_t</span> filebno, <span class="type">uint32_t</span> **ppdiskbno, <span class="type">bool</span> alloc)</span></span><br><span class="line">&#123;</span><br><span class="line">       <span class="comment">// LAB 5: Your code here.</span></span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(filebno &gt;= NDIRECT + NINDIRECT)</span><br><span class="line">		<span class="keyword">return</span> -E_INVAL;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(filebno &lt; NDIRECT)&#123;</span><br><span class="line">		*ppdiskbno = (f-&gt;f_direct) + filebno;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(alloc &amp;&amp; (f-&gt;f_indirect == <span class="number">0</span>))&#123;</span><br><span class="line">			<span class="keyword">if</span>((r = alloc_block()) &lt; <span class="number">0</span>)</span><br><span class="line">				<span class="keyword">return</span> r;</span><br><span class="line">			<span class="built_in">memset</span>(diskaddr(r), <span class="number">0</span>, BLKSIZE);</span><br><span class="line">			f-&gt;f_indirect = r;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(f-&gt;f_indirect == <span class="number">0</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> -E_NOT_FOUND;</span><br><span class="line">		&#125;</span><br><span class="line">		*ppdiskbno = ((<span class="type">uint32_t</span> *)diskaddr(f-&gt;f_indirect)) + filebno - NDIRECT;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过<code>file_block_walk()</code>找到对应的pdiskbno，如果为0，那么就进行分配，否则的话利用<code>diskaddr()</code>转换成地址。成功就返回0。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Set *blk to the address in memory where the filebno&#x27;th</span></span><br><span class="line"><span class="comment">// block of file &#x27;f&#x27; would be mapped.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Returns 0 on success, &lt; 0 on error.  Errors are:</span></span><br><span class="line"><span class="comment">//	-E_NO_DISK if a block needed to be allocated but the disk is full.</span></span><br><span class="line"><span class="comment">//	-E_INVAL if filebno is out of range.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Hint: Use file_block_walk and alloc_block.</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">file_get_block</span><span class="params">(<span class="keyword">struct</span> File *f, <span class="type">uint32_t</span> filebno, <span class="type">char</span> **blk)</span></span><br><span class="line">&#123;</span><br><span class="line">       <span class="comment">// LAB 5: Your code here.</span></span><br><span class="line">	<span class="type">uint32_t</span> * pdiskbno;</span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line">	<span class="keyword">if</span>((r = file_block_walk(f, filebno, &amp;pdiskbno, <span class="literal">true</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	<span class="keyword">if</span>(*pdiskbno == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">if</span>((r = alloc_block()) &lt; <span class="number">0</span>)</span><br><span class="line">			<span class="keyword">return</span> r;</span><br><span class="line">		*pdiskbno = r;</span><br><span class="line">	&#125;</span><br><span class="line">	*blk = (<span class="type">char</span> *)diskaddr(*pdiskbno);</span><br><span class="line">	flush_block(*blk);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="exercise-5"><a class="markdownIt-Anchor" href="#exercise-5"></a> Exercise 5</h2>
+<p>实际上就是针对于<code>file_read()</code>的一层封装，首先利用<code>openfile_lookup()</code>找到对应的文件，然后调用<code>file_read()</code>进行读入，之后调整文件的指针，并返回读入的大小。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Read at most ipc-&gt;read.req_n bytes from the current seek position</span></span><br><span class="line"><span class="comment">// in ipc-&gt;read.req_fileid.  Return the bytes read from the file to</span></span><br><span class="line"><span class="comment">// the caller in ipc-&gt;readRet, then update the seek position.  Returns</span></span><br><span class="line"><span class="comment">// the number of bytes successfully read, or &lt; 0 on error.</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">serve_read</span><span class="params">(<span class="type">envid_t</span> envid, <span class="keyword">union</span> Fsipc *ipc)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Fsreq_read</span> *<span class="title">req</span> =</span> &amp;ipc-&gt;read;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Fsret_read</span> *<span class="title">ret</span> =</span> &amp;ipc-&gt;readRet;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (debug)</span><br><span class="line">		cprintf(<span class="string">&quot;serve_read %08x %08x %08x\n&quot;</span>, envid, req-&gt;req_fileid, req-&gt;req_n);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Lab 5: Your code here:</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">OpenFile</span> * <span class="title">o</span>;</span></span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line">	<span class="keyword">if</span>((r = openfile_lookup(envid, req-&gt;req_fileid, &amp;o)) &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	<span class="keyword">if</span>((r = file_read(o-&gt;o_file, ret-&gt;ret_buf, req-&gt;req_n, o-&gt;o_fd-&gt;fd_offset)) &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	o-&gt;o_fd-&gt;fd_offset += r;</span><br><span class="line">	<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-6"><a class="markdownIt-Anchor" href="#exercise-6"></a> Exercise 6</h2>
+<p><code>serve_write()</code>的逻辑类似于<code>serve_read()</code>，具体代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Write req-&gt;req_n bytes from req-&gt;req_buf to req_fileid, starting at</span></span><br><span class="line"><span class="comment">// the current seek position, and update the seek position</span></span><br><span class="line"><span class="comment">// accordingly.  Extend the file if necessary.  Returns the number of</span></span><br><span class="line"><span class="comment">// bytes written, or &lt; 0 on error.</span></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">serve_write</span><span class="params">(<span class="type">envid_t</span> envid, <span class="keyword">struct</span> Fsreq_write *req)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (debug)</span><br><span class="line">		cprintf(<span class="string">&quot;serve_write %08x %08x %08x\n&quot;</span>, envid, req-&gt;req_fileid, req-&gt;req_n);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// LAB 5: Your code here.</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">OpenFile</span> *<span class="title">o</span>;</span></span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line">	<span class="keyword">if</span>((r = openfile_lookup(envid, req-&gt;req_fileid, &amp;o)) &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	<span class="keyword">if</span>((r = file_write(o-&gt;o_file, req-&gt;req_buf, req-&gt;req_n, o-&gt;o_fd-&gt;fd_offset)) &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	o-&gt;o_fd-&gt;fd_offset += r;</span><br><span class="line">	<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>devfile_write(0)</code>同样可以仿照<code>devfile_read()</code>进行完成。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Write at most &#x27;n&#x27; bytes from &#x27;buf&#x27; to &#x27;fd&#x27; at the current seek position.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Returns:</span></span><br><span class="line"><span class="comment">//	 The number of bytes successfully written.</span></span><br><span class="line"><span class="comment">//	 &lt; 0 on error.</span></span><br><span class="line"><span class="type">static</span> <span class="type">ssize_t</span></span><br><span class="line"><span class="title function_">devfile_write</span><span class="params">(<span class="keyword">struct</span> Fd *fd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> n)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// Make an FSREQ_WRITE request to the file system server.  Be</span></span><br><span class="line">	<span class="comment">// careful: fsipcbuf.write.req_buf is only so large, but</span></span><br><span class="line">	<span class="comment">// remember that write is always allowed to write *fewer*</span></span><br><span class="line">	<span class="comment">// bytes than requested.</span></span><br><span class="line">	<span class="comment">// LAB 5: Your code here</span></span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line">	fsipcbuf.write.req_fileid = fd-&gt;fd_file.id;</span><br><span class="line">	fsipcbuf.write.req_n = n;</span><br><span class="line">	memmove(fsipcbuf.write.req_buf, buf, n);</span><br><span class="line">	<span class="keyword">if</span>((r = fsipc(FSREQ_WRITE, <span class="literal">NULL</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> r;</span><br><span class="line">	assert(r &lt;= n);</span><br><span class="line">	assert(r &lt;= PGSIZE);</span><br><span class="line">	<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-7"><a class="markdownIt-Anchor" href="#exercise-7"></a> Exercise 7</h2>
+<p>首先判断得到env，然后从18~20行依次为，开启中断，设置IOPL为0，将保护权限设置为3(CPL 3)。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Set envid&#x27;s trap frame to &#x27;tf&#x27;.</span></span><br><span class="line"><span class="comment">// tf is modified to make sure that user environments always run at code</span></span><br><span class="line"><span class="comment">// protection level 3 (CPL 3), interrupts enabled, and IOPL of 0.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Returns 0 on success, &lt; 0 on error.  Errors are:</span></span><br><span class="line"><span class="comment">//	-E_BAD_ENV if environment envid doesn&#x27;t currently exist,</span></span><br><span class="line"><span class="comment">//		or the caller doesn&#x27;t have permission to change envid.</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span></span><br><span class="line"><span class="title function_">sys_env_set_trapframe</span><span class="params">(<span class="type">envid_t</span> envid, <span class="keyword">struct</span> Trapframe *tf)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// LAB 5: Your code here.</span></span><br><span class="line">	<span class="comment">// Remember to check whether the user has supplied us with a good</span></span><br><span class="line">	<span class="comment">// address!</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Env</span>* <span class="title">env</span>;</span></span><br><span class="line">	<span class="keyword">if</span>(envid2env(envid, &amp;env, <span class="number">1</span>))</span><br><span class="line">		<span class="keyword">return</span> -E_BAD_ENV;</span><br><span class="line">	env-&gt;env_tf = *tf;</span><br><span class="line">	env-&gt;env_tf.tf_eflags |= FL_IF;</span><br><span class="line">	env-&gt;env_tf.tf_eflags &amp;= ~FL_IOPL_MASK;</span><br><span class="line">	env-&gt;env_tf.tf_cs |= <span class="number">3</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	panic(<span class="string">&quot;sys_env_set_trapframe not implemented&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-8"><a class="markdownIt-Anchor" href="#exercise-8"></a> Exercise 8</h2>
+<p>关于<code>duppage()</code>的修改，可以注意到直接只需要在可写页面修改为COW的时候进行PTE_SHARE的标志位判断就可以了，只在第11行处添加一个判断，其余内容同lab4中完全相同。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span></span><br><span class="line"><span class="title function_">duppage</span><span class="params">(<span class="type">envid_t</span> envid, <span class="type">unsigned</span> pn)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// LAB 4: Your code here.</span></span><br><span class="line">	<span class="type">pte_t</span> pte = uvpt[pn];</span><br><span class="line">	<span class="type">void</span> * addr = (<span class="type">void</span> *)(pn * PGSIZE);</span><br><span class="line"></span><br><span class="line">	<span class="type">uint32_t</span> perm = pte &amp; PTE_SYSCALL;</span><br><span class="line">	<span class="keyword">if</span>(perm &amp; (PTE_W | PTE_COW) &amp;&amp; !(perm &amp; PTE_SHARE))&#123;</span><br><span class="line">		perm &amp;= ~PTE_W;</span><br><span class="line">		perm |= PTE_COW;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>((r = sys_page_map(<span class="number">0</span>, addr, envid, addr, perm &amp; PTE_SYSCALL))&lt;<span class="number">0</span>)</span><br><span class="line">		panic(<span class="string">&quot;duppage: %e&quot;</span>, r);</span><br><span class="line">	<span class="keyword">if</span>((r = sys_page_map(<span class="number">0</span>, addr, <span class="number">0</span>, addr, perm &amp; PTE_SYSCALL))&lt;<span class="number">0</span>)</span><br><span class="line">		panic(<span class="string">&quot;duppage: %e&quot;</span>, r);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从UTEXT到UXSTACKTOP的所有共享页面将其映射复制到子进程的地址空间即可，代码类似于lab4里面的<code>fork()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Copy the mappings for shared pages into the child address space.</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span></span><br><span class="line"><span class="title function_">copy_shared_pages</span><span class="params">(<span class="type">envid_t</span> child)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// LAB 5: Your code here.</span></span><br><span class="line">	<span class="type">uint8_t</span>* addr;	</span><br><span class="line">	<span class="keyword">for</span>(addr = (<span class="type">uint8_t</span> *)UTEXT; addr &lt;(<span class="type">uint8_t</span> *)UXSTACKTOP; addr += PGSIZE)</span><br><span class="line">		<span class="keyword">if</span>((uvpd[PDX(addr)] &amp; PTE_P) &amp;&amp; (uvpt[PGNUM(addr)] &amp; PTE_P) &amp;&amp; (uvpt[PGNUM(addr)] &amp; PTE_SHARE))</span><br><span class="line">			sys_page_map(<span class="number">0</span>, (<span class="type">void</span> *)addr, child, (<span class="type">void</span> *)addr, (uvpt[PGNUM(addr)] &amp; PTE_SYSCALL));</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-9"><a class="markdownIt-Anchor" href="#exercise-9"></a> Exercise 9</h2>
+<p>添加对应的分发入口即可：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Handle keyboard and serial interrupts.</span></span><br><span class="line"><span class="comment">// LAB 5: Your code here.</span></span><br><span class="line"><span class="keyword">if</span>(tf-&gt;tf_trapno == IRQ_OFFSET + IRQ_KBD)&#123;</span><br><span class="line">	kbd_intr();</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(tf-&gt;tf_trapno == IRQ_OFFSET + IRQ_SERIAL)&#123;</span><br><span class="line">	serial_intr();</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise-10"><a class="markdownIt-Anchor" href="#exercise-10"></a> Exercise 10</h2>
+<p>重定向输出流的代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">&#x27;&gt;&#x27;</span>:	<span class="comment">// Output redirection</span></span><br><span class="line">	<span class="comment">// Grab the filename from the argument list</span></span><br><span class="line">	<span class="keyword">if</span> (gettoken(<span class="number">0</span>, &amp;t) != <span class="string">&#x27;w&#x27;</span>) &#123;</span><br><span class="line">		cprintf(<span class="string">&quot;syntax error: &gt; not followed by word\n&quot;</span>);</span><br><span class="line">		<span class="built_in">exit</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ((fd = open(t, O_WRONLY|O_CREAT|O_TRUNC)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		cprintf(<span class="string">&quot;open %s for write: %e&quot;</span>, t, fd);</span><br><span class="line">		<span class="built_in">exit</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (fd != <span class="number">1</span>) &#123;</span><br><span class="line">		dup(fd, <span class="number">1</span>);</span><br><span class="line">		close(fd);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>仿照就可以完成输入流的重定向：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LAB 5: Your code here.</span></span><br><span class="line"><span class="keyword">if</span>((fd = open(t, O_RDONLY)) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">	cprintf(<span class="string">&quot;open %s for read: %e&quot;</span>, t, fd);</span><br><span class="line">	<span class="built_in">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(fd != <span class="number">0</span>)&#123;</span><br><span class="line">	dup(fd, <span class="number">0</span>);</span><br><span class="line">	close(fd);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>到这里可以达到150/150的满分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">internal FS tests [fs/test.c]: OK (1.0s)</span><br><span class="line">  fs i/o: OK</span><br><span class="line">  check_bc: OK</span><br><span class="line">  check_super: OK</span><br><span class="line">  check_bitmap: OK</span><br><span class="line">  alloc_block: OK</span><br><span class="line">  file_open: OK</span><br><span class="line">  file_get_block: OK</span><br><span class="line">  file_flush/file_truncate/file rewrite: OK</span><br><span class="line">testfile: OK (1.6s)</span><br><span class="line">  serve_open/file_stat/file_close: OK</span><br><span class="line">  file_read: OK</span><br><span class="line">  file_write: OK</span><br><span class="line">  file_read after file_write: OK</span><br><span class="line">  open: OK</span><br><span class="line">  large file: OK</span><br><span class="line">spawn via spawnhello: OK (1.8s)</span><br><span class="line">Protection I/O space: OK (1.6s)</span><br><span class="line">PTE_SHARE [testpteshare]: OK (0.9s)</span><br><span class="line">PTE_SHARE [testfdsharing]: OK (1.4s)</span><br><span class="line">start the shell [icode]: Timeout! OK (31.5s)</span><br><span class="line">testshell: OK (2.4s)</span><br><span class="line">    (Old jos.out.testshell failure log removed)</span><br><span class="line">primespipe: OK (7.2s)</span><br><span class="line">Score: 150/150</span><br></pre></td></tr></table></figure>
+<h2 id="challenge-1"><a class="markdownIt-Anchor" href="#challenge-1"></a> Challenge 1</h2>
+<p>Challenge的要求即为清空掉所有的没有被访问的页面。那么对于单个页面，只需要调用<code>flush_block()</code>，之后通过系统调用unmap就可以了。<code>evict_policy()</code>即对于所有的block做一个便利，清除所有从未被访问过的页面。具体代码内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// challenge</span></span><br><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">evict_block</span><span class="params">(<span class="type">void</span> *addr)</span>&#123;</span><br><span class="line">	<span class="type">uint32_t</span> blockno = ((<span class="type">uint32_t</span>)addr - DISKMAP) / BLKSIZE;</span><br><span class="line">	<span class="keyword">if</span>(addr &lt; (<span class="type">void</span>*)DISKMAP || addr &gt;= (<span class="type">void</span>*)(DISKMAP + DISKSIZE))</span><br><span class="line">		panic(<span class="string">&quot;evict_block of bad va %08x&quot;</span>, addr);</span><br><span class="line">	</span><br><span class="line">	<span class="type">int</span> r;</span><br><span class="line">	addr = ROUNDDOWN(addr, BLKSIZE);</span><br><span class="line">	flush_block(addr);</span><br><span class="line">	<span class="keyword">if</span>((r = sys_page_unmap(<span class="number">0</span>, addr)) &lt; <span class="number">0</span>)</span><br><span class="line">		panic(<span class="string">&quot;in evict block, sys_page_unmap: %e&quot;</span>, r);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">evict_policy</span><span class="params">()</span>&#123;</span><br><span class="line">	<span class="type">uint32_t</span> blockno;</span><br><span class="line">	<span class="keyword">for</span>(blockno = <span class="number">3</span>; blockno &lt; DISKSIZE / BLKSIZE; ++blockno)&#123;</span><br><span class="line">		<span class="keyword">if</span>(!(uvpt[PGNUM(diskaddr(blockno))]&amp;PTE_A))&#123;</span><br><span class="line">			evict_block(diskaddr(blockno));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/6-828/" rel="tag"># 6.828</a>
+              <a href="/tags/Operating-System/" rel="tag"># Operating System</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/10/RN-Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/" rel="prev" title="[论文笔记] Bag of Tricks for Image Classification with Convolutional Neural Networks">
+      <i class="fa fa-chevron-left"></i> [论文笔记] Bag of Tricks for Image Classification with Convolutional Neural Networks
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/30/CF-1363E/" rel="next" title="Codeforces 1363E - Tree Shuffling">
+      Codeforces 1363E - Tree Shuffling <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-1"><span class="nav-number">1.</span> <span class="nav-text"> Exercise 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-2"><span class="nav-number">2.</span> <span class="nav-text"> Exercise 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-3"><span class="nav-number">3.</span> <span class="nav-text"> Exercise 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-4"><span class="nav-number">4.</span> <span class="nav-text"> Exercise 4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-5"><span class="nav-number">5.</span> <span class="nav-text"> Exercise 5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-6"><span class="nav-number">6.</span> <span class="nav-text"> Exercise 6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-7"><span class="nav-number">7.</span> <span class="nav-text"> Exercise 7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-8"><span class="nav-number">8.</span> <span class="nav-text"> Exercise 8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-9"><span class="nav-number">9.</span> <span class="nav-text"> Exercise 9</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise-10"><span class="nav-number">10.</span> <span class="nav-text"> Exercise 10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#challenge-1"><span class="nav-number">11.</span> <span class="nav-text"> Challenge 1</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

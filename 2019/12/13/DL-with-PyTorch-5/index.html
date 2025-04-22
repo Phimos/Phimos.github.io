@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="这一章采用神经网络方法来搭建模型，从而能够解决更为实际的问题。  神经网络单元 一个神经单元可以看做o&#x3D;f(w∗x+b)o &#x3D; f(w*x+b)o&#x3D;f(w∗x+b)，一个线性的变换再加上一个非线性的激活函数，常见的激活函数如下：  其中ReLU是最为通用的激活函数！ 激活函数的通用特征：  非线性 可导（可以存在点不连续，比如Hardtanh和ReLU） 有至少一个敏感的域，输入的变化会改变输出的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[读书笔记] Deep Learning with Pytorch -- Chapter 5">
+<meta property="og:url" content="http://phimos.github.io/2019/12/13/DL-with-PyTorch-5/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="这一章采用神经网络方法来搭建模型，从而能够解决更为实际的问题。  神经网络单元 一个神经单元可以看做o&#x3D;f(w∗x+b)o &#x3D; f(w*x+b)o&#x3D;f(w∗x+b)，一个线性的变换再加上一个非线性的激活函数，常见的激活函数如下：  其中ReLU是最为通用的激活函数！ 激活函数的通用特征：  非线性 可导（可以存在点不连续，比如Hardtanh和ReLU） 有至少一个敏感的域，输入的变化会改变输出的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/isvSctlDGXHUe7B.jpg">
+<meta property="article:published_time" content="2019-12-13T06:04:00.000Z">
+<meta property="article:modified_time" content="2019-12-13T06:04:00.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="Reading Notes">
+<meta property="article:tag" content="PyTorch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/10/isvSctlDGXHUe7B.jpg">
+
+<link rel="canonical" href="http://phimos.github.io/2019/12/13/DL-with-PyTorch-5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[读书笔记] Deep Learning with Pytorch -- Chapter 5 | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2019/12/13/DL-with-PyTorch-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [读书笔记] Deep Learning with Pytorch -- Chapter 5
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-13 14:04:00" itemprop="dateCreated datePublished" datetime="2019-12-13T14:04:00+08:00">2019-12-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这一章采用神经网络方法来搭建模型，从而能够解决更为实际的问题。</p>
+<h2 id="神经网络单元"><a class="markdownIt-Anchor" href="#神经网络单元"></a> 神经网络单元</h2>
+<p>一个神经单元可以看做<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi><mo>=</mo><mi>f</mi><mo>(</mo><mi>w</mi><mo>∗</mo><mi>x</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">o = f(w*x+b)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">o</span><span class="mrel">=</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">∗</span><span class="mord mathit">x</span><span class="mbin">+</span><span class="mord mathit">b</span><span class="mclose">)</span></span></span></span>，一个线性的变换再加上一个非线性的激活函数，常见的激活函数如下：</p>
+<p><img src="https://s2.loli.net/2023/01/10/isvSctlDGXHUe7B.jpg" alt="" /></p>
+<p>其中ReLU是最为通用的激活函数！</p>
+<p>激活函数的通用特征：</p>
+<ul>
+<li>非线性</li>
+<li>可导（可以存在点不连续，比如Hardtanh和ReLU）</li>
+<li>有至少一个敏感的域，输入的变化会改变输出的变化</li>
+<li>有至少一个不敏感的域，输入的变化对输出的变化无影响或极其有限</li>
+<li>当输入是负无穷的时候有lower bound，当输入是正无穷的时候有upper bound（非必须）</li>
+</ul>
+<h2 id="pytorch中的nn"><a class="markdownIt-Anchor" href="#pytorch中的nn"></a> PyTorch中的nn</h2>
+<p>PyTorch中有一系列构建好的module来帮助构造神经网络，一个module是nn.Module基类派生出来的一个子类。每个Module有一个或多个Parameter对象。一个Module同样可以可以由一个或多个submodules，并且可以同样可以追踪他们的参数。</p>
+<p>注意：submodules不能再list或者dict里面。否则的话优化器没有办法定位他们，更新参数。如果要使用submodules的list或者dict，PyTorch提供了<code>nn.ModuleList</code>和<code>nn.ModuleDict</code>。</p>
+<p>直接调用<code>nn.Module</code>实际上等同调用了<code>forward</code>方法，理论上调用<code>forward</code>也可以达到同样的效果，但是实际上不应该这么操作。</p>
+<p>现在的training loop长这个样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">training_loop</span>(<span class="params">n_epochs, optimizer, model, loss_fn, t_u_train, t_u_val, t_c_train, t_c_val</span>):</span><br><span class="line">  <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n_epochs + <span class="number">1</span>):</span><br><span class="line">    t_p_train = model(t_u_train)</span><br><span class="line">    loss_train = loss_fn(t_p_train, t_c_train)</span><br><span class="line">    </span><br><span class="line">    t_p_val = model(t_u_val)</span><br><span class="line">    loss_val = loss_fn(t_p_val, t_c_val)</span><br><span class="line">    </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss_train.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> epoch == <span class="number">1</span> <span class="keyword">or</span> epoch %<span class="number">1000</span> == <span class="number">0</span>:</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;Epoch &#123;&#125;, Training loss &#123;&#125;, Validation loss &#123;&#125;&quot;</span>.<span class="built_in">format</span>(epoch, <span class="built_in">float</span>(loss_train), <span class="built_in">float</span>(loss_val)))</span><br></pre></td></tr></table></figure>
+<p>调用方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">linear_model = nn.Linear(<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line">optimizer = optim.SGD(linear_model.parameters, lr=<span class="number">1e-2</span>)</span><br><span class="line"></span><br><span class="line">training_loop(</span><br><span class="line">	n_epochs = <span class="number">3000</span>,</span><br><span class="line">	optimizer = optimizer,</span><br><span class="line">	model = linear_model,</span><br><span class="line">	loss_fn = nn.MSELoss(),</span><br><span class="line">	t_u_train = t_un_train,</span><br><span class="line">	t_u_val = t_un_val,</span><br><span class="line">	t_c_train = t_c_train,</span><br><span class="line">	t_c_val = t_c_val)</span><br></pre></td></tr></table></figure>
+<p>现在考虑一个稍微复杂一点的情况，一个线性模型套一个激活函数再套一个线性模型，PyTorch提供了<code>nn.Sequential</code>容器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">seq_model = nn.Sequential(nn.Linear(<span class="number">1</span>,<span class="number">13</span>),</span><br><span class="line">                         nn.Tanh(),</span><br><span class="line">                         nn.Linear(<span class="number">13</span>,<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>可以通过<code>model.parameters()</code>来得到里面的参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[param.shape <span class="keyword">for</span> param <span class="keyword">in</span> seq_model.parameters()]</span><br></pre></td></tr></table></figure>
+<p>如果一个模型通过很多子模型构成的话，能够通过名字辨别是非常方便的事情，PyTorch提供了<code>named_parameters</code>方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name, param <span class="keyword">in</span> seq_model.named_parameters():</span><br><span class="line">  <span class="built_in">print</span>(name,param.shape)</span><br></pre></td></tr></table></figure>
+<p><code>Sequential</code>按模块在里面出现的顺序进行排序，从0开始命名。<code>Sequential</code>同样接受<code>OrderedDict</code>，可以在里面对传入<code>Sequential</code>的每个model进行命名</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br><span class="line"></span><br><span class="line">seq_model = nn.Seqential(OrderedDict([(<span class="string">&#x27;hidden_linear&#x27;</span>,nn.Linear(<span class="number">1</span>,<span class="number">8</span>)),</span><br><span class="line">                                     (<span class="string">&#x27;hidden_activation&#x27;</span>,nn.Tanh()),</span><br><span class="line">                                     (<span class="string">&#x27;outpu_linear&#x27;</span>,nn.Linear(<span class="number">8</span>,<span class="number">1</span>))]))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, param <span class="keyword">in</span> seq_model.named_parameters():</span><br><span class="line">  <span class="built_in">print</span>(name,param.shape)</span><br></pre></td></tr></table></figure>
+<p>同样可以把子模块当做属性来对于特定的参数进行访问：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seq_model.output_linear.bias</span><br></pre></td></tr></table></figure>
+<p>可以定义<code>nn.Module</code>的子类来更大程度上的自定义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SubclassModel</span>(nn.Module):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">super</span>().__init__()</span><br><span class="line">    self.hidden_linear = nn.Linear(<span class="number">1</span>,<span class="number">11</span>)</span><br><span class="line">    self.hidden_activation = nn.Tanh()</span><br><span class="line">    self.output_linear = nn.Linear(<span class="number">11</span>,<span class="number">1</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">    hidden_t = self.hidden_linear(<span class="built_in">input</span>)</span><br><span class="line">    activated_t = self.hidden_activation(hidden_t)</span><br><span class="line">    output_t = self.output_linear(activated_t)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> output_t</span><br><span class="line"></span><br><span class="line">subclass_model = SubclassModel()</span><br></pre></td></tr></table></figure>
+<p>这样极大提高了自定义能力，可以在<code>forward</code>里面做任何你想做的事情，甚至可以写类似于<code>activated_t = self.hidden_activation(hidden_t) if random.random() &gt;0.5 else hidden_t</code>，由于PyTorch采用的是动态的运算图，所以无论<code>random.random()</code>返回的是什么都可以正常运行。</p>
+<p>在subclass内部所定义的module会自动的注册，和named_parameters中类似。<code>nn.ModuleList</code>和<code>nn.ModuleDict</code>也会自动进行注册。</p>
+<p>PyTorch中有<code>functional</code>，它代表输出完全由输入决定，像<code>nn.Tanh</code>这种可以直接写在<code>forward</code>里面。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SubclassFunctionalModel</span>(nn.Module):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">super</span>().__init__()</span><br><span class="line">    </span><br><span class="line">    self.hidden_linear = nn.Linear(<span class="number">1</span>,<span class="number">14</span>)</span><br><span class="line">    </span><br><span class="line">    self.output_linear = nn.Linear(<span class="number">14</span>,<span class="number">1</span>)</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">    hidden_t = self.hidden_linear(<span class="built_in">input</span>)</span><br><span class="line">    activated_t = torch.tanh(hidden_t)</span><br><span class="line">    output_t = self.output_linear(activated_t)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> output_t</span><br><span class="line">func_model = SubclassFunctionalModel()</span><br></pre></td></tr></table></figure>
+<p>在PyTorch1.0中有许多函数被放到了<code>torch</code>命名空间中，更多的函数留在<code>torch.nn.functional</code>里面。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Reading-Notes/" rel="tag"># Reading Notes</a>
+              <a href="/tags/PyTorch/" rel="tag"># PyTorch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/13/DL-with-PyTorch-4/" rel="prev" title="[读书笔记] Deep Learning with Pytorch -- Chapter 4">
+      <i class="fa fa-chevron-left"></i> [读书笔记] Deep Learning with Pytorch -- Chapter 4
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/15/RN-Multivariate-Time-Series-Imputation-with-Generative-Adversarial-Networks/" rel="next" title="[论文笔记] Multivariate Time Series Imputation with Generative Adversarial Networks">
+      [论文笔记] Multivariate Time Series Imputation with Generative Adversarial Networks <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%8D%95%E5%85%83"><span class="nav-number">1.</span> <span class="nav-text"> 神经网络单元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytorch%E4%B8%AD%E7%9A%84nn"><span class="nav-number">2.</span> <span class="nav-text"> PyTorch中的nn</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

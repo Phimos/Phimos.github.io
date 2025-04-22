@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="简介 文章提出了一种利用重复一个简单基本块从而聚集一系列有着相同拓扑结构的的转换，这种多分支的结构叫做ResNeXt，相对于ResNet的有着更好地性能。 就像VGG和ResNet一样，都是通过堆叠有着相同拓扑结构的模块这种简单策略，来实现更好的效果。而Inception model不同，是通过一种split-transform-merge的策略，首先split来得到一些低维的embedding">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[论文笔记] (ResNeXt) Aggregated Residual Transformations for Deep Neural Networks Saining">
+<meta property="og:url" content="http://phimos.github.io/2020/02/29/RN-ResNeXt/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="简介 文章提出了一种利用重复一个简单基本块从而聚集一系列有着相同拓扑结构的的转换，这种多分支的结构叫做ResNeXt，相对于ResNet的有着更好地性能。 就像VGG和ResNet一样，都是通过堆叠有着相同拓扑结构的模块这种简单策略，来实现更好的效果。而Inception model不同，是通过一种split-transform-merge的策略，首先split来得到一些低维的embedding">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/MlvsFhHEoeDwp4X.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/trKCeXTiBDl6N9s.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/TtbSWCvz2U7qlKf.jpg">
+<meta property="article:published_time" content="2020-02-28T22:44:06.000Z">
+<meta property="article:modified_time" content="2020-02-28T22:44:06.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="Paper Reading">
+<meta property="article:tag" content="Computer Vision">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/10/MlvsFhHEoeDwp4X.jpg">
+
+<link rel="canonical" href="http://phimos.github.io/2020/02/29/RN-ResNeXt/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[论文笔记] (ResNeXt) Aggregated Residual Transformations for Deep Neural Networks Saining | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/02/29/RN-ResNeXt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [论文笔记] (ResNeXt) Aggregated Residual Transformations for Deep Neural Networks Saining
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-29 06:44:06" itemprop="dateCreated datePublished" datetime="2020-02-29T06:44:06+08:00">2020-02-29</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
+<p>文章提出了一种利用重复一个简单基本块从而聚集一系列有着相同拓扑结构的的转换，这种多分支的结构叫做ResNeXt，相对于ResNet的有着更好地性能。</p>
+<p>就像VGG和ResNet一样，都是通过堆叠有着相同拓扑结构的模块这种简单策略，来实现更好的效果。而Inception model不同，是通过一种split-transform-merge的策略，首先split来得到一些低维的embedding，然后过一系列不同的filter来进行transform，最后直接拼接merge在一起，通过这种方式来用更小的算力企图获得更大更深的网络能够带来的表现。</p>
+<p>这篇论文中提出了一个同样是重复模块的简单模型，从VGG/ResNet和Inception model都借鉴了策略，将一系列有着相同拓扑结构的transformation给聚集起来了。这种聚集的transformation的多少叫做<code>cardinality</code>。实验证明，当提高网络的深度和宽度得到减少的回报的时候，提升cardinality是一个更有效的提升准确率的方法。</p>
+<h2 id="网络结构"><a class="markdownIt-Anchor" href="#网络结构"></a> 网络结构</h2>
+<p>这种网络有着三种等价形式：</p>
+<p><img src="https://s2.loli.net/2023/01/10/MlvsFhHEoeDwp4X.jpg" alt="" /></p>
+<p>可以发现最上面一层每一条路径都能够看到全部的数据，最后面一层由于最后对于多条之路要汇总求和，所以也是可以直接做卷积，能够看到全部的数据的。事实上只有中间的卷积操作，对于每一条支路而言，只能看到上一层部分的数据。虽然三者相互等价，但是显然在实现上采用c中描述的形式要简便许多。</p>
+<p>以上分析针对三层以上网络，那么对于小于三层的网络而言，两种实现是完全等价的。</p>
+<p><img src="https://s2.loli.net/2023/01/10/trKCeXTiBDl6N9s.jpg" alt="" /></p>
+<p>那么这里采用新的形式从64变为32x4d的方法只是额外增加了网络宽度。</p>
+<h2 id="参数量"><a class="markdownIt-Anchor" href="#参数量"></a> 参数量</h2>
+<img src="https://s2.loli.net/2023/01/10/TtbSWCvz2U7qlKf.jpg" alt="image-20200229223535943" style="zoom:50%;" />
+<p>以上是几种参数规模差不多的设置，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">C=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mrel">=</span><span class="mord mathrm">1</span></span></span></span>的情况代表的就是普通的ResNet，实验结果最好的为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>=</mo><mn>3</mn><mn>2</mn></mrow><annotation encoding="application/x-tex">C=32</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mord mathrm">2</span></span></span></span>，即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><mn>2</mn><mo>×</mo><mn>4</mn><mi>d</mi></mrow><annotation encoding="application/x-tex">32\times4d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">3</span><span class="mord mathrm">2</span><span class="mbin">×</span><span class="mord mathrm">4</span><span class="mord mathit">d</span></span></span></span>的模型。对于每一层的参数计算如下：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>⋅</mo><mo>(</mo><mn>2</mn><mn>5</mn><mn>6</mn><mo>∗</mo><mi>d</mi><mo>+</mo><mn>3</mn><mo>∗</mo><mi>d</mi><mo>∗</mo><mi>d</mi><mo>+</mo><mi>d</mi><mo>∗</mo><mn>2</mn><mn>5</mn><mn>6</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">C \cdot(256*d+3*d*d+d*256)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mbin">⋅</span><span class="mopen">(</span><span class="mord mathrm">2</span><span class="mord mathrm">5</span><span class="mord mathrm">6</span><span class="mbin">∗</span><span class="mord mathit">d</span><span class="mbin">+</span><span class="mord mathrm">3</span><span class="mbin">∗</span><span class="mord mathit">d</span><span class="mbin">∗</span><span class="mord mathit">d</span><span class="mbin">+</span><span class="mord mathit">d</span><span class="mbin">∗</span><span class="mord mathrm">2</span><span class="mord mathrm">5</span><span class="mord mathrm">6</span><span class="mclose">)</span></span></span></span></span></p>
+<h2 id="代码实现"><a class="markdownIt-Anchor" href="#代码实现"></a> 代码实现</h2>
+<p>其实基本和ResNet的实现相同，由于pyTorch的卷积层自身有group参数，采用之前提到的三种等价形式的最后一种，只需要在Bottleneck的模块中将中间的卷积层的group设置成32，重新设置Basicblock和Bottleneck的expansion为原来的二分之一，调整channel的大小为原来的两倍，就可以得到ResNeXt了，下面是ResNeXt(32x4D)的一个实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BasicBlock</span>(nn.Module):</span><br><span class="line">    expansion = <span class="number">0.5</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_channel, channel, stride</span>):</span><br><span class="line">        <span class="built_in">super</span>(BasicBlock, self).__init__()</span><br><span class="line">        </span><br><span class="line">        output_channel = <span class="built_in">int</span>(channel * self.expansion)</span><br><span class="line">        self.downsample = <span class="keyword">lambda</span> x: x</span><br><span class="line">        <span class="keyword">if</span>(input_channel != output_channel):</span><br><span class="line">            self.downsample = nn.Sequential(</span><br><span class="line">                nn.Conv2d(in_channels = input_channel, out_channels = output_channel, kernel_size = <span class="number">1</span>, stride = stride, bias = <span class="literal">False</span>),</span><br><span class="line">                nn.BatchNorm2d(output_channel)</span><br><span class="line">            )</span><br><span class="line">        </span><br><span class="line">        self.relu = nn.ReLU(inplace = <span class="literal">True</span>)</span><br><span class="line">        </span><br><span class="line">        self.convlayers = nn.Sequential(</span><br><span class="line">            nn.Conv2d(in_channels = input_channel, out_channels = channel, kernel_size = <span class="number">3</span>, stride = stride, padding = <span class="number">1</span>, bias = <span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(channel),</span><br><span class="line">            nn.ReLU(inplace = <span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(in_channels = channel, out_channels = output_channel, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>, bias = <span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(output_channel)</span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        out = self.downsample(x) + self.convlayers(x)</span><br><span class="line">        out = self.relu(out)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Bottleneck</span>(nn.Module):</span><br><span class="line">    expansion = <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_channel, channel, stride, expansion = <span class="number">2</span>, group_num = <span class="number">32</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(Bottleneck, self).__init__()</span><br><span class="line">        self.expansion = expansion</span><br><span class="line">        output_channel = channel * expansion</span><br><span class="line">        </span><br><span class="line">        self.downsample = <span class="keyword">lambda</span> x: x</span><br><span class="line">        <span class="keyword">if</span>(input_channel != output_channel):</span><br><span class="line">            self.downsample = nn.Sequential(</span><br><span class="line">                nn.Conv2d(in_channels = input_channel, out_channels = output_channel, kernel_size = <span class="number">1</span>, stride = stride, bias = <span class="literal">False</span>),</span><br><span class="line">                nn.BatchNorm2d(output_channel)</span><br><span class="line">            )</span><br><span class="line">        </span><br><span class="line">        self.relu = nn.ReLU(inplace = <span class="literal">True</span>)</span><br><span class="line">        </span><br><span class="line">        self.convlayers = nn.Sequential(</span><br><span class="line">            nn.Conv2d(in_channels = input_channel, out_channels = channel, kernel_size = <span class="number">1</span>, stride = <span class="number">1</span>, bias = <span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(channel),</span><br><span class="line">            nn.ReLU(inplace = <span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(in_channels = channel, out_channels = channel, kernel_size = <span class="number">3</span>, stride = stride, padding = <span class="number">1</span>, groups = group_num, bias = <span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(channel),</span><br><span class="line">            nn.ReLU(inplace = <span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(in_channels = channel, out_channels = output_channel, kernel_size = <span class="number">1</span>, stride = <span class="number">1</span>, bias = <span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(output_channel)</span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        out = self.downsample(x) + self.convlayers(x)</span><br><span class="line">        out = self.relu(out)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, block, block_nums, input_channel, class_num = <span class="number">1000</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(ResNet, self).__init__()</span><br><span class="line">        </span><br><span class="line">        self.stacklayers = nn.Sequential(</span><br><span class="line">            nn.Conv2d(in_channels = input_channel, out_channels = <span class="number">64</span>, kernel_size = <span class="number">7</span>, stride = <span class="number">2</span>, padding = <span class="number">3</span>, bias = <span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">64</span>),</span><br><span class="line">            nn.ReLU(inplace = <span class="literal">True</span>),</span><br><span class="line">            nn.MaxPool2d(kernel_size = <span class="number">3</span>, stride = <span class="number">2</span>, padding = <span class="number">1</span>),</span><br><span class="line">            self.make_layers(block = block, input_channel = <span class="number">64</span>, channel = <span class="number">128</span>, stride = <span class="number">1</span>, block_num = block_nums[<span class="number">0</span>]),</span><br><span class="line">            self.make_layers(block = block, input_channel = <span class="built_in">int</span>(<span class="number">128</span> * block.expansion), channel = <span class="number">256</span>, stride = <span class="number">2</span>, block_num = block_nums[<span class="number">1</span>]),</span><br><span class="line">            self.make_layers(block = block, input_channel = <span class="built_in">int</span>(<span class="number">256</span> * block.expansion), channel = <span class="number">512</span>, stride = <span class="number">2</span>, block_num = block_nums[<span class="number">2</span>]),</span><br><span class="line">            self.make_layers(block = block, input_channel = <span class="built_in">int</span>(<span class="number">512</span> * block.expansion), channel = <span class="number">1024</span>, stride = <span class="number">2</span>, block_num = block_nums[<span class="number">3</span>]),</span><br><span class="line">            nn.AdaptiveAvgPool2d(<span class="number">1</span>),</span><br><span class="line">            nn.Flatten(),</span><br><span class="line">            nn.Linear(<span class="built_in">int</span>(<span class="number">1024</span>*block.expansion), class_num)</span><br><span class="line">        )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">make_layers</span>(<span class="params">self, block, input_channel, channel, stride, block_num</span>):</span><br><span class="line">        layers = []</span><br><span class="line">        layers.append(block(input_channel, channel, stride))</span><br><span class="line">        input_channel = <span class="built_in">int</span>(channel * block.expansion)</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, block_num):</span><br><span class="line">            layers.append(block(input_channel, channel, <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> nn.Sequential(*layers)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        out = self.stacklayers(x)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ResNeXt_18</span>(<span class="params">input_channel, class_num</span>):</span><br><span class="line">    <span class="keyword">return</span> ResNet(BasicBlock, [<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>], input_channel, class_num)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ResNeXt_34</span>(<span class="params">input_channel, class_num</span>):</span><br><span class="line">    <span class="keyword">return</span> ResNet(BasicBlock, [<span class="number">3</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">3</span>], input_channel, class_num)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ResNeXt_50</span>(<span class="params">input_channel, class_num</span>):</span><br><span class="line">    <span class="keyword">return</span> ResNet(Bottleneck, [<span class="number">3</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">3</span>], input_channel, class_num)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ResNeXt_101</span>(<span class="params">input_channel, class_num</span>):</span><br><span class="line">    <span class="keyword">return</span> ResNet(Bottleneck, [<span class="number">3</span>,<span class="number">4</span>,<span class="number">23</span>,<span class="number">3</span>], input_channel, class_num)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ResNeXt_152</span>(<span class="params">input_channel, class_num</span>):</span><br><span class="line">    <span class="keyword">return</span> ResNet(Bottleneck, [<span class="number">3</span>,<span class="number">8</span>,<span class="number">36</span>,<span class="number">3</span>], input_channel, class_num)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Paper-Reading/" rel="tag"># Paper Reading</a>
+              <a href="/tags/Computer-Vision/" rel="tag"># Computer Vision</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/28/6828-lab1/" rel="prev" title="MIT6.828 Lab1">
+      <i class="fa fa-chevron-left"></i> MIT6.828 Lab1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/06/OpenMP-on-macOS/" rel="next" title="在macOS 10.15上使用OpenMP">
+      在macOS 10.15上使用OpenMP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text"> 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text"> 网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text"> 参数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text"> 代码实现</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

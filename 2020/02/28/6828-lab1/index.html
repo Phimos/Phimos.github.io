@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Environment Setting 在OS X下进行的环境搭建，配置如下： 12345678910111213             ###                  User: pims           ####                   Hostname: PimsdeMacBook-Pro           ###                    Dis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT6.828 Lab1">
+<meta property="og:url" content="http://phimos.github.io/2020/02/28/6828-lab1/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="Environment Setting 在OS X下进行的环境搭建，配置如下： 12345678910111213             ###                  User: pims           ####                   Hostname: PimsdeMacBook-Pro           ###                    Dis">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/8ZGbCXie5tYRn76.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/7eJAEYlsKn9qOiW.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/UM3YOkIGv4S6inT.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/UGgApluvSIOZteD.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/N7Xlr9QpwftGAaE.jpg">
+<meta property="article:published_time" content="2020-02-28T09:47:54.000Z">
+<meta property="article:modified_time" content="2020-02-28T09:47:54.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="6.828">
+<meta property="article:tag" content="Operating System">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/10/8ZGbCXie5tYRn76.jpg">
+
+<link rel="canonical" href="http://phimos.github.io/2020/02/28/6828-lab1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>MIT6.828 Lab1 | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/02/28/6828-lab1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MIT6.828 Lab1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-28 17:47:54" itemprop="dateCreated datePublished" datetime="2020-02-28T17:47:54+08:00">2020-02-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="environment-setting"><a class="markdownIt-Anchor" href="#environment-setting"></a> Environment Setting</h2>
+<p>在OS X下进行的环境搭建，配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">             ###                  User: pims</span><br><span class="line">           ####                   Hostname: PimsdeMacBook-Pro</span><br><span class="line">           ###                    Distro: OS X 10.15.3</span><br><span class="line">   #######    #######             Kernel: Darwin</span><br><span class="line"> ######################           Uptime:  7:32</span><br><span class="line">#####################             Shell: /bin/zsh</span><br><span class="line">####################              Terminal: xterm-256color iTerm.app</span><br><span class="line">####################              CPU: Intel Core i5-8257U CPU @ 1.40GHz</span><br><span class="line">#####################             Memory: 16 GB</span><br><span class="line"> ######################           Disk: 26%</span><br><span class="line">  ####################            Battery: 100%</span><br><span class="line">    ################             </span><br><span class="line">     ####     #####</span><br></pre></td></tr></table></figure>
+<p>由于官网提供的补丁版qemu在本地报错make不成功，所以用的是正常版的qemu，但是对于在完成exercise的过程中没有遇到很大的问题，对于lab文件的make结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">➜  lab git:(lab1) ✗ make</span><br><span class="line">+ as kern/entry.S</span><br><span class="line">+ cc kern/entrypgdir.c</span><br><span class="line">+ cc kern/init.c</span><br><span class="line">+ cc kern/console.c</span><br><span class="line">+ cc kern/monitor.c</span><br><span class="line">+ cc kern/printf.c</span><br><span class="line">+ cc kern/kdebug.c</span><br><span class="line">+ cc lib/printfmt.c</span><br><span class="line">+ cc lib/readline.c</span><br><span class="line">+ cc lib/string.c</span><br><span class="line">+ ld obj/kern/kernel</span><br><span class="line">i386-jos-elf-ld: warning: section `.bss&#x27; type changed to PROGBITS</span><br><span class="line">+ as boot/boot.S</span><br><span class="line">+ cc -Os boot/main.c</span><br><span class="line">+ ld boot/boot</span><br><span class="line">boot block is 382 bytes (max 510)</span><br><span class="line">+ mk obj/kern/kernel.img</span><br></pre></td></tr></table></figure>
+<h2 id="exercise1"><a class="markdownIt-Anchor" href="#exercise1"></a> Exercise1</h2>
+<p>内容为阅读汇编的文档，进行了阅读，了解了内嵌汇编的语法格式。</p>
+<h2 id="exercise2"><a class="markdownIt-Anchor" href="#exercise2"></a> Exercise2</h2>
+<p>逐步执行查看了运行过程，并且对于GDB指令进行了进一步的熟悉。</p>
+<h2 id="exercise3"><a class="markdownIt-Anchor" href="#exercise3"></a> Exercise3</h2>
+<ul>
+<li>At what point does the processor start executing 32-bit code? What exactly causes the switch from 16- to 32-bit mode?</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lgdt    gdtdesc</span><br><span class="line">movl    %cr0, %eax        </span><br><span class="line">orl     $CR0_PE_ON, %eax  </span><br><span class="line">movl    %eax, %cr0        </span><br><span class="line"></span><br><span class="line"># Jump to next instruction, but in 32-bit code segment.</span><br><span class="line"># Switches processor into 32-bit mode.</span><br><span class="line">ljmp    $PROT_MODE_CSEG, $protcseg</span><br></pre></td></tr></table></figure>
+<p>在修改完了<code>cr0</code>的值之后，通过<code>ljmp</code>指令切换到32-bit模式</p>
+<ul>
+<li>What is the last instruction of the boot loader executed, and what is the first instruction of the kernel it just loaded?</li>
+</ul>
+<p>在main.c文件中可以看到，<code>bootmain</code>结尾的最后是：</p>
+ <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((<span class="type">void</span> (*)(<span class="type">void</span>)) (ELFHDR-&gt;e_entry))();</span><br></pre></td></tr></table></figure>
+<p>转到ELF头里面的入口，这个函数正常情况下不会返回，所以后面bad里面的死循环在正常情况下是永远不可能执行的代码。</p>
+<p>在obj/boot/boot.asm里面可以看到对应的内容为：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7d63:	ff 15 18 00 01 00    	call   *0x10018</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Where is the first instruction of the kernel?</li>
+</ul>
+<p>在gdb窗口中<code>b *0x7d63</code>在<code>call</code>语句前面打一个断点，之后执行<code>si</code>，可以看到kernel里面的第一条语句是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x10000c:	movw   $0x1234,0x472</span><br></pre></td></tr></table></figure>
+<ul>
+<li>How does the boot loader decide how many sectors it must read in order to fetch the entire kernel from disk? Where does it find this information?</li>
+</ul>
+<p>在ELF头里面，保存了相关的信息，其中Elf数据类型的定义inc/elf.h头文件当中：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Elf</span> &#123;</span></span><br><span class="line">	<span class="type">uint32_t</span> e_magic;	<span class="comment">// must equal ELF_MAGIC</span></span><br><span class="line">	<span class="type">uint8_t</span> e_elf[<span class="number">12</span>];</span><br><span class="line">	<span class="type">uint16_t</span> e_type;</span><br><span class="line">	<span class="type">uint16_t</span> e_machine;</span><br><span class="line">	<span class="type">uint32_t</span> e_version;</span><br><span class="line">	<span class="type">uint32_t</span> e_entry;</span><br><span class="line">	<span class="type">uint32_t</span> e_phoff;</span><br><span class="line">	<span class="type">uint32_t</span> e_shoff;</span><br><span class="line">	<span class="type">uint32_t</span> e_flags;</span><br><span class="line">	<span class="type">uint16_t</span> e_ehsize;</span><br><span class="line">	<span class="type">uint16_t</span> e_phentsize;</span><br><span class="line">	<span class="type">uint16_t</span> e_phnum;</span><br><span class="line">	<span class="type">uint16_t</span> e_shentsize;</span><br><span class="line">	<span class="type">uint16_t</span> e_shnum;</span><br><span class="line">	<span class="type">uint16_t</span> e_shstrndx;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中e_phoff表示Program header table在文件中的偏移量，e_phnum表示Program header table里面一共有多少个条目，在<code>bootmain</code>的主函数中从ELF头读入得到：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ph = (<span class="keyword">struct</span> Proghdr *) ((<span class="type">uint8_t</span> *) ELFHDR + ELFHDR-&gt;e_phoff);</span><br><span class="line">eph = ph + ELFHDR-&gt;e_phnum;</span><br></pre></td></tr></table></figure>
+<h2 id="exercise4"><a class="markdownIt-Anchor" href="#exercise4"></a> Exercise4</h2>
+<p>pointers.c的文件具体内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span></span><br><span class="line"><span class="title function_">f</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> a[<span class="number">4</span>];</span><br><span class="line">    <span class="type">int</span> *b = <span class="built_in">malloc</span>(<span class="number">16</span>);</span><br><span class="line">    <span class="type">int</span> *c;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1: a = %p, b = %p, c = %p\n&quot;</span>, a, b, c);</span><br><span class="line"></span><br><span class="line">    c = a;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">	a[i] = <span class="number">100</span> + i;</span><br><span class="line">    c[<span class="number">0</span>] = <span class="number">200</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,</span><br><span class="line">	   a[<span class="number">0</span>], a[<span class="number">1</span>], a[<span class="number">2</span>], a[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    c[<span class="number">1</span>] = <span class="number">300</span>;</span><br><span class="line">    *(c + <span class="number">2</span>) = <span class="number">301</span>;</span><br><span class="line">    <span class="number">3</span>[c] = <span class="number">302</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;3: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,</span><br><span class="line">	   a[<span class="number">0</span>], a[<span class="number">1</span>], a[<span class="number">2</span>], a[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    c = c + <span class="number">1</span>;</span><br><span class="line">    *c = <span class="number">400</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;4: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,</span><br><span class="line">	   a[<span class="number">0</span>], a[<span class="number">1</span>], a[<span class="number">2</span>], a[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    c = (<span class="type">int</span> *) ((<span class="type">char</span> *) c + <span class="number">1</span>);</span><br><span class="line">    *c = <span class="number">500</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;5: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,</span><br><span class="line">	   a[<span class="number">0</span>], a[<span class="number">1</span>], a[<span class="number">2</span>], a[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    b = (<span class="type">int</span> *) a + <span class="number">1</span>;</span><br><span class="line">    c = (<span class="type">int</span> *) ((<span class="type">char</span> *) a + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;6: a = %p, b = %p, c = %p\n&quot;</span>, a, b, c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">main</span><span class="params">(<span class="type">int</span> ac, <span class="type">char</span> **av)</span></span><br><span class="line">&#123;</span><br><span class="line">    f();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到的输出结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1: a = 0x7ffeef413940, b = 0x7ffe70c00060, c = 0x7ffeef4139a0</span><br><span class="line">2: a[0] = 200, a[1] = 101, a[2] = 102, a[3] = 103</span><br><span class="line">3: a[0] = 200, a[1] = 300, a[2] = 301, a[3] = 302</span><br><span class="line">4: a[0] = 200, a[1] = 400, a[2] = 301, a[3] = 302</span><br><span class="line">5: a[0] = 200, a[1] = 128144, a[2] = 256, a[3] = 302</span><br><span class="line">6: a = 0x7ffeef413940, b = 0x7ffeef413944, c = 0x7ffeef413941</span><br></pre></td></tr></table></figure>
+<p>可以看到b指向的是在堆上面开辟的空间，而a、c都是在栈上面开辟的空间，所以地址存在一定差异。之后都是一些比较简单的地址索引以及指针加法。</p>
+<h2 id="exercise5"><a class="markdownIt-Anchor" href="#exercise5"></a> Exercise5</h2>
+<p>这里将boot/Makefrag文件中的0x7C00修改成了0x7D00：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(OBJDIR)/boot/boot: $(BOOT_OBJS)</span><br><span class="line">	@echo + ld boot/boot</span><br><span class="line">	$(V)$(LD) $(LDFLAGS) -N -e start -Ttext 0x7D00 -o $@.out $^</span><br><span class="line">	$(V)$(OBJDUMP) -S $@.out &gt;$@.asm</span><br><span class="line">	$(V)$(OBJCOPY) -S -O binary -j .text $@.out $@</span><br><span class="line">	$(V)perl boot/sign.pl $(OBJDIR)/boot/boot</span><br></pre></td></tr></table></figure>
+<p>重新make之后，查看obj/boot/boot.asm可以发现链接地址已经发生了改变：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.globl start</span><br><span class="line">start:</span><br><span class="line">  .code16                     # Assemble for 16-bit mode</span><br><span class="line">  cli                         # Disable interrupts</span><br><span class="line">    7d00:	fa                   	cli    </span><br><span class="line">  cld                         # String operations increment</span><br><span class="line">    7d01:	fc                   	cld    </span><br><span class="line"></span><br><span class="line">  # Set up the important data segment registers (DS, ES, SS).</span><br><span class="line">  xorw    %ax,%ax             # Segment number zero</span><br><span class="line">    7d02:	31 c0                	xor    %eax,%eax</span><br><span class="line">  movw    %ax,%ds             # -&gt; Data Segment</span><br><span class="line">    7d04:	8e d8                	mov    %eax,%ds</span><br><span class="line">  movw    %ax,%es             # -&gt; Extra Segment</span><br><span class="line">    7d06:	8e c0                	mov    %eax,%es</span><br><span class="line">  movw    %ax,%ss             # -&gt; Stack Segment</span><br><span class="line">    7d08:	8e d0                	mov    %eax,%ss</span><br></pre></td></tr></table></figure>
+<p>但是执行GDB可以看到，事实上BIOS依然将boot loader加载到了0x7c00的位置，也就是说程序在执行到这里的时候，前面依然有一部分是可以正常执行的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">Breakpoint 1, 0x00007c00 in ?? ()</span><br><span class="line">(gdb) x/40i</span><br><span class="line">   0x7c01:	cld</span><br><span class="line">   0x7c02:	xor    %eax,%eax</span><br><span class="line">   0x7c04:	mov    %eax,%ds</span><br><span class="line">   0x7c06:	mov    %eax,%es</span><br><span class="line">   0x7c08:	mov    %eax,%ss</span><br><span class="line">   0x7c0a:	in     $0x64,%al</span><br><span class="line">   0x7c0c:	test   $0x2,%al</span><br><span class="line">   0x7c0e:	jne    0x7c0a</span><br><span class="line">   0x7c10:	mov    $0xd1,%al</span><br><span class="line">   0x7c12:	out    %al,$0x64</span><br><span class="line">   0x7c14:	in     $0x64,%al</span><br><span class="line">   0x7c16:	test   $0x2,%al</span><br><span class="line">   0x7c18:	jne    0x7c14</span><br><span class="line">   0x7c1a:	mov    $0xdf,%al</span><br><span class="line">   0x7c1c:	out    %al,$0x60</span><br><span class="line">   0x7c1e:	lgdtl  (%esi)</span><br><span class="line">   0x7c21:	fs jge 0x7c33</span><br><span class="line">   0x7c24:	and    %al,%al</span><br><span class="line">   0x7c26:	or     $0x1,%ax</span><br><span class="line">   0x7c2a:	mov    %eax,%cr0</span><br><span class="line">   0x7c2d:	ljmp   $0xb866,$0x87d32</span><br><span class="line">   0x7c34:	adc    %al,(%eax)</span><br><span class="line">   0x7c36:	mov    %eax,%ds</span><br><span class="line">   0x7c38:	mov    %eax,%es</span><br><span class="line">   0x7c3a:	mov    %eax,%fs</span><br><span class="line">   0x7c3c:	mov    %eax,%gs</span><br><span class="line">   0x7c3e:	mov    %eax,%ss</span><br><span class="line">   0x7c40:	mov    $0x7d00,%esp</span><br><span class="line">   0x7c45:	call   0x7d0b</span><br><span class="line">   0x7c4a:	jmp    0x7c4a</span><br><span class="line">   0x7c4c:	add    %al,(%eax)</span><br><span class="line">   0x7c4e:	add    %al,(%eax)</span><br><span class="line">   0x7c50:	add    %al,(%eax)</span><br><span class="line">   0x7c52:	add    %al,(%eax)</span><br><span class="line">   0x7c54:	(bad)</span><br><span class="line">   0x7c55:	incl   (%eax)</span><br><span class="line">   0x7c57:	add    %al,(%eax)</span><br><span class="line">   0x7c59:	lcall  $0x0,$0xffff00cf</span><br><span class="line">   0x7c60:	add    %dl,0x1700cf(%edx)</span><br><span class="line">   0x7c66:	dec    %esp</span><br></pre></td></tr></table></figure>
+<p>但是与之前相比而言，对于<code>ljmp</code>指令发生了改变，这里附上之前的内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">Breakpoint 1, 0x00007c00 in ?? ()</span><br><span class="line">(gdb) x/40i</span><br><span class="line">   0x7c01:	cld</span><br><span class="line">   0x7c02:	xor    %eax,%eax</span><br><span class="line">   0x7c04:	mov    %eax,%ds</span><br><span class="line">   0x7c06:	mov    %eax,%es</span><br><span class="line">   0x7c08:	mov    %eax,%ss</span><br><span class="line">   0x7c0a:	in     $0x64,%al</span><br><span class="line">   0x7c0c:	test   $0x2,%al</span><br><span class="line">   0x7c0e:	jne    0x7c0a</span><br><span class="line">   0x7c10:	mov    $0xd1,%al</span><br><span class="line">   0x7c12:	out    %al,$0x64</span><br><span class="line">   0x7c14:	in     $0x64,%al</span><br><span class="line">   0x7c16:	test   $0x2,%al</span><br><span class="line">   0x7c18:	jne    0x7c14</span><br><span class="line">   0x7c1a:	mov    $0xdf,%al</span><br><span class="line">   0x7c1c:	out    %al,$0x60</span><br><span class="line">   0x7c1e:	lgdtl  (%esi)</span><br><span class="line">   0x7c21:	fs jl  0x7c33</span><br><span class="line">   0x7c24:	and    %al,%al</span><br><span class="line">   0x7c26:	or     $0x1,%ax</span><br><span class="line">   0x7c2a:	mov    %eax,%cr0</span><br><span class="line">   0x7c2d:	ljmp   $0xb866,$0x87c32</span><br><span class="line">   0x7c34:	adc    %al,(%eax)</span><br><span class="line">   0x7c36:	mov    %eax,%ds</span><br><span class="line">   0x7c38:	mov    %eax,%es</span><br><span class="line">   0x7c3a:	mov    %eax,%fs</span><br><span class="line">   0x7c3c:	mov    %eax,%gs</span><br><span class="line">   0x7c3e:	mov    %eax,%ss</span><br><span class="line">   0x7c40:	mov    $0x7c00,%esp</span><br><span class="line">   0x7c45:	call   0x7d0b</span><br><span class="line">   0x7c4a:	jmp    0x7c4a</span><br><span class="line">   0x7c4c:	add    %al,(%eax)</span><br><span class="line">   0x7c4e:	add    %al,(%eax)</span><br><span class="line">   0x7c50:	add    %al,(%eax)</span><br><span class="line">   0x7c52:	add    %al,(%eax)</span><br><span class="line">   0x7c54:	(bad)</span><br><span class="line">   0x7c55:	incl   (%eax)</span><br><span class="line">   0x7c57:	add    %al,(%eax)</span><br><span class="line">   0x7c59:	lcall  $0x0,$0xffff00cf</span><br><span class="line">   0x7c60:	add    %dl,0x1700cf(%edx)</span><br><span class="line">   0x7c66:	dec    %esp</span><br></pre></td></tr></table></figure>
+<p>可以看到由<code>$0x87c32</code>变成了<code>$0x87d32</code>，在执行完了<code>ljmp</code>指令之后，程序就会出错了。</p>
+<h2 id="exercise6"><a class="markdownIt-Anchor" href="#exercise6"></a> Exercise6</h2>
+<p>在0x7c00处添加断点，查看0x100000地址存放的内容，可以发现是全0，这就是BIOS在进入boot loader的时候，对应的内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x100000:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x100010:	0x00000000	0x00000000	0x00000000	0x00000000</span><br></pre></td></tr></table></figure>
+<p>之后再0x7d63处添加断点，此时是boot loader要进入内核的时点，0x100000存放的内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x100000:	0x1badb002	0x00000000	0xe4524ffe	0x7205c766</span><br><span class="line">0x100010:	0x34000004	0x7000b812	0x220f0011	0xc0200fd8</span><br></pre></td></tr></table></figure>
+<p>可以发现已经发生了改变，并不是一开始的全0，说明boot loader进行了一个载入内核的工作。</p>
+<h2 id="exercise7"><a class="markdownIt-Anchor" href="#exercise7"></a> Exercise7</h2>
+<p>从entry.S中，可以看到<code>mov  %eax,%cr0</code>位于入口的开头处，利用gdb在入口处设置断点，逐条执行可以发现，这条指令位于0x100025，在此处设置断点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/8x 0x00100000</span><br><span class="line">0x100000:	0x1badb002	0x00000000	0xe4524ffe	0x7205c766</span><br><span class="line">0x100010:	0x34000004	0x7000b812	0x220f0011	0xc0200fd8</span><br><span class="line">(gdb) x/8x 0xf0100000</span><br><span class="line">0xf0100000 &lt;_start-268435468&gt;:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0xf0100010 &lt;entry+4&gt;:	0x00000000	0x00000000	0x00000000	0x00000000</span><br></pre></td></tr></table></figure>
+<p>执行完这条指令之后：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/8x 0x00100000</span><br><span class="line">0x100000:	0x1badb002	0x00000000	0xe4524ffe	0x7205c766</span><br><span class="line">0x100010:	0x34000004	0x7000b812	0x220f0011	0xc0200fd8</span><br><span class="line">(gdb) x/8x 0xf0100000</span><br><span class="line">0xf0100000 &lt;_start-268435468&gt;:	0x1badb002	0x00000000	0xe4524ffe	0x7205c766</span><br><span class="line">0xf0100010 &lt;entry+4&gt;:	0x34000004	0x7000b812	0x220f0011	0xc0200fd8</span><br></pre></td></tr></table></figure>
+<p>可以发现，在执行这条指令之前，0xf0100000处是全0的，在执行之后，有了和0x00100000处一样的值。设置了%cr0后启用分页，让0xf0100000和0x00100000映射到了同样的物理地址，所以查看会有相同的值。</p>
+<p>在entry.S中可以看到，之后他尝试执行的指令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov	$relocated, %eax</span><br><span class="line">jmp	*%eax</span><br></pre></td></tr></table></figure>
+<p>他要在执行C代码之前，跳转到KERNBASE上方，不再在低地址了。从gdb可以发现，这里移入<code>%eax</code>的值为0xf010002f，如果没有启用分页，那么跳转将会失败。</p>
+<p>可以发现当注释掉那一行之后，会导致内核崩溃，卡在<code>Booting from Hard Disk..</code>，同时利用GDB查看也可以看到，跳转进入的0xf010002c位置为全0。</p>
+<h2 id="exercise8"><a class="markdownIt-Anchor" href="#exercise8"></a> Exercise8</h2>
+<p>缺失的内容定义在printfmt.c中第206行，直接仿照上面的<code>%u</code>进行修改，将base改成8就可以了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// (unsigned) octal</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">&#x27;o&#x27;</span>:</span><br><span class="line">	<span class="comment">// Replace this with your code.</span></span><br><span class="line">	num = getuint(&amp;ap, lflag);</span><br><span class="line">	base = <span class="number">8</span>;</span><br><span class="line">	<span class="keyword">goto</span> number;</span><br></pre></td></tr></table></figure>
+<p>可以发现，修改完之后，命令行中的&quot;6828 decimal is 15254 octal!&quot;已经可以正确显示了。</p>
+<ol>
+<li>Explain the interface between <code>printf.c</code> and <code>console.c</code>. Specifically, what function does <code>console.c</code> export? How is this function used by <code>printf.c</code>?</li>
+</ol>
+<p><code>console.c</code>里面<code>cputchar()</code>函数在<code>printf.c</code>里面被使用了。它的作用是往屏幕上打印一个字符，被用在<code>printf.c</code>里面的<code>putch()</code>函数中，之后作为参数传入<code>vprintfmt()</code>的调用过程。</p>
+<ol start="2">
+<li>Explain the following from <code>console.c</code>:</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (crt_pos &gt;= CRT_SIZE) &#123;</span><br><span class="line">  <span class="type">int</span> i;</span><br><span class="line">  memmove(crt_buf, crt_buf + CRT_COLS, (CRT_SIZE - CRT_COLS) * <span class="keyword">sizeof</span>(<span class="type">uint16_t</span>));</span><br><span class="line">  <span class="keyword">for</span> (i = CRT_SIZE - CRT_COLS; i &lt; CRT_SIZE; i++)</span><br><span class="line">    crt_buf[i] = <span class="number">0x0700</span> | <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">  crt_pos -= CRT_COLS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CRT_SIZE指的应该是crt_buff里面显示缓冲区的大小，所以这里的情况实际是超过缓冲区最大上限的时候的处理方法。<code>memmove()</code>函数的定义如下所示，其作用是将str2处复制n个字符到str1处，在有重叠区域的情况下比<code>memcpy()</code>更加安全。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memmove</span><span class="params">(<span class="type">void</span> *str1, <span class="type">const</span> <span class="type">void</span> *str2, <span class="type">size_t</span> n)</span></span><br></pre></td></tr></table></figure>
+<p>所以这里所进行的内容是将缓冲区的内容整体前移了CRT_COLS字符，腾出了一部分的缓冲区空间。</p>
+<ol start="3">
+<li>
+<p>For the following questions you might wish to consult the notes for Lecture 2. These notes cover GCC’s calling convention on the x86.<br />
+Trace the execution of the following code step-by-step:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">1</span>, y = <span class="number">3</span>, z = <span class="number">4</span>;</span><br><span class="line">cprintf(<span class="string">&quot;x %d, y %x, z %d\n&quot;</span>, x, y, z);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>In the call to <code>cprintf()</code>, to what does <code>fmt</code> point? To what does <code>ap</code> point?</li>
+<li>List (in order of execution) each call to cons_putc, va_arg, and vcprintf. For cons_putc, list its argument as well. For va_arg, list what ap points to before and after the call. For vcprintf list the values of its two arguments.</li>
+</ul>
+</li>
+</ol>
+<p>在对于<code>cprintf()</code>的调用当中，<code>fmt</code>指的是格式化的字符串，<code>ap</code>指向的是参数列表。</p>
+<p>其中<code>cons_putc()</code>的内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// output a character to the console</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">cons_putc</span><span class="params">(<span class="type">int</span> c)</span></span><br><span class="line">&#123;</span><br><span class="line">	serial_putc(c);</span><br><span class="line">	lpt_putc(c);</span><br><span class="line">	cga_putc(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>他的作用是向console输出一个字符，主要的操作位于<code>cga_putc()</code>内容当中，对于输入来确定字符，然后根据情况进行输出。</p>
+<p><code>vcprintf()</code>内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">vcprintf</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *fmt, va_list ap)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	vprintfmt((<span class="type">void</span>*)putch, &amp;cnt, fmt, ap);</span><br><span class="line">	<span class="keyword">return</span> cnt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>传入格式化的字符串以及对应的参数列表，然后通过调用<code>vprintfmt()</code>进行输出。</p>
+<p>而<code>va_arg()</code>的调用在<code>vprintfmt()</code>当中出现，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">&#x27;*&#x27;</span>:</span><br><span class="line">	precision = va_arg(ap, <span class="type">int</span>);</span><br><span class="line">	<span class="keyword">goto</span> process_precision;</span><br></pre></td></tr></table></figure>
+<p>他实现的内容实际上是从<code>ap</code>里面读取一个参数，然后将ap进行一个修改，即通过后面提供的数据类型来进行指针的移动。</p>
+<p>这三个函数的关系是<code>vcprintf()</code>中调用了<code>vprintfmt()</code>，在<code>vprintfmt()</code>内部利用<code>va_arg()</code>对格式化字符串中的参数进行解析，之后得到确切的字符串利用<code>cons_putc()</code>函数一个一个字符的向console进行输出。</p>
+<ol start="4">
+<li>Run the following code.</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> i = <span class="number">0x00646c72</span>;</span><br><span class="line">cprintf(<span class="string">&quot;H%x Wo%s&quot;</span>, <span class="number">57616</span>, &amp;i);</span><br></pre></td></tr></table></figure>
+<p>What is the output? Explain how this output is arrived at in the step-by-step manner of the previous exercise.</p>
+<p>The output depends on that fact that the x86 is little-endian. If the x86 were instead big-endian what would you set <code>i</code> to in order to yield the same output? Would you need to change 57616 to a different value?</p>
+<p>得到的输出为：“He110 World”。</p>
+<p>可以知道57616转换成16进制的结果为e110，所以前半部分得到的是He110。</p>
+<p>后半部分对应ASCII码表可以知道：</p>
+<p><img src="https://s2.loli.net/2023/01/10/8ZGbCXie5tYRn76.jpg" alt="" /></p>
+<p>由于小端法存储，0x00646c72的存储实际上是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">72 6c 64 00</span><br></pre></td></tr></table></figure>
+<p>对应的字符串就是&quot;rld\0&quot;，得到的后半部分为World。</p>
+<p>如果改为大端法，对前半部分不会有影响，后半部分需要改成<code>i = 0x726c6400</code>。</p>
+<ol start="5">
+<li>In the following code, what is going to be printed after ‘y=’? (note: the answer is not a specific value.) Why does this happen?</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cprintf(<span class="string">&quot;x=%d y=%d&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<p>执行得到的结果为&quot;x=3 y=-267288596&quot;，因为此处y所对应的<code>%d</code>没有给出，那么他会尝试在栈上读取内容。通过gdb调试可以知道最后传入时候<code>ap = f0117fd4</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/8x 0xf0117fd4</span><br><span class="line">0xf0117fd4:	0x00000003	0xf0117fec	0x00000000	0x00000000</span><br><span class="line">0xf0117fe4:	0x00000000	0x00000000	0x00646c72	0x00000000</span><br></pre></td></tr></table></figure>
+<p>查看地址所对应的内容，可以发现所打印出来的y其实就是后面的<code>0xf0117fec</code>转换成int的值。</p>
+<ol start="6">
+<li>Let’s say that GCC changed its calling convention so that it pushed arguments on the stack in declaration order, so that the last argument is pushed last. How would you have to change cprintf or its interface so that it would still be possible to pass it a variable number of arguments?</li>
+</ol>
+<p>需要能够从栈顶知道一共有多少参数才能规范后面的行为，通过调整参数顺序，把fmt字符串当做最后一个参数输入，或者添加一个新参数为参数的总个数n放在末尾都可以。</p>
+<h2 id="exercise9"><a class="markdownIt-Anchor" href="#exercise9"></a> Exercise9</h2>
+<p>在kern/entry.S的末尾可以看到如下代码，在.data段里面为栈预留了KSTKSIZE大小的空间。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.data</span><br><span class="line">###################################################################</span><br><span class="line"># boot stack</span><br><span class="line">###################################################################</span><br><span class="line">	.p2align	PGSHIFT		# force page alignment</span><br><span class="line">	.globl		bootstack</span><br><span class="line">bootstack:</span><br><span class="line">	.space		KSTKSIZE</span><br><span class="line">	.globl		bootstacktop   </span><br><span class="line">bootstacktop:</span><br></pre></td></tr></table></figure>
+<p>在obj/kern/kernel.asm中的第56-58行，通过设置%esp来初始化栈的位置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">	# Set the stack pointer</span><br><span class="line">	movl	$(bootstacktop),%esp</span><br><span class="line">f0100034:	bc 00 80 11 f0       	mov    $0xf0118000,%esp</span><br></pre></td></tr></table></figure>
+<p>栈底的位置就是<code>0xf0118000</code>，从高地址往低地址生长。</p>
+<p>同时在kern/entry.S的69行处可以看到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">relocated:</span><br><span class="line"></span><br><span class="line">	# Clear the frame pointer register (EBP)</span><br><span class="line">	# so that once we get into debugging C code,</span><br><span class="line">	# stack backtraces will be terminated properly.</span><br><span class="line">	movl	$0x0,%ebp			# nuke frame pointer</span><br></pre></td></tr></table></figure>
+<p>将栈的终点设置为0，这能够使得后面进行的backtrace可以正常终止，不会陷入死循环或者出错访问到栈之外的空间。</p>
+<h2 id="exercise10"><a class="markdownIt-Anchor" href="#exercise10"></a> Exercise10</h2>
+<p>流程就是不断进行函数的调用，输入的参数每一次都-1，从一开始的5到最后的1然后到达递归终点。</p>
+<p>obj/kern/kernel.asm中的对应内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">test_backtrace(int x)</span><br><span class="line">&#123;</span><br><span class="line">f0100040:	55                   	push   %ebp</span><br><span class="line">f0100041:	89 e5                	mov    %esp,%ebp</span><br><span class="line">f0100043:	53                   	push   %ebx</span><br><span class="line">f0100044:	83 ec 14             	sub    $0x14,%esp</span><br><span class="line">f0100047:	8b 5d 08             	mov    0x8(%ebp),%ebx</span><br><span class="line">	cprintf(&quot;entering test_backtrace %d\n&quot;, x);</span><br><span class="line">f010004a:	89 5c 24 04          	mov    %ebx,0x4(%esp)</span><br><span class="line">f010004e:	c7 04 24 80 18 10 f0 	movl   $0xf0101880,(%esp)</span><br><span class="line">f0100055:	e8 34 09 00 00       	call   f010098e &lt;cprintf&gt;</span><br><span class="line">	if (x &gt; 0)</span><br><span class="line">f010005a:	85 db                	test   %ebx,%ebx</span><br><span class="line">f010005c:	7e 0d                	jle    f010006b &lt;test_backtrace+0x2b&gt;</span><br><span class="line">		test_backtrace(x-1);</span><br><span class="line">f010005e:	8d 43 ff             	lea    -0x1(%ebx),%eax</span><br><span class="line">f0100061:	89 04 24             	mov    %eax,(%esp)</span><br><span class="line">f0100064:	e8 d7 ff ff ff       	call   f0100040 &lt;test_backtrace&gt;</span><br><span class="line">f0100069:	eb 1c                	jmp    f0100087 &lt;test_backtrace+0x47&gt;</span><br><span class="line">	else</span><br><span class="line">		mon_backtrace(0, 0, 0);</span><br><span class="line">f010006b:	c7 44 24 08 00 00 00 	movl   $0x0,0x8(%esp)</span><br><span class="line">f0100072:	00 </span><br><span class="line">f0100073:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)</span><br><span class="line">f010007a:	00 </span><br><span class="line">f010007b:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)</span><br><span class="line">f0100082:	e8 cb 06 00 00       	call   f0100752 &lt;mon_backtrace&gt;</span><br><span class="line">	cprintf(&quot;leaving test_backtrace %d\n&quot;, x);</span><br><span class="line">f0100087:	89 5c 24 04          	mov    %ebx,0x4(%esp)</span><br><span class="line">f010008b:	c7 04 24 9c 18 10 f0 	movl   $0xf010189c,(%esp)</span><br><span class="line">f0100092:	e8 f7 08 00 00       	call   f010098e &lt;cprintf&gt;</span><br><span class="line">&#125;</span><br><span class="line">f0100097:	83 c4 14             	add    $0x14,%esp</span><br><span class="line">f010009a:	5b                   	pop    %ebx</span><br><span class="line">f010009b:	5d                   	pop    %ebp</span><br><span class="line">f010009c:	c3                   	ret    </span><br></pre></td></tr></table></figure>
+<p>通过:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f0100044:	83 ec 14             	sub    $0x14,%esp</span><br></pre></td></tr></table></figure>
+<p>可以看到，每次栈向下生长0x14，并且每一次函数调用都会传入参数，同时保存<code>%ebp</code>和<code>%ebx</code>的值，将其压入栈中。每次栈向下生长0x20。折算成32-bit字的话应当是8个。</p>
+<h2 id="exercise11"><a class="markdownIt-Anchor" href="#exercise11"></a> Exercise11</h2>
+<p>补全的<code>mon_backtrace()</code>如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">mon_backtrace</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="keyword">struct</span> Trapframe *tf)</span></span><br><span class="line">&#123;</span><br><span class="line">	cprintf(<span class="string">&quot;Stack backtrace:\n&quot;</span>);</span><br><span class="line">	<span class="type">uint32_t</span>* ebp = (<span class="type">uint32_t</span>*)read_ebp();</span><br><span class="line">	<span class="keyword">while</span>(ebp)&#123;</span><br><span class="line">		cprintf(<span class="string">&quot;ebp %08x &quot;</span>,ebp);</span><br><span class="line">		cprintf(<span class="string">&quot;eip %08x &quot;</span>,*(ebp+<span class="number">1</span>));</span><br><span class="line">		cprintf(<span class="string">&quot;args&quot;</span>);</span><br><span class="line">		<span class="type">int</span> i;</span><br><span class="line">		<span class="keyword">for</span>(i=<span class="number">2</span>;i&lt;=<span class="number">6</span>;++i)</span><br><span class="line">			cprintf(<span class="string">&quot; %08x&quot;</span>,*(ebp+i));</span><br><span class="line">		cprintf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">		ebp = (<span class="type">uint32_t</span>*)(*ebp);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<img src="https://s2.loli.net/2023/01/10/7eJAEYlsKn9qOiW.jpg" alt="image-20200223161749177" style="zoom:50%;" />
+<p>可以看到最顶上的是<code>mon_backtrace()</code>函数，下面是五次的<code>test_backtrace()</code>调用，符合题目要求。</p>
+<h2 id="exercise12"><a class="markdownIt-Anchor" href="#exercise12"></a> Exercise12</h2>
+<p>在<code>debuginfo_eip()</code>中利用<code>stab_binsearch()</code>函数来查找行号，通过观察inc/stab.h中的宏定义可以发现对应的类型应当是N_SLINE，对于搜索得到的结果，将行号从stabs数组中提取填写到info里面。如果lline&gt;rline说明出现了错误，直接返回-1。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">stab_binsearch(stabs, &amp;lline, &amp;rline, N_SLINE, addr);</span><br><span class="line"><span class="keyword">if</span>(lline &lt;= rline)</span><br><span class="line">	info-&gt;eip_line = stabs[lline].n_desc;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br></pre></td></tr></table></figure>
+<p>之后修改<code>mon_backtrace()</code>函数内部如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span></span><br><span class="line"><span class="title function_">mon_backtrace</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="keyword">struct</span> Trapframe *tf)</span></span><br><span class="line">&#123;</span><br><span class="line">	cprintf(<span class="string">&quot;Stack backtrace:\n&quot;</span>);</span><br><span class="line">	<span class="type">uint32_t</span>* ebp = (<span class="type">uint32_t</span>*)read_ebp();</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Eipdebuginfo</span> <span class="title">info</span>;</span></span><br><span class="line">	<span class="keyword">while</span>(ebp)&#123;</span><br><span class="line">		cprintf(<span class="string">&quot;ebp %08x &quot;</span>,ebp);</span><br><span class="line">		cprintf(<span class="string">&quot;eip %08x &quot;</span>,ebp[<span class="number">1</span>]);</span><br><span class="line">		cprintf(<span class="string">&quot;args&quot;</span>);</span><br><span class="line">		<span class="type">int</span> i;</span><br><span class="line">		<span class="keyword">for</span>(i=<span class="number">2</span>;i&lt;=<span class="number">6</span>;++i)</span><br><span class="line">			cprintf(<span class="string">&quot; %08x&quot;</span>,ebp[i]);</span><br><span class="line">		cprintf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">		debuginfo_eip(ebp[<span class="number">1</span>], &amp;info);</span><br><span class="line">		cprintf(<span class="string">&quot;\t%s:%d: %.*s+%d\n&quot;</span>, info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[<span class="number">1</span>]-info.eip_fn_addr);</span><br><span class="line"></span><br><span class="line">		ebp = (<span class="type">uint32_t</span>*)(*ebp);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在kern/monitor.c文件中加入新的命令行指令，这样当输入backtrace的时候就会调用<code>mon_backtrace()</code>函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">Command</span> <span class="title">commands</span>[] =</span> &#123;</span><br><span class="line">	&#123; <span class="string">&quot;help&quot;</span>, <span class="string">&quot;Display this list of commands&quot;</span>, mon_help &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;kerninfo&quot;</span>, <span class="string">&quot;Display information about the kernel&quot;</span>, mon_kerninfo &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;backtrace&quot;</span>, <span class="string">&quot;Findout the the value of \%ebp, \%eip and the args of called functions&quot;</span>, mon_backtrace&#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<img src="https://s2.loli.net/2023/01/10/UM3YOkIGv4S6inT.jpg" alt="image-20200223195603628" style="zoom:50%;" />
+<p>可见该指令可以成功被调用。</p>
+<p>在本地使用<code>make grade</code>评测可以得到满分50分：</p>
+<img src="https://s2.loli.net/2023/01/10/UGgApluvSIOZteD.jpg" alt="image-20200223195701827" style="zoom:50%;" />
+<h2 id="challenge"><a class="markdownIt-Anchor" href="#challenge"></a> Challenge</h2>
+<p>通过<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ANSI_escape_code">WIKI百科</a>中对于ANSI escape code的描述可以知道，利用\e[可以开启一个控制序列，那么只需要调整在输出字符串的开头控制颜色，在结尾恢复就可以，例如以下代码就会将输出文本调整成红色：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\e[31m&lt;output string&gt;\e[0m</span><br></pre></td></tr></table></figure>
+<p>将<code>mon_backtrace()</code>中打印行号等部分修改如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cprintf(<span class="string">&quot;\t\e[92m%s\e[0m:\e[31m%d\e[0m: \e[36m%.*s+%d\e[0m\n&quot;</span>, info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[<span class="number">1</span>]-info.eip_fn_addr);</span><br></pre></td></tr></table></figure>
+<p>可以看到产生图中所示的彩色输出：</p>
+<img src="https://s2.loli.net/2023/01/10/N7Xlr9QpwftGAaE.jpg" alt="image-20200223195925655" style="zoom:50%;" />
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/6-828/" rel="tag"># 6.828</a>
+              <a href="/tags/Operating-System/" rel="tag"># Operating System</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/21/jiukun/" rel="prev" title="量化笔试回忆版">
+      <i class="fa fa-chevron-left"></i> 量化笔试回忆版
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/29/RN-ResNeXt/" rel="next" title="[论文笔记] (ResNeXt) Aggregated Residual Transformations for Deep Neural Networks Saining">
+      [论文笔记] (ResNeXt) Aggregated Residual Transformations for Deep Neural Networks Saining <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#environment-setting"><span class="nav-number">1.</span> <span class="nav-text"> Environment Setting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise1"><span class="nav-number">2.</span> <span class="nav-text"> Exercise1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise2"><span class="nav-number">3.</span> <span class="nav-text"> Exercise2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise3"><span class="nav-number">4.</span> <span class="nav-text"> Exercise3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise4"><span class="nav-number">5.</span> <span class="nav-text"> Exercise4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise5"><span class="nav-number">6.</span> <span class="nav-text"> Exercise5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise6"><span class="nav-number">7.</span> <span class="nav-text"> Exercise6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise7"><span class="nav-number">8.</span> <span class="nav-text"> Exercise7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise8"><span class="nav-number">9.</span> <span class="nav-text"> Exercise8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise9"><span class="nav-number">10.</span> <span class="nav-text"> Exercise9</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise10"><span class="nav-number">11.</span> <span class="nav-text"> Exercise10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise11"><span class="nav-number">12.</span> <span class="nav-text"> Exercise11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exercise12"><span class="nav-number">13.</span> <span class="nav-text"> Exercise12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#challenge"><span class="nav-number">14.</span> <span class="nav-text"> Challenge</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

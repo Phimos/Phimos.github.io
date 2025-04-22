@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://phimos.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="某量化的机器学习岗笔试题，回忆如下，虽然我不知道这笔试和金融&#x2F;机器学习有什么关系。考试时长四个小时，一共七道题，最后两道编程题选一题做就可以，所以平均下来是每题四十分钟。  一、最大回撤 题目背景：考虑一个股票的价格在NNN天内的价格为P1,P2,…,PNP_1,P_2,\ldots,P_NP​1​​,P​2​​,…,P​N​​，一个投资者比较厌恶风险，他所能接受的最大回撤不能超过DDD，试着计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="量化笔试回忆版">
+<meta property="og:url" content="http://phimos.github.io/2020/02/21/jiukun/index.html">
+<meta property="og:site_name" content="Pims的博客">
+<meta property="og:description" content="某量化的机器学习岗笔试题，回忆如下，虽然我不知道这笔试和金融&#x2F;机器学习有什么关系。考试时长四个小时，一共七道题，最后两道编程题选一题做就可以，所以平均下来是每题四十分钟。  一、最大回撤 题目背景：考虑一个股票的价格在NNN天内的价格为P1,P2,…,PNP_1,P_2,\ldots,P_NP​1​​,P​2​​,…,P​N​​，一个投资者比较厌恶风险，他所能接受的最大回撤不能超过DDD，试着计算">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/10/P4xHZQa2u3JjYlV.jpg">
+<meta property="article:published_time" content="2020-02-20T21:30:58.000Z">
+<meta property="article:modified_time" content="2020-02-20T21:30:58.000Z">
+<meta property="article:author" content="Pims">
+<meta property="article:tag" content="Interview">
+<meta property="article:tag" content="Quant">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/10/P4xHZQa2u3JjYlV.jpg">
+
+<link rel="canonical" href="http://phimos.github.io/2020/02/21/jiukun/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>量化笔试回忆版 | Pims的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Pims的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pims的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phimos.github.io/2020/02/21/jiukun/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pims">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pims的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          量化笔试回忆版
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-21 05:30:58" itemprop="dateCreated datePublished" datetime="2020-02-21T05:30:58+08:00">2020-02-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>某量化的机器学习岗笔试题，回忆如下，虽然我不知道这笔试和金融/机器学习有什么关系。考试时长四个小时，一共七道题，最后两道编程题选一题做就可以，所以平均下来是每题四十分钟。</p>
+<h2 id="一-最大回撤"><a class="markdownIt-Anchor" href="#一-最大回撤"></a> 一、最大回撤</h2>
+<p>题目背景：考虑一个股票的价格在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>天内的价格为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>P</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>P</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">P_1,P_2,\ldots,P_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">1</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mpunct">,</span><span class="minner">…</span><span class="mpunct">,</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span>，一个投资者比较厌恶风险，他所能接受的最大回撤不能超过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">D</span></span></span></span>，试着计算他在这个最大回撤限制下的最大收益，算法复杂度需要是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>的级别。最大回撤定义为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>max</mi><mo>(</mo><msub><mi>P</mi><mi>i</mi></msub><mo>−</mo><msub><mi>P</mi><mi>j</mi></msub><mo>)</mo><mo separator="true">,</mo><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">\max(P_i-P_j),i&lt;j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="base textstyle uncramped"><span class="mop">max</span><span class="mopen">(</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mbin">−</span><span class="mord"><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.13889em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.05724em;">j</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mord mathit">i</span><span class="mrel">&lt;</span><span class="mord mathit" style="margin-right:0.05724em;">j</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i,j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.65952em;"></span><span class="strut bottom" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">i</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.05724em;">j</span></span></span></span>都在买卖区间内。</p>
+<p>我的解答：双指针+单调队列维护区间最大值</p>
+<p>双指针靠左的指向买入日，靠右的指向卖出日，利用单调队列维护买卖区间中的最大值。每次当卖出日右移的时候检查是否满足最大回撤的约束，如果是就尝试更新最大收益，否则的话就左移买入指针，并尝试更新最大收益。卖出指针移动到末端的时候，仍然要依次左移买入指针直到末端，并尝试更新最大收益。由于两个指针都要遍历数组，容易知道复杂度是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathit">n</span><span class="mclose">)</span></span></span></span>的。</p>
+<h2 id="二-概率题打乒乓球"><a class="markdownIt-Anchor" href="#二-概率题打乒乓球"></a> 二、概率题——打乒乓球</h2>
+<p>题目背景：ABC三个人喜欢打乒乓球，但是一张球桌只能有两个人，所以有如下规则：每次两人对打，输家下场，换场下的人上场和赢家对打。那么三个人都非常好强，想要赢下另外两个人至少一局才算打爽了，（如A要打得爽，那么A需要赢过B也要赢过C），且只有所有人都打爽了球局才会结束，如果任意两个人的对局，都是五五开的，那么考虑以下两种情况：</p>
+<ol>
+<li>如果第一局AB对阵，B胜利，第二轮BC对阵，C胜利，第三轮AC对阵，A胜利，第四轮AB对阵，A胜利。从这之后到所有人都打爽了，需要打的局数的期望是多少？</li>
+<li>如果此时三个人刚刚来打球，那么要所有人都打爽了，需要打的局数的期望是多少？</li>
+</ol>
+<p>我的解答：</p>
+<ol>
+<li>
+<p>考虑如下的状态转换：</p>
+<p><img src="https://s2.loli.net/2023/01/10/P4xHZQa2u3JjYlV.jpg" alt="" /></p>
+<p>一共有一下六个状态<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mi>b</mi><mi>c</mi><mi>d</mi><mi>e</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">abcdef</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">a</span><span class="mord mathit">b</span><span class="mord mathit">c</span><span class="mord mathit">d</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.10764em;">f</span></span></span></span>，他们对应状态要打的局数期望有以下关系：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">{</mo><mtable><mtr><mtd><mrow><mi>a</mi><mo>=</mo><mn>1</mn><mo>+</mo><mo>(</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>b</mi><mo>=</mo><mn>1</mn><mo>+</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>e</mi><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>c</mi><mo>=</mo><mn>1</mn><mo>+</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>d</mi><mo>=</mo><mn>1</mn><mo>+</mo><mi>e</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>e</mi><mo>=</mo><mn>1</mn><mo>+</mo><mo>(</mo><mi>d</mi><mo>+</mo><mi>f</mi><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>f</mi><mo>=</mo><mn>1</mn><mo>+</mo><mo>(</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">\begin{cases}
+a = 1 + (c+d)/2
+\\
+b = 1 + (a+e)/2
+\\
+c = 1 + (a+b)/2
+\\
+d = 1 + e/2
+\\
+e = 1+(d+f)/2
+\\
+f = 1 + (d+e)/2
+\end{cases}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:4.570000000000001em;"></span><span class="strut bottom" style="height:8.64em;vertical-align:-4.07em;"></span><span class="base displaystyle textstyle uncramped"><span class="minner displaystyle textstyle uncramped"><span class="style-wrap reset-textstyle textstyle uncramped"><span class="delimsizing mult"><span class="vlist"><span style="top:3.0500100000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎩</span></span></span><span style="top:3.0500100000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:2.7500100000000005em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:2.4500100000000007em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:2.150010000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:1.8500100000000008em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:1.5500100000000008em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:1.2500100000000007em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:0.9500100000000007em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-0.000009999999999399378em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎨</span></span></span><span style="top:-1.1500099999999993em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-1.4500099999999994em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-1.7500099999999994em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.0500099999999994em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.3500099999999993em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.650009999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.950009999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-3.2500099999999987em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-3.5500199999999986em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎧</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist"><span style="top:-3.562000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">a</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mbin">+</span><span class="mopen">(</span><span class="mord mathit">c</span><span class="mbin">+</span><span class="mord mathit">d</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span><span style="top:-2.122000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">b</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mbin">+</span><span class="mopen">(</span><span class="mord mathit">a</span><span class="mbin">+</span><span class="mord mathit">e</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span><span style="top:-0.6820000000000014em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">c</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mbin">+</span><span class="mopen">(</span><span class="mord mathit">a</span><span class="mbin">+</span><span class="mord mathit">b</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span><span style="top:0.757999999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">d</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mbin">+</span><span class="mord mathit">e</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span><span style="top:2.1979999999999995em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">e</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mbin">+</span><span class="mopen">(</span><span class="mord mathit">d</span><span class="mbin">+</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span><span style="top:3.6380000000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mbin">+</span><span class="mopen">(</span><span class="mord mathit">d</span><span class="mbin">+</span><span class="mord mathit">e</span><span class="mclose">)</span><span class="mord mathrm">/</span><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<p>可以解得：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">{</mo><mtable><mtr><mtd><mrow><mi>a</mi><mo>=</mo><mn>3</mn><mn>6</mn><mi mathvariant="normal">/</mi><mn>5</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>b</mi><mo>=</mo><mn>3</mn><mn>8</mn><mi mathvariant="normal">/</mi><mn>5</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>c</mi><mo>=</mo><mn>4</mn><mn>2</mn><mi mathvariant="normal">/</mi><mn>5</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>d</mi><mo>=</mo><mn>4</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>e</mi><mo>=</mo><mn>6</mn></mrow></mtd></mtr><mtr><mtd><mrow><mi>f</mi><mo>=</mo><mn>6</mn></mrow></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">\begin{cases}
+a = 36/5
+\\
+b = 38/5
+\\
+c = 42/5
+\\
+d = 4
+\\
+e = 6
+\\
+f = 6
+\end{cases}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:4.570000000000001em;"></span><span class="strut bottom" style="height:8.64em;vertical-align:-4.07em;"></span><span class="base displaystyle textstyle uncramped"><span class="minner displaystyle textstyle uncramped"><span class="style-wrap reset-textstyle textstyle uncramped"><span class="delimsizing mult"><span class="vlist"><span style="top:3.0500100000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎩</span></span></span><span style="top:3.0500100000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:2.7500100000000005em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:2.4500100000000007em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:2.150010000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:1.8500100000000008em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:1.5500100000000008em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:1.2500100000000007em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:0.9500100000000007em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-0.000009999999999399378em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎨</span></span></span><span style="top:-1.1500099999999993em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-1.4500099999999994em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-1.7500099999999994em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.0500099999999994em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.3500099999999993em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.650009999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-2.950009999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-3.2500099999999987em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎪</span></span></span><span style="top:-3.5500199999999986em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="delimsizinginner delim-size4"><span>⎧</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist"><span style="top:-3.562000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">a</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mord mathrm">6</span><span class="mord mathrm">/</span><span class="mord mathrm">5</span></span></span><span style="top:-2.122000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">b</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mord mathrm">8</span><span class="mord mathrm">/</span><span class="mord mathrm">5</span></span></span><span style="top:-0.6820000000000014em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">c</span><span class="mrel">=</span><span class="mord mathrm">4</span><span class="mord mathrm">2</span><span class="mord mathrm">/</span><span class="mord mathrm">5</span></span></span><span style="top:0.757999999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">d</span><span class="mrel">=</span><span class="mord mathrm">4</span></span></span><span style="top:2.1979999999999995em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit">e</span><span class="mrel">=</span><span class="mord mathrm">6</span></span></span><span style="top:3.6380000000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mrel">=</span><span class="mord mathrm">6</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span><span class="sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span></span></span></span></span></p>
+<p>所以期望应当是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>3</mn><mn>6</mn><mi mathvariant="normal">/</mi><mn>5</mn></mrow><annotation encoding="application/x-tex">36/5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">3</span><span class="mord mathrm">6</span><span class="mord mathrm">/</span><span class="mord mathrm">5</span></span></span></span>轮次</p>
+</li>
+<li>
+<p>我确实不会（菜狗哭泣），用它给的做编程题的窗口写了个代码跑模拟，得到的结果是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn><mn>2</mn><mi mathvariant="normal">/</mi><mn>5</mn></mrow><annotation encoding="application/x-tex">62/5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">6</span><span class="mord mathrm">2</span><span class="mord mathrm">/</span><span class="mord mathrm">5</span></span></span></span>的期望。</p>
+</li>
+</ol>
+<h2 id="三-报数"><a class="markdownIt-Anchor" href="#三-报数"></a> 三、报数</h2>
+<p>题目背景：一共有2019个人依次编号，首尾相连占成一个圈，教练让从1号开始报数，依次报121212，每次报到2的人出局，由于是一个圈，所以可以一直循环下去。</p>
+<ol>
+<li>问最后留下来的那个人的编号是多少？</li>
+<li>小明拿到了1001号，但是他爸是教练，可以选择在任意时候给他爸一个眼神交流，让他爸讲报数顺序逆转，问小明有没有可能留到最后？</li>
+</ol>
+<p>我的解答：</p>
+<ol>
+<li>为了叙述方便首先定义轮次，从第1个人跑到最后算一个轮次，那么可以知道从第一轮留下来的都是奇数，相邻的人差的都是2，第二轮留下来的差的都是4，依次类推。所以容易发现每一轮留下来的人，在二进制表示上，有一位是相同的<br />
+2019的二进制表示为：</li>
+</ol>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mn>1</mn><mn>1</mn><mtext> </mtext><mn>1</mn><mn>1</mn><mn>1</mn><mn>0</mn><mtext> </mtext><mn>0</mn><mn>0</mn><mn>1</mn><mn>1</mn></mrow><annotation encoding="application/x-tex">   111\ 1110\ 0011
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mspace"> </span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mspace"> </span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span></span></span></span></span></p>
+<p>将其左移一位，末尾补1，找到在1~2019范围内的值就是所求的值，对应的二进制表示为</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mn>1</mn><mn>1</mn><mtext> </mtext><mn>1</mn><mn>1</mn><mn>0</mn><mn>0</mn><mtext> </mtext><mn>0</mn><mn>1</mn><mn>1</mn><mn>1</mn></mrow><annotation encoding="application/x-tex">   111\ 1100\ 0111
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mspace"> </span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mspace"> </span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span></span></span></span></span></p>
+<p>即留下来的是1991号。</p>
+<ol start="2">
+<li>有了前面的推断方法，我们可以判断在一共<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span></span></span></span>个人的队列中，处于第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span>个的时候是不是最后留下来的，考虑1001的二进制表示为：</li>
+</ol>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mn>1</mn><mn>1</mn><mtext> </mtext><mn>1</mn><mn>1</mn><mn>1</mn><mn>0</mn><mtext> </mtext><mn>1</mn><mn>0</mn><mn>0</mn><mn>1</mn></mrow><annotation encoding="application/x-tex">   011\ 1110\ 1001
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mspace"> </span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mspace"> </span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span></span></span></span></span></p>
+<p>在倒数第二位的二进制表示出现不同，那么可以知道如果他爸不改顺序的话，他计划是在第二轮就被淘汰的。<br />
+这里进行讨论，首先看在第一轮的情况下，如果他爸在报数还没报到他的情况下就反转了，能不能让他留到最后。假设在他前面已经有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span></span></span></span>个人出局了，那么就还剩下了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mn>0</mn><mn>1</mn><mn>9</mn><mo>−</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">2019-n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mbin">−</span><span class="mord mathit">n</span></span></span></span>个人，由于在他之前，所以可以知道<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>&lt;</mo><mo>=</mo><mn>5</mn><mn>0</mn><mn>0</mn></mrow><annotation encoding="application/x-tex">n&lt;=500</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mrel">&lt;</span><span class="mrel">=</span><span class="mord mathrm">5</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span></span></span></span>，必定有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mn>0</mn><mn>1</mn><mn>9</mn><mo>−</mo><mi>n</mi><mo>&gt;</mo><mo>=</mo><mn>1</mn><mn>5</mn><mn>1</mn><mn>9</mn><mo>&gt;</mo><mn>1</mn><mn>0</mn><mn>2</mn><mn>4</mn></mrow><annotation encoding="application/x-tex">2019-n&gt;=1519&gt;1024</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mbin">−</span><span class="mord mathit">n</span><span class="mrel">&gt;</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mord mathrm">5</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mrel">&gt;</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">2</span><span class="mord mathrm">4</span></span></span></span>，所以二进制表示保持有11位。<br />
+他爸有两种方法，一个是在第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">2n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">2</span><span class="mord mathit">n</span></span></span></span>号出局的时候，立刻反转由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2n-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">2</span><span class="mord mathit">n</span><span class="mbin">−</span><span class="mord mathrm">1</span></span></span></span>号开始报1，他在队列中排<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mn>0</mn><mn>1</mn><mn>9</mn><mo>+</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">1019+n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mbin">+</span><span class="mord mathit">n</span></span></span></span>位，另一种是在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2n+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">2</span><span class="mord mathit">n</span><span class="mbin">+</span><span class="mord mathrm">1</span></span></span></span>号报了1之后在进行反转，他在队列中排<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mn>0</mn><mn>1</mn><mn>9</mn><mo>+</mo><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">1019+n+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mbin">+</span><span class="mord mathit">n</span><span class="mbin">+</span><span class="mord mathrm">1</span></span></span></span>位。<br />
+为了使得他能够留到最后，那么要满足以上情况：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>2</mn><mn>0</mn><mn>1</mn><mn>9</mn><mo>−</mo><mi>n</mi><mo>−</mo><mn>1</mn><mn>0</mn><mn>2</mn><mn>4</mn><mo>)</mo><mo>∗</mo><mn>2</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>1</mn><mn>0</mn><mn>1</mn><mn>9</mn><mo>+</mo><mi>n</mi><mo>(</mo><mo>+</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">   (2019-n-1024)*2+1 = 1019+n(+1)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mopen">(</span><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mbin">−</span><span class="mord mathit">n</span><span class="mbin">−</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">2</span><span class="mord mathrm">4</span><span class="mclose">)</span><span class="mbin">∗</span><span class="mord mathrm">2</span><span class="mbin">+</span><span class="mord mathrm">1</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">1</span><span class="mord mathrm">9</span><span class="mbin">+</span><span class="mord mathit">n</span><span class="mopen">(</span><span class="mord">+</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span></span></p>
+<p>此处的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mo>+</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">(+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord">+</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span>表示两种情况，整理可以得到：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn><mn>7</mn><mn>2</mn><mo>=</mo><mn>3</mn><mi>n</mi><mo>(</mo><mo>+</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">   972= 3n(+1)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">9</span><span class="mord mathrm">7</span><span class="mord mathrm">2</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mord mathit">n</span><span class="mopen">(</span><span class="mord">+</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span></span></p>
+<p>可以发现，当不带<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mo>+</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">(+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord">+</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span>的时候，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span></span></span></span>是存在解的，即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>3</mn><mn>2</mn><mn>4</mn></mrow><annotation encoding="application/x-tex">n=324</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mord mathrm">2</span><span class="mord mathrm">4</span></span></span></span>，所以在628号淘汰出局的时候，他爸立刻转向，让627号报1，小明就可以成为留到最后的人。</p>
+<h2 id="四-桥牌"><a class="markdownIt-Anchor" href="#四-桥牌"></a> 四、桥牌</h2>
+<p>问题背景：</p>
+<ol>
+<li>一共除去大小王有52张牌，每人13张牌，大小次序为AKQJT98765432。</li>
+<li>桥牌分为东南西北四家，其中南北为一队，东西为一队。按西北东南顺序出牌。</li>
+<li>每一轮要根据第一轮出牌的花色来出牌，没有的话只能出其他花色的垫牌，垫牌必定小。这一轮最大的下一轮首先出牌。</li>
+<li>西家先出牌，南北获胜的方法是赢下所有十三轮，东西获胜只要赢下一轮就可以。</li>
+</ol>
+<p>问当四人都明牌的情况下，南北方的必胜策略是什么？</p>
+<ol>
+<li>西家先出红心T</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>西</th>
+<th>北</th>
+<th>东</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>J876</td>
+<td>A5432</td>
+<td></td>
+<td>KQT9</td>
+</tr>
+<tr>
+<td>红心</td>
+<td>[T]98</td>
+<td>AKQ</td>
+<td>7654</td>
+<td>J32</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>876</td>
+<td>J2</td>
+<td>T9543</td>
+<td>AKQ</td>
+</tr>
+<tr>
+<td>梅花</td>
+<td>654</td>
+<td>A32</td>
+<td>T987</td>
+<td>KQJ</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li>西家先出红心T</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>西</th>
+<th>北</th>
+<th>东</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>76</td>
+<td>AKQ5</td>
+<td>JT98</td>
+<td>432</td>
+</tr>
+<tr>
+<td>红心</td>
+<td>[T]987</td>
+<td>KQJ</td>
+<td>65</td>
+<td>A432</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>T98</td>
+<td>5432</td>
+<td>76</td>
+<td>AKQJ</td>
+</tr>
+<tr>
+<td>梅花</td>
+<td>7654</td>
+<td>A2</td>
+<td>KJT98</td>
+<td>Q3</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>西家先出红心6</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>西</th>
+<th>北</th>
+<th>东</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>J9876</td>
+<td>A54</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td>[6]5</td>
+<td>432</td>
+<td>KQJ987</td>
+<td>AT</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>7</td>
+<td>AKQ6543</td>
+<td>JT98</td>
+<td>2</td>
+</tr>
+<tr>
+<td>梅花</td>
+<td>65432</td>
+<td></td>
+<td>T</td>
+<td>AKQJ987</td>
+</tr>
+</tbody>
+</table>
+<p>我的解答：真是绝了，这道题杀我，太久没打牌而陷入思维陷阱，笔试就只做出了第一个。</p>
+<ol>
+<li>红心方片梅花北南都是绝对大，所以直接到下面这种情况，由于之前都是绝对大，此时北南可以控制由哪一边出牌</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>西</th>
+<th>北</th>
+<th>东</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>J8</td>
+<td>A5</td>
+<td></td>
+<td>T9</td>
+</tr>
+</tbody>
+</table>
+<p>此时南家出9，如果西家出J，北家出A大。如果西家出8，那么北家出5，让南家大。</p>
+<ol start="2">
+<li>南北两家出红心方片在可以绝对大八轮，在这中间北家垫牌梅花2，出梅花A大一轮，这个时候东家要垫四张牌，此时都是南家大。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北</th>
+<th>东（垫4张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>AKQ5</td>
+<td>JT98</td>
+<td>432</td>
+</tr>
+<tr>
+<td>梅花</td>
+<td></td>
+<td>KJT9</td>
+<td>Q</td>
+</tr>
+</tbody>
+</table>
+<p>如果东家垫的全部都是梅花，那么南家出梅花Q，北家垫掉黑桃5，之后北家三轮大。</p>
+<p>如果东家垫过黑桃，那么北家黑桃AKQ5四轮都大。</p>
+<ol start="3">
+<li>第一轮打完东家出J逼南家出A大，之后北家有方片AKQ三张绝对大，之后难上手，一定会打掉梅花七张牌。由于西家黑桃J大不过北家的A和南家的Q，所以这里略去西家。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北（垫7张）</th>
+<th>东（垫6张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>A54</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td>43</td>
+<td>KQ987</td>
+<td>T</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>AKQ6543</td>
+<td>JT98</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>首先可以确定北家必定上手，那么东家不会留超过两张红心，红心789首先会被垫干净。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北（垫7张）</th>
+<th>东（垫3张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>A54</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td>43</td>
+<td>KQ</td>
+<td>T</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>AKQ6543</td>
+<td>JT98</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>之后北家角度来看，东家必然垫完了987之后，北家和南家都无法打过东家的牌，必然不会再打红心，所以北家的两张红心也会被垫干净</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北（垫5张）</th>
+<th>东（垫3张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>A54</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td></td>
+<td>KQ</td>
+<td>T</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>AKQ6543</td>
+<td>JT98</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>那么北家不会再打红心，东家继续拿着两张红心是不合理的，但是南家还有一张红心，所以红心Q也会被垫掉</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北（垫5张）</th>
+<th>东（垫2张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>A54</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td></td>
+<td>K</td>
+<td>T</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>AKQ6543</td>
+<td>JT98</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>这个时候，由于轮次的问题，北家必须要垫掉四张牌，然后才轮到东家决策，北家垫掉方片3456</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北（垫1张）</th>
+<th>东（垫2张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>A54</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td></td>
+<td>K</td>
+<td>T</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>AKQ</td>
+<td>JT98</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>此时东家必定垫掉方片8，之后北家垫掉黑桃4</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>北</th>
+<th>东（垫1张）</th>
+<th>南</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>黑桃</td>
+<td>A5</td>
+<td>KT</td>
+<td>Q32</td>
+</tr>
+<tr>
+<td>红心</td>
+<td></td>
+<td>K</td>
+<td>T</td>
+</tr>
+<tr>
+<td>方片</td>
+<td>AKQ</td>
+<td>JT9</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>东家肯定不会再动方片，那么最后一张垫牌就在红心K和黑桃T之间决策。</p>
+<p>如果东家垫了黑桃T，那么南家走一张黑桃2，牌权交给北家，北家打完之后打掉方片三张，之后用一张黑桃5让南家黑桃Q大，游戏结束。</p>
+<p>如果东家垫了红心K，那么南家走一张红心T可以大一轮，北家垫掉黑桃5，之后北家四张牌都是绝对大，游戏结束。</p>
+<h2 id="五-个人项目简答"><a class="markdownIt-Anchor" href="#五-个人项目简答"></a> 五、个人项目简答</h2>
+<p>就一个有关自己曾经做过项目的简答题，要求简明扼要，所占的分并不多。</p>
+<h2 id="六-算法编程信封嵌套"><a class="markdownIt-Anchor" href="#六-算法编程信封嵌套"></a> 六、算法编程——信封嵌套</h2>
+<p>问题背景：给定<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>个信封，每个信封由两个数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi><mo separator="true">,</mo><mi>h</mi></mrow><annotation encoding="application/x-tex">w,h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mord mathit">h</span></span></span></span>描述，表示信封的宽和高，如果一个信封的宽和高分别小于另外一个信封，那么就可以放入另一个信封，每个信封都可以进行90°的旋转，所以<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>w</mi><mo separator="true">,</mo><mi>h</mi></mrow><annotation encoding="application/x-tex">w,h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mord mathit">h</span></span></span></span>是可以互换的。</p>
+<ol>
+<li>求出嵌套层数最多的方案。</li>
+<li>如果不是信封而是三维盒子，求出嵌套最多的方案。</li>
+</ol>
+<p>我的解答：在我的算法中，信封和盒子都没有任何区别，所以这里统一考虑。</p>
+<p>容易写出针对于两个信封比较的函数，即一个信封能否装下另一个信封。对每两个信封都做一个对比，如果<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span></span></span></span>信封能够装下<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.05017em;">B</span></span></span></span>信封，那么建立一条<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>→</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A \rightarrow B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">A</span><span class="mrel">→</span><span class="mord mathit" style="margin-right:0.05017em;">B</span></span></span></span>的连边。这样就构成了一个有向无环图，问题转变成了求图上的最长路径。</p>
+<p>采用图上动态规划的方法来进行求解，每个节点上的val表示这个节点的信封作为最外层，所能够嵌套的层数，如果这个节点没有出边，那么将其val设置为1。否则的话，将他的val设置为子节点最大的val再加上1。遍历完整张图之后得到的最大的val值就是最大的嵌套层数。然后从有最大val值的节点进行一个DFS，就可以找到嵌套层数最多的方案。</p>
+<p>建图的时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>N</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>，进行遍历的时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>，所以总的时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathit">n</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>。可能有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N\log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>的解法？</p>
+<p>Update：首先将两个数值进行排序，小的为高，大的为宽。之后对于一个排序，另一个利用树状数组进行维护，查看有多少高宽都小于它的信封就可以了，时间复杂度<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>N</mi><mi>log</mi><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(N\log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>。</p>
+<h2 id="七-算法编程螺旋数组"><a class="markdownIt-Anchor" href="#七-算法编程螺旋数组"></a> 七、算法编程——螺旋数组</h2>
+<p>问题背景：给定一个边长为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>，数值由行列递增的方阵，问顺时针螺旋来读的话，第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">K</span></span></span></span>位数字是什么？要求算法能够在合理时间内求解<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>=</mo><mn>3</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn></mrow><annotation encoding="application/x-tex">N=30000000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span></span></span></span>量级的输入。</p>
+<p>例如一个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">N=3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mrel">=</span><span class="mord mathrm">3</span></span></span></span>的方阵，数值就为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mtable><mtr><mtd><mrow><mn>1</mn></mrow></mtd><mtd><mrow><mn>2</mn></mrow></mtd><mtd><mrow><mn>3</mn></mrow></mtd></mtr><mtr><mtd><mrow><mn>4</mn></mrow></mtd><mtd><mrow><mn>5</mn></mrow></mtd><mtd><mrow><mn>6</mn></mrow></mtd></mtr><mtr><mtd><mrow><mn>7</mn></mrow></mtd><mtd><mrow><mn>8</mn></mrow></mtd><mtd><mrow><mn>9</mn></mrow></mtd></mtr><mtr><mtd><mrow></mrow></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">\begin{matrix}1&amp;2&amp;3\\4&amp;5&amp;6\\7&amp;8&amp;9\\\end{matrix}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:2.6500000000000004em;"></span><span class="strut bottom" style="height:4.800000000000001em;vertical-align:-2.1500000000000004em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist"><span style="top:-1.8100000000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">1</span></span></span><span style="top:-0.6100000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">4</span></span></span><span style="top:0.5900000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">7</span></span></span><span style="top:1.7900000000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist"><span style="top:-1.8100000000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">2</span></span></span><span style="top:-0.6100000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">5</span></span></span><span style="top:0.5900000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">8</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist"><span style="top:-1.8100000000000003em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">3</span></span></span><span style="top:-0.6100000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">6</span></span></span><span style="top:0.5900000000000001em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="mord displaystyle textstyle uncramped"><span class="mord mathrm">9</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span></span></span></span></span></span></span></p>
+<p>此时顺时针螺旋读的话，顺序就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>9</mn><mo separator="true">,</mo><mn>8</mn><mo separator="true">,</mo><mn>7</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">1,2,3,6,9,8,7,4,5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">1</span><span class="mpunct">,</span><span class="mord mathrm">2</span><span class="mpunct">,</span><span class="mord mathrm">3</span><span class="mpunct">,</span><span class="mord mathrm">6</span><span class="mpunct">,</span><span class="mord mathrm">9</span><span class="mpunct">,</span><span class="mord mathrm">8</span><span class="mpunct">,</span><span class="mord mathrm">7</span><span class="mpunct">,</span><span class="mord mathrm">4</span><span class="mpunct">,</span><span class="mord mathrm">5</span></span></span></span>，所以对于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>=</mo><mn>3</mn><mo separator="true">,</mo><mi>K</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">N=3,K=4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mrel">=</span><span class="mord mathrm">3</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.07153em;">K</span><span class="mrel">=</span><span class="mord mathrm">4</span></span></span></span>的情况得到的结果就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>6</mn></mrow><annotation encoding="application/x-tex">6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">6</span></span></span></span>。</p>
+<p>输入：两个整数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo separator="true">,</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">N,K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.07153em;">K</span></span></span></span></p>
+<p>输出：一个整数</p>
+<p>我的解答：首先确定对于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">K</span></span></span></span>个数，是属于第几个圈，之后确定第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.07153em;">K</span></span></span></span>个数的行和列，然后计算得到结果。</p>
+<p>时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>log</mi><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(\log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>，如果不考虑计算开方的复杂度可以认为是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span>的。</p>
+<h2 id="八-总结"><a class="markdownIt-Anchor" href="#八-总结"></a> 八、总结</h2>
+<p>笔试时长一共4个小时，除去高中竞赛之后好像基本没考过这么长的考试了。内容基本上全是智力测试，专业知识（金融知识）的考察基本为零，我觉得毫无准备硬冲基本非常容易一脸懵逼（对就是我）。不知道能不能过笔试（菜狗哭泣）。</p>
+<h2 id="update"><a class="markdownIt-Anchor" href="#update"></a> Update</h2>
+<p>我这空了一道大题，编程算法题复杂度还写高了的居然过了笔试，不愧是我。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Interview/" rel="tag"># Interview</a>
+              <a href="/tags/Quant/" rel="tag"># Quant</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/15/RN-ResNet/" rel="prev" title="[论文笔记] (ResNet) Deep Residual Learning for Image Recognition">
+      <i class="fa fa-chevron-left"></i> [论文笔记] (ResNet) Deep Residual Learning for Image Recognition
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/28/6828-lab1/" rel="next" title="MIT6.828 Lab1">
+      MIT6.828 Lab1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E6%9C%80%E5%A4%A7%E5%9B%9E%E6%92%A4"><span class="nav-number">1.</span> <span class="nav-text"> 一、最大回撤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E6%A6%82%E7%8E%87%E9%A2%98%E6%89%93%E4%B9%92%E4%B9%93%E7%90%83"><span class="nav-number">2.</span> <span class="nav-text"> 二、概率题——打乒乓球</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%8A%A5%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text"> 三、报数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B-%E6%A1%A5%E7%89%8C"><span class="nav-number">4.</span> <span class="nav-text"> 四、桥牌</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94-%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE%E7%AE%80%E7%AD%94"><span class="nav-number">5.</span> <span class="nav-text"> 五、个人项目简答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD-%E7%AE%97%E6%B3%95%E7%BC%96%E7%A8%8B%E4%BF%A1%E5%B0%81%E5%B5%8C%E5%A5%97"><span class="nav-number">6.</span> <span class="nav-text"> 六、算法编程——信封嵌套</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83-%E7%AE%97%E6%B3%95%E7%BC%96%E7%A8%8B%E8%9E%BA%E6%97%8B%E6%95%B0%E7%BB%84"><span class="nav-number">7.</span> <span class="nav-text"> 七、算法编程——螺旋数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB-%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text"> 八、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#update"><span class="nav-number">9.</span> <span class="nav-text"> Update</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pims</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pims</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
