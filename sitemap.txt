@@ -1,3 +1,4 @@
+http://phimos.github.io/2025/09/26/trick-pytorch-rankdata/
 http://phimos.github.io/2025/04/22/dl-tensorboard-loader/
 http://phimos.github.io/2025/04/22/env-gcc-default-version/
 http://phimos.github.io/love/index.html
