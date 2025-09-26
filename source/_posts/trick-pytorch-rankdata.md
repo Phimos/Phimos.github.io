@@ -4,6 +4,29 @@ date: "2025-09-26 20:00:00"
 tags: ["Trick", "PyTorch"]
 ---
 
+在数据处理过程当中，我们经常会遇到需要对数据进行排序并赋予排名的需求。SciPy库中的`rankdata`函数提供了多种处理重复值（ties）的方法。
+
+> * `average`: The average of the ranks that would have been assigned to all the tied values is assigned to each value.
+> * `min`: The minimum of the ranks that would have been assigned to all the tied values is assigned to each value. (This is also referred to as “competition” ranking.)
+> * `max`: The maximum of the ranks that would have been assigned to all the tied values is assigned to each value.
+> * `dense`: Like `min`, but the rank of the next highest element is assigned the rank immediately after those assigned to the tied elements.
+> * `ordinal`: All values are given a distinct rank, corresponding to the order that the values occur in a.
+
+
+但是SciPy并不支持在GPU上运行，无法利用GPU的计算能力来加速处理大规模数据。本文将介绍如何在PyTorch中实现类似于SciPy的`rankdata`功能，并支持多种处理重复值的方法。
+
+通常来说，一个简单的Trick是使用两次`argsort`来实现排名功能，如下所示：
+
+```python
+def rankdata(input: torch.Tensor, dim: int = -1) -> torch.Tensor:
+    return torch.argsort(torch.argsort(input, dim=dim), dim=dim) + 1
+```
+
+但是这种方法无法处理重复值的情况。为了解决这个问题，大体上的思路是首先对于输入数据进行排序，然后使用`searchsorted`函数来确定每个元素在排序后的数组中的位置。通过调整`searchsorted`的`side`参数，我们可以获取重复值的区间，从而实现不同的排名策略。假设`left`和`right`分别表示每个元素在排序后数组中的左边界和右边界，我们可以比较简单的获得`average`、`min`和`max`三种排名方式：
+
+- `average`: `(left + right + 1) / 2`
+- `min`: `left + 1`
+- `max`: `right`
 
 ```python
 @torch.jit.script
@@ -61,6 +84,8 @@ def rankdata_max(input: torch.Tensor, dim: int = -1) -> torch.Tensor:
     return ranks
 ```
 
+对应于`dense`方法，我们可以先将排序后的数组中的重复值替换为一个较大的数（如最大值），然后再进行一次排序，最后使用`searchsorted`来获取排名：
+
 ```python
 @torch.jit.script
 def rankdata_dense(input: torch.Tensor, dim: int = -1) -> torch.Tensor:
@@ -81,6 +106,7 @@ def rankdata_dense(input: torch.Tensor, dim: int = -1) -> torch.Tensor:
     return ranks
 ```
 
+对应于`ordinal`方法，重复值的排名并不是一致的，使用最简单的两次`argsort`方法即可，这里提供一种基于`scatter_`的实现方式：
 
 ```python
 @torch.jit.script
